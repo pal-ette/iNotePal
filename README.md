@@ -1,1 +1,1 @@
-# PersonaChatBot
+# iNotePal
