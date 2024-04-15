@@ -2,7 +2,7 @@ import streamlit as st
 from openai import OpenAI
 from firebase_auth import sign_in_with_email_and_password, sign_out
 import datetime
-
+from streamlit_calendar import calendar
 
 with st.sidebar:
     if "firebase" in st.session_state:
@@ -20,6 +20,8 @@ with st.sidebar:
         if email and pw:
             st.session_state["firebase"] = sign_in_with_email_and_password(email, pw)
             st.rerun()
+    calendar = calendar()
+    st.write(calendar)
 
 
 if "firebase" in st.session_state:
