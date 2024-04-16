@@ -5,8 +5,6 @@ import datetime
 from streamlit_calendar import calendar
 from models.ryugibo import Ryugibo
 
-fn_inference = None
-
 
 def load_model(model_type):
     model = None
@@ -16,6 +14,8 @@ def load_model(model_type):
 
 
 selected_model = None
+if "last_selected_model" not in st.session_state:
+    st.session_state["last_selected_model"] = None
 
 with st.sidebar:
     if "firebase" in st.session_state:
@@ -38,9 +38,12 @@ with st.sidebar:
     calendar = calendar()
     st.write(calendar)
 
-with st.spinner("모델 초기화 중..."):
-    inference_model = load_model(selected_model)
-
+if st.session_state["last_selected_model"] != selected_model:
+    st.session_state["last_selected_model"] = selected_model
+    with st.spinner("모델 초기화 중..."):
+        st.session_state["inference_model"] = load_model(
+            st.session_state["last_selected_model"]
+        )
 if "firebase" in st.session_state:
 
     def print_history(messages):
@@ -71,9 +74,9 @@ if "firebase" in st.session_state:
         with st.chat_message("human"):
             st.markdown(input)
             st.write(
-                inference_model.predict(
-                    inference_model.padding(
-                        inference_model.tokenize(
+                st.session_state["inference_model"].predict(
+                    st.session_state["inference_model"].padding(
+                        st.session_state["inference_model"].tokenize(
                             [
                                 input,
                             ],
