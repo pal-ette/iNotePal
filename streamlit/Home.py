@@ -3,6 +3,19 @@ from openai import OpenAI
 from firebase_auth import sign_in_with_email_and_password, sign_out
 import datetime
 from streamlit_calendar import calendar
+from models.ryugibo import Ryugibo
+
+fn_inference = None
+
+
+def load_model(model_type):
+    model = None
+    if model_type == "ryugibo":
+        model = Ryugibo("dummy-0.0.0")
+    return model
+
+
+selected_model = None
 
 with st.sidebar:
     if "firebase" in st.session_state:
@@ -12,6 +25,8 @@ with st.sidebar:
             sign_out()
 
         st.button(label="로그아웃", on_click=logout)
+
+        selected_model = st.selectbox(label="감정 분류 모델 선택", options=["ryugibo"])
     else:
         email = st.text_input(label="Email", disabled=("firebase" in st.session_state))
         pw = st.text_input(
@@ -23,6 +38,8 @@ with st.sidebar:
     calendar = calendar()
     st.write(calendar)
 
+with st.spinner("모델 초기화 중..."):
+    inference_model = load_model(selected_model)
 
 if "firebase" in st.session_state:
 
@@ -53,6 +70,17 @@ if "firebase" in st.session_state:
         st.session_state["messages"].append(("human", input))
         with st.chat_message("human"):
             st.markdown(input)
+            st.write(
+                inference_model.predict(
+                    inference_model.padding(
+                        inference_model.tokenize(
+                            [
+                                input,
+                            ],
+                        ),
+                    ),
+                ),
+            )
         with st.spinner(text="대답하는 중.."):
             response = st.session_state["openai"].chat.completions.create(
                 model="gpt-3.5-turbo",
