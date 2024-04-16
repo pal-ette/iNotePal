@@ -9,9 +9,12 @@ class Model:
     """
 
     def __init__(self, version) -> None:
-        self.cache_dir = f"{os.getcwd()}/.cache/{version}"
+        self.cache_dir = f"{os.getcwd()}/.cache"
         if not os.path.isdir(self.cache_dir):
             os.mkdir(self.cache_dir)
+        self.cache_version_dir = f"{self.cache_dir}/{version}"
+        if not os.path.isdir(self.cache_version_dir):
+            os.mkdir(self.cache_version_dir)
 
     def tokenize(self, string):
         pass
@@ -24,7 +27,7 @@ class Model:
 
     def download_file(self, url):
         response = requests.get(url)
-        file_cache_path = os.path.join(self.cache_dir, os.path.basename(url))
+        file_cache_path = os.path.join(self.cache_version_dir, os.path.basename(url))
         if os.path.exists(file_cache_path):
             return file_cache_path
         open(file_cache_path, "wb").write(response.content)
