@@ -38,8 +38,8 @@ with st.sidebar:
     calendar = calendar()
     st.write(calendar)
 
-
-model = load_model(selected_model)
+with st.spinner("모델 초기화 중..."):
+    inference_model = load_model(selected_model)
 
 if "firebase" in st.session_state:
 
@@ -70,7 +70,17 @@ if "firebase" in st.session_state:
         st.session_state["messages"].append(("human", input))
         with st.chat_message("human"):
             st.markdown(input)
-            st.write(model.predict(model.padding(model.tokenize([input]))))
+            st.write(
+                inference_model.predict(
+                    inference_model.padding(
+                        inference_model.tokenize(
+                            [
+                                input,
+                            ],
+                        ),
+                    ),
+                ),
+            )
         with st.spinner(text="대답하는 중.."):
             response = st.session_state["openai"].chat.completions.create(
                 model="gpt-3.5-turbo",
