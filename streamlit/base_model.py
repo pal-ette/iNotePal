@@ -9,7 +9,7 @@ class Model:
     """
 
     def __init__(self, version) -> None:
-        self.cache_dir = f".cache/{version}"
+        self.cache_dir = f"{os.getcwd()}/.cache/{version}"
         if not os.path.isdir(self.cache_dir):
             os.mkdir(self.cache_dir)
 
