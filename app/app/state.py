@@ -3,6 +3,9 @@
 import reflex as rx
 import os
 from openai import AsyncOpenAI
+from .ryugibo import Ryugibo
+
+inference_model = Ryugibo("dummy-0.0.0")
 
 
 class State(rx.State):
@@ -20,7 +23,19 @@ class State(rx.State):
             stream=True,
         )
         answer = ""
-        self.chat_history.append((self.question, answer))
+        emote = (
+            inference_model.predict(
+                inference_model.padding(
+                    inference_model.tokenize(
+                        [
+                            self.question,
+                        ],
+                    ),
+                ),
+            ),
+        )
+
+        self.chat_history.append((f"[{emote}]: {self.question}", answer))
         self.question = ""
         yield
 
