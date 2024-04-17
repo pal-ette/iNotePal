@@ -4,6 +4,9 @@ import reflex as rx
 
 from app import style
 from app.state import State
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def qa(question: str, answer: str) -> rx.Component:

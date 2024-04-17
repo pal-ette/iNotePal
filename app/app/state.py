@@ -1,7 +1,7 @@
 # state.py
 
 import reflex as rx
-
+import os
 from openai import AsyncOpenAI
 
 
@@ -11,7 +11,7 @@ class State(rx.State):
     chat_history: list[tuple[str, str]]
 
     async def answer(self):
-        client = AsyncOpenAI(api_key="")
+        client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         session = await client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": self.question}],
