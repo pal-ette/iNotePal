@@ -5,6 +5,10 @@ import reflex as rx
 from app import style
 from app.state import State
 from dotenv import load_dotenv
+from .login import require_login
+from .registration import registration_page as registration_page
+
+# 외부 정의 DB 모델
 
 load_dotenv()
 
@@ -56,6 +60,7 @@ def action_bar() -> rx.Component:
     )
 
 
+@require_login
 def index() -> rx.Component:
     return rx.center(
         rx.vstack(
