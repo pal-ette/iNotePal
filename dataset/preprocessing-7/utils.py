@@ -63,16 +63,23 @@ def handle_missing_values(df, target):
     df = df.dropna(subset=[target]).reset_index(drop=True)
     return df
 
-def konlp_processing(text):
+def spell_check(text):
 
     text = re.sub(r"[^가-힣ㅏ-ㅣㄱ-ㅎA-Za-z0-9,!?\'\`\"]", "", text)
-    result = spell_checker.check(text)
+    try:
+        result = spell_checker.check(text)
+    except:
+        result = 'error'
+
+    return result
+
+def new_spacing(text):
 
     spacing = Spacing()
-    if result == 'error':
+    if text == 'error':
         text_spacing = spacing(text)
     else:
-        text_spacing = spacing(result.checked)
+        text_spacing = spacing(text.checked)
 
     return text_spacing
 
