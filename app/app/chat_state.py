@@ -1,14 +1,14 @@
 # state.py
 
-import reflex as rx
 import os
 from openai import AsyncOpenAI
+from .app_state import AppState
 from .ryugibo import Ryugibo
 
 inference_model = Ryugibo("dummy-0.0.0")
 
 
-class State(rx.State):
+class ChatState(AppState):
     question: str
 
     chat_history: list[tuple[str, str]]
@@ -23,6 +23,8 @@ class State(rx.State):
             stream=True,
         )
         answer = ""
+        print(">>>> BEFORE INFERENCE")
+        print(dir(inference_model))
         emote = (
             inference_model.predict(
                 inference_model.padding(
@@ -34,6 +36,7 @@ class State(rx.State):
                 ),
             ),
         )
+        print(">>>> AFTER INFERENCE")
 
         self.chat_history.append((f"[{emote}]: {self.question}", answer))
         self.question = ""

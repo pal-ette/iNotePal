@@ -7,18 +7,19 @@ from collections.abc import AsyncGenerator
 
 import reflex as rx
 
-from sqlmodel import select
-
-from .base_state import BaseState
+from .app_state import AppState
 from .login import LOGIN_ROUTE, REGISTER_ROUTE
-from .user import User
+import re
+from .supabase_client import supabase_client
 
 
-class RegistrationState(BaseState):
+class RegistrationState(AppState):
     """Handle registration form submission and redirect to login page after registration."""
 
     success: bool = False
     error_message: str = ""
+
+    is_loading: bool = False
 
     async def handle_registration(
         self, form_data
@@ -30,45 +31,60 @@ class RegistrationState(BaseState):
         Args:
             form_data: A dict of form fields and values.
         """
-        with rx.session() as session:
-            username = form_data["username"]
-            if not username:
-                self.error_message = "Username cannot be empty"
-                yield rx.set_focus("username")
-                return
-            existing_user = session.exec(
-                select(User).where(User.username == username)
-            ).one_or_none()
-            if existing_user is not None:
-                self.error_message = (
-                    f"Username {username} is already registered. Try a different name"
-                )
-                yield [rx.set_value("username", ""), rx.set_focus("username")]
-                return
-            password = form_data["password"]
-            if not password:
-                self.error_message = "Password cannot be empty"
-                yield rx.set_focus("password")
-                return
-            if password != form_data["confirm_password"]:
-                self.error_message = "Passwords do not match"
-                yield [
-                    rx.set_value("confirm_password", ""),
-                    rx.set_focus("confirm_password"),
-                ]
-                return
-            # Create the new user and add it to the database.
-            new_user = User()  # type: ignore
-            new_user.username = username
-            new_user.password_hash = User.hash_password(password)
-            new_user.enabled = True
-            session.add(new_user)
-            session.commit()
+
+        # set the following values to spin the button
+        self.is_loading = True
+        yield
+
+        email = form_data["email"]
+        if not email:
+            self.error_message = "email cannot be empty"
+            rx.set_focus("email")
+            # reset state variable again
+            self.is_loading = False
+            yield
+            return
+        if not is_valid_email(email):
+            self.error_message = "email is not a valid email address."
+            rx.set_focus("email")
+            # reset state variable again
+            self.is_loading = False
+            yield
+            return
+
+        password = form_data["password"]
+        if not password:
+            self.error_message = "Password cannot be empty"
+            rx.set_focus("password")
+            # reset state variable again
+            self.is_loading = False
+            yield
+            return
+        if password != form_data["confirm_password"]:
+            self.error_message = "Passwords do not match"
+            [
+                rx.set_value("confirm_password", ""),
+                rx.set_focus("confirm_password"),
+            ]
+            # reset state variable again
+            self.is_loading = False
+            yield
+            return
+
+        # sign up with supabase
+        supabase_client().auth.sign_up(
+            {
+                "email": email,
+                "password": password,
+            }
+        )
+
         # Set success and redirect to login page after a brief delay.
         self.error_message = ""
         self.success = True
+        self.is_loading = False
         yield
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(3)
         yield [rx.redirect(LOGIN_ROUTE), RegistrationState.set_success(False)]
 
 
@@ -79,91 +95,39 @@ def registration_page() -> rx.Component:
     Returns:
         A reflex component.
     """
-
-    register_form = rx.box(
-        rx.vstack(
-            rx.form(
-                rx.fragment(
-                    rx.heading("Create an account", size="7", margin_bottom="2rem"),
-                    rx.text(
-                        "Username",
-                        color="hsl(240, 5%, 64.9%)",
-                        margin_top="2px",
-                        margin_bottom="4px",
-                    ),
-                    rx.input(
-                        placeholder="username",
-                        id="username",
-                        border_color="hsl(240,3.7%,15.9%)",
-                        justify_content="center",
-                    ),
-                    rx.text(
-                        "Password",
-                        color="hsl(240, 5%, 64.9%)",
-                        margin_top="2px",
-                        margin_bottom="4px",
-                    ),
-                    rx.input(
-                        placeholder="password",
-                        id="password",
-                        border_color="hsl(240,3.7%,15.9%)",
-                        justify_content="center",
-                        type="password",
-                    ),
-                    rx.text(
-                        "Confirm Password",
-                        color="hsl(240, 5%, 64.9%)",
-                        margin_top="2px",
-                        margin_bottom="4px",
-                    ),
-                    rx.input(
-                        placeholder="confirm",
-                        id="confirm_password",
-                        border_color="hsl(240,3.7%,15.9%)",
-                        justify_content="center",
-                        type="password",
-                    ),
-                    rx.box(
-                        rx.button(
-                            "Sign up",
-                            type="submit",
-                            width="100%",
-                        ),
-                        padding_top="14px",
-                    ),
-                ),
-                on_submit=RegistrationState.handle_registration,
-            ),
-            rx.link("Login", href=LOGIN_ROUTE),
-            align_items="center",
+    register_form = rx.chakra.form(
+        rx.chakra.input(placeholder="email", id="email", type_="email"),
+        rx.chakra.password(placeholder="password", id="password"),
+        rx.chakra.password(placeholder="confirm", id="confirm_password"),
+        rx.chakra.button(
+            "Register",
+            type_="submit",
+            is_loading=RegistrationState.is_loading,
         ),
-        padding="8rem 10rem",
-        margin_top="10vh",
-        margin_x="auto",
-        border="2px solid black",
-        border_color="gray.300",
-        border_radius=10,
+        width="80vw",
+        on_submit=RegistrationState.handle_registration,
     )
-
     return rx.fragment(
         rx.cond(
             RegistrationState.success,
-            rx.vstack(
-                rx.text("Registration successful!"),
+            rx.chakra.vstack(
+                rx.chakra.text(
+                    "Registration successful, check your mail to confirm signup so as to login!"
+                ),
                 rx.chakra.spinner(),
             ),
-            rx.vstack(
+            rx.chakra.vstack(
                 rx.cond(  # conditionally show error messages
                     RegistrationState.error_message != "",
-                    rx.callout(
-                        RegistrationState.error_message,
-                        icon="alert_triangle",
-                        color_scheme="red",
-                        role="alert",
-                    ),
+                    rx.chakra.text(RegistrationState.error_message),
                 ),
                 register_form,
                 padding_top="10vh",
             ),
         )
     )
+
+
+def is_valid_email(email):
+    pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    return re.match(pattern, email) is not None

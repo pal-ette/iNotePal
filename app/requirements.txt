@@ -13,6 +13,7 @@ cffi==1.16.0
 charset-normalizer==3.3.2
 click==8.1.7
 cryptography==42.0.5
+deprecation==2.1.0
 dill==0.3.8
 distro==1.9.0
 docutils==0.21.1
@@ -23,6 +24,7 @@ gast==0.5.4
 google-auth==2.29.0
 google-auth-oauthlib==1.2.0
 google-pasta==0.2.0
+gotrue==2.4.2
 greenlet==3.0.3
 grpcio==1.62.1
 gunicorn==21.2.0
@@ -60,6 +62,7 @@ passlib==1.7.4
 pipdeptree==2.16.2
 pkginfo==1.10.0
 platformdirs==4.2.0
+postgrest==0.16.3
 protobuf==4.25.3
 psutil==5.9.8
 pyasn1==0.6.0
@@ -67,6 +70,7 @@ pyasn1_modules==0.4.0
 pycparser==2.22
 pydantic==1.10.15
 Pygments==2.17.2
+PyJWT==2.8.0
 pyproject_hooks==1.0.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
@@ -74,6 +78,7 @@ python-engineio==4.9.0
 python-multipart==0.0.9
 python-socketio==5.11.2
 readme_renderer==43.0
+realtime==1.0.4
 redis==5.0.3
 reflex==0.4.8
 reflex-hosting-cli==0.1.12
@@ -94,6 +99,10 @@ SQLAlchemy==2.0.29
 sqlmodel==0.0.16
 starlette==0.37.2
 starlette-admin==0.13.2
+storage3==0.7.4
+StrEnum==0.4.15
+supabase==2.4.3
+supafunc==0.4.5
 tabulate==0.9.0
 tensorboard==2.15.2
 tensorboard-data-server==0.7.2
