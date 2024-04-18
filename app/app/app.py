@@ -3,9 +3,9 @@
 import reflex as rx
 
 from app import style
-from app.state import State
 from dotenv import load_dotenv
 
+from .chat_state import ChatState
 from .app_state import AppState
 from .registration import registration_page as registration_page
 from .login import require_login
@@ -37,7 +37,7 @@ def qa(question: str, answer: str) -> rx.Component:
 def chat() -> rx.Component:
     return rx.chakra.box(
         rx.foreach(
-            State.chat_history,
+            ChatState.chat_history,
             lambda messages: qa(
                 messages[0],
                 messages[1],
@@ -49,14 +49,14 @@ def chat() -> rx.Component:
 def action_bar() -> rx.Component:
     return rx.chakra.hstack(
         rx.chakra.input(
-            value=State.question,
+            value=ChatState.question,
             placeholder="Ask a question",
-            on_change=State.set_question,
+            on_change=ChatState.set_question,
             style=style.input_style,
         ),
         rx.chakra.button(
             "Ask",
-            on_click=State.answer,
+            on_click=ChatState.answer,
             style=style.button_style,
         ),
     )
