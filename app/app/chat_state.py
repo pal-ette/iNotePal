@@ -23,20 +23,16 @@ class ChatState(AppState):
             stream=True,
         )
         answer = ""
-        print(">>>> BEFORE INFERENCE")
         print(dir(inference_model))
-        emote = (
-            inference_model.predict(
-                inference_model.padding(
-                    inference_model.tokenize(
-                        [
-                            self.question,
-                        ],
-                    ),
+        emote = inference_model.predict(
+            inference_model.padding(
+                inference_model.tokenize(
+                    [
+                        self.question,
+                    ],
                 ),
             ),
-        )
-        print(">>>> AFTER INFERENCE")
+        )[0]
 
         self.chat_history.append((f"[{emote}]: {self.question}", answer))
         self.question = ""
