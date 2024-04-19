@@ -53,7 +53,7 @@ class LoginState(AppState):
         if not self.is_hydrated:
             # wait until after hydration
             return LoginState.redir()
-        page = self.get_current_page()
+        page = self.router.page
 
         if not self.token_is_valid and page != LOGIN_ROUTE:
             self.redirect_to = page

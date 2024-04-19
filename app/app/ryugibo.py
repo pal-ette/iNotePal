@@ -1,5 +1,5 @@
-import keras
-import numpy as np
+from keras.models import load_model
+from keras.preprocessing.sequence import pad_sequences
 from .inference_model import InferenceModel
 
 
@@ -7,13 +7,14 @@ class Ryugibo(InferenceModel):
 
     def __init__(self, version) -> None:
         super().__init__(version)
+
         self.paths = {
             "model": f"https://github.com/pal-ette/iNotePal/releases/download/{version}/ryugibo_model.keras",
             "tokenizer": f"https://github.com/pal-ette/iNotePal/releases/download/{version}/ryugibo_tokenizer.pickle",
             "y_label_binarizer": f"https://github.com/pal-ette/iNotePal/releases/download/{version}/ryugibo_label_binarizer.pickle",
             "config": f"https://github.com/pal-ette/iNotePal/releases/download/{version}/ryugibo_config.pickle",
         }
-        self.model = keras.models.load_model(self.download_file(self.paths["model"]))
+        self.model = load_model(self.download_file(self.paths["model"]))
         self.tokenizer = self.load_pickle_file(
             self.download_file(self.paths["tokenizer"])
         )
@@ -28,7 +29,7 @@ class Ryugibo(InferenceModel):
         return self.tokenizer.texts_to_sequences(string)
 
     def padding(self, tokenzied_string):
-        return keras.preprocessing.sequence.pad_sequences(
+        return pad_sequences(
             tokenzied_string,
             maxlen=self.seq_length,
         )
