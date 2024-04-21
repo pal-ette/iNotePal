@@ -1,0 +1,21 @@
+name: Auto assign pull request
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: "Auto-assign PR"
+        uses: pozil/auto-assign-issue@v1
+        with:
+          repo-token: ${{ secrets.MY_PERSONAL_ACCESS_TOKEN }}
+          assignees: ryugibo
+          teams: dev
+          numOfAssignee: 1
+          allowSelfAssign: true
+          teamIsPullRequestReviewer: true
