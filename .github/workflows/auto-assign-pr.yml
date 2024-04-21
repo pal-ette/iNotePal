@@ -10,12 +10,14 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - name: "Auto-assign PR"
+      - name: "Auto assignee PR"
         uses: pozil/auto-assign-issue@v1
         with:
           repo-token: ${{ secrets.MY_PERSONAL_ACCESS_TOKEN }}
           assignees: ryugibo
-          teams: dev
-          numOfAssignee: 1
           allowSelfAssign: true
+      - name: "Auto reviewer PR"
+        uses: pozil/auto-assign-issue@v1
+          repo-token: ${{ secrets.MY_PERSONAL_ACCESS_TOKEN }}
+          teams: dev
           teamIsPullRequestReviewer: true
