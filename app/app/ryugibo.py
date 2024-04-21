@@ -37,4 +37,4 @@ class Ryugibo(InferenceModel):
     def predict(self, padded_tokenized_string):
         return self.y_label_binarizer.inverse_transform(
             self.model.predict(padded_tokenized_string)
-        )
+        )[0]

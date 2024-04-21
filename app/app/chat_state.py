@@ -3,9 +3,9 @@
 import os
 from openai import AsyncOpenAI
 from .app_state import AppState
-from .ryugibo import Ryugibo
+from .inference_model import InferenceModel
 
-inference_model = Ryugibo("dummy-0.0.0")
+inference_model = InferenceModel("dummy-0.0.0")
 
 
 class ChatState(AppState):
@@ -32,9 +32,11 @@ class ChatState(AppState):
                     ],
                 ),
             ),
-        )[0]
+        )
 
-        self.chat_history.append((f"[{emote}]: {self.question}", answer))
+        self.chat_history.append(
+            (f"[{emote if emote else ''}]: {self.question}", answer)
+        )
         self.question = ""
         yield
 
