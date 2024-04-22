@@ -1,16 +1,15 @@
-"""New user registration form and validation logic."""
-
-from __future__ import annotations
-
-import asyncio
-from collections.abc import AsyncGenerator
-
 import reflex as rx
-
-from .app_state import AppState
-from .login import LOGIN_ROUTE, REGISTER_ROUTE
+import asyncio
 import re
-from .supabase_client import supabase_client
+from collections.abc import AsyncGenerator
+from app.app_state import AppState
+from app.routes import LOGIN_ROUTE
+from app.supabase_client import supabase_client
+
+
+def is_valid_email(email):
+    pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    return re.match(pattern, email) is not None
 
 
 class RegistrationState(AppState):
@@ -86,48 +85,3 @@ class RegistrationState(AppState):
         yield
         await asyncio.sleep(3)
         yield [rx.redirect(LOGIN_ROUTE), RegistrationState.set_success(False)]
-
-
-@rx.page(route=REGISTER_ROUTE)
-def registration_page() -> rx.Component:
-    """Render the registration page.
-
-    Returns:
-        A reflex component.
-    """
-    register_form = rx.chakra.form(
-        rx.chakra.input(placeholder="email", id="email", type_="email"),
-        rx.chakra.password(placeholder="password", id="password"),
-        rx.chakra.password(placeholder="confirm", id="confirm_password"),
-        rx.chakra.button(
-            "Register",
-            type_="submit",
-            is_loading=RegistrationState.is_loading,
-        ),
-        width="80vw",
-        on_submit=RegistrationState.handle_registration,
-    )
-    return rx.fragment(
-        rx.cond(
-            RegistrationState.success,
-            rx.chakra.vstack(
-                rx.chakra.text(
-                    "Registration successful, check your mail to confirm signup so as to login!"
-                ),
-                rx.chakra.spinner(),
-            ),
-            rx.chakra.vstack(
-                rx.cond(  # conditionally show error messages
-                    RegistrationState.error_message != "",
-                    rx.chakra.text(RegistrationState.error_message),
-                ),
-                register_form,
-                padding_top="10vh",
-            ),
-        )
-    )
-
-
-def is_valid_email(email):
-    pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-    return re.match(pattern, email) is not None
