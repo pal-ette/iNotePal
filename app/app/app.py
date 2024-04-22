@@ -123,6 +123,6 @@ def protected() -> rx.Component:
 
 app = rx.App()
 app.add_page(index)
-app.add_page(protected)
+app.add_page(protected, on_load=AppState.check_login)
 app.add_page(registration_page, route=REGISTER_ROUTE)
 app.add_page(login_page, route=LOGIN_ROUTE)

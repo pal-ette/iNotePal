@@ -2,7 +2,7 @@
 
 import reflex as rx
 
-from app.routes import LOGIN_ROUTE, REGISTER_ROUTE
+from app.routes import REGISTER_ROUTE
 from app.state.login_state import LoginState
 
 
@@ -52,7 +52,10 @@ def require_login(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
         return rx.fragment(
             rx.cond(
                 LoginState.is_hydrated,
-                rx.cond(LoginState.token_is_valid, page(), login_page()),
+                rx.cond(
+                    LoginState.token_is_valid,
+                    page(),
+                ),
                 rx.chakra.center(
                     # When this spinner mounts, it will redirect to the login page
                     rx.chakra.spinner(),
