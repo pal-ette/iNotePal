@@ -5,10 +5,11 @@ import reflex as rx
 from app import style
 from dotenv import load_dotenv
 
-from .chat_state import ChatState
-from .app_state import AppState
-from .registration import registration_page as registration_page
-from .login import require_login
+from app.state.chat_state import ChatState
+from app.app_state import AppState
+from app.page.registration import registration_page
+from app.page.login import login_page, require_login
+from app.routes import LOGIN_ROUTE, REGISTER_ROUTE
 
 # 외부 정의 DB 모델
 
@@ -122,4 +123,6 @@ def protected() -> rx.Component:
 
 app = rx.App()
 app.add_page(index)
-app.add_page(protected)
+app.add_page(protected, on_load=AppState.check_login)
+app.add_page(registration_page, route=REGISTER_ROUTE)
+app.add_page(login_page, route=LOGIN_ROUTE)

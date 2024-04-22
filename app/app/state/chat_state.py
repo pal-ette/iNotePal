@@ -2,8 +2,8 @@
 
 import os
 from openai import AsyncOpenAI
-from .app_state import AppState
-from .inference_model import InferenceModel
+from app.app_state import AppState
+from app.model.inference_model import InferenceModel
 
 inference_model = InferenceModel("dummy-0.0.0")
 
@@ -23,7 +23,6 @@ class ChatState(AppState):
             stream=True,
         )
         answer = ""
-        print(dir(inference_model))
         emote = inference_model.predict(
             inference_model.padding(
                 inference_model.tokenize(

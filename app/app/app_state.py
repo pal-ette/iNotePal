@@ -11,6 +11,8 @@ import time
 import reflex as rx
 from dotenv import load_dotenv
 
+from app.routes import LOGIN_ROUTE
+
 # load env
 load_dotenv()
 
@@ -76,3 +78,7 @@ class AppState(rx.State):
             return bool(self.decodeJWT)
         except Exception:
             return False
+
+    def check_login(self):
+        if not self.token_is_valid:
+            return rx.redirect(LOGIN_ROUTE)
