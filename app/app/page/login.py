@@ -39,7 +39,7 @@ def login_page() -> rx.Component:
 def require_login(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
     """Decorator to require authentication before rendering a page.
 
-    If the user is not authenticated, then redirect to the login page.
+    If the user is not authenticated. do not rendering anything.
 
     Args:
         page: The page to wrap.
@@ -57,7 +57,6 @@ def require_login(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
                     page(),
                 ),
                 rx.chakra.center(
-                    # When this spinner mounts, it will redirect to the login page
                     rx.chakra.spinner(),
                 ),
             )
