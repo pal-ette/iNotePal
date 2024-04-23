@@ -96,6 +96,7 @@ def dashboard():
                         rx.button(
                             "새로운 대화를 시작할까요?",
                             on_click=ChatState.start_new_chat,
+                            disabled=ChatState.is_waiting,
                         ),
                         align="center",
                         height="800px",
@@ -104,9 +105,15 @@ def dashboard():
                     ),
                     rx.vstack(
                         chat_history(),
-                        rx.button(
-                            "대화 마치기",
-                            on_click=ChatState.evaluate_chat,
+                        rx.cond(
+                            ChatState.is_closed,
+                            rx.badge(
+                                ChatState.chat_emotion,
+                            ),
+                            rx.button(
+                                "대화 마치기",
+                                on_click=ChatState.evaluate_chat,
+                            ),
                         ),
                         align="center",
                         height="800px",

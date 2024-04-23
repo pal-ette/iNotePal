@@ -25,7 +25,27 @@ class ChatState(AppState):
     _db_chat_id: int
 
     @rx.cached_var
-    def is_exist_chat(self):
+    def is_closed(self) -> bool:
+        if not self.token_is_valid:
+            return False
+
+        if not self.is_exist_chat:
+            return False
+
+        user = supabase_client().auth.get_user(self.auth_token)
+        chat = (
+            supabase_client()
+            .table("chat")
+            .select("is_closed")
+            .eq("user_id", user.user.id)
+            .eq("date", self._db_select_date)
+            .single()
+            .execute()
+        )
+        return chat.data["is_closed"]
+
+    @rx.cached_var
+    def is_exist_chat(self) -> bool:
         if not self.token_is_valid:
             return False
 
@@ -64,6 +84,26 @@ class ChatState(AppState):
             for chat_data in chats.data
         ]
 
+    @rx.cached_var
+    def chat_emotion(self) -> str:
+        if not self.token_is_valid:
+            return ""
+
+        if not self.is_exist_chat:
+            return ""
+
+        user = supabase_client().auth.get_user(self.auth_token)
+        chat = (
+            supabase_client()
+            .table("chat")
+            .select("emotion")
+            .eq("user_id", user.user.id)
+            .eq("date", self._db_select_date)
+            .single()
+            .execute()
+        )
+        return chat.data["emotion"]
+
     def switch_day(self, day):
         self.select_date = day
         self._db_select_date = datetime.strptime(day, "%a %b %d %Y").strftime(
@@ -99,7 +139,21 @@ class ChatState(AppState):
         )
 
     def evaluate_chat(self):
-        pass
+        if not self.token_is_valid:
+            yield
+        supabase_client().auth.get_user(self.auth_token)
+        (
+            supabase_client()
+            .table("chat")
+            .update(
+                {
+                    "emotion": "분노",
+                    "is_closed": True,
+                }
+            )
+            .eq("id", self._db_chat_id)
+            .execute()
+        )
 
     async def start_new_chat(self):
         if not self.token_is_valid:
