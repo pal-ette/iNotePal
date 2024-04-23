@@ -9,6 +9,7 @@ from app.app_state import AppState
 from app.model.inference_model import InferenceModel
 from app.supabase_client import supabase_client
 from typing import List, Tuple
+from reflex_calendar import reformat_date
 
 inference_model = InferenceModel("dummy-0.0.0")
 
@@ -106,9 +107,7 @@ class ChatState(AppState):
 
     def switch_day(self, day):
         self.select_date = day
-        self._db_select_date = datetime.strptime(day, "%a %b %d %Y").strftime(
-            "%Y-%m-%d"
-        )
+        self._db_select_date = reformat_date(day)
 
     def insert_user_history(self, message):
         (

@@ -10,6 +10,7 @@ import jwt
 import time
 import reflex as rx
 from dotenv import load_dotenv
+from app.supabase_client import supabase_client
 
 from app.routes import LOGIN_ROUTE
 
@@ -28,6 +29,13 @@ class AppState(rx.State):
         """signout."""
         self.auth_token = ""
         yield
+
+    @rx.cached_var
+    def user_mail(self) -> str:
+        if not self.token_is_valid:
+            return ""
+        user = supabase_client().auth.get_user(self.auth_token)
+        return user.user.email
 
     @rx.cached_var
     def decodeJWT(self) -> dict:
