@@ -106,7 +106,7 @@ class ChatState(AppState):
         self.select_date = day
         self._db_select_date = reformat_date(day)
 
-    def insert_user_history(self, message):
+    def insert_history(self, message, is_user):
         (
             supabase_client()
             .table("message")
@@ -114,21 +114,7 @@ class ChatState(AppState):
                 {
                     "chat_id": self._db_chat_id,
                     "message": message,
-                    "is_user": True,
-                }
-            )
-            .execute()
-        )
-
-    def insert_bot_history(self, message):
-        (
-            supabase_client()
-            .table("message")
-            .insert(
-                {
-                    "chat_id": self._db_chat_id,
-                    "message": message,
-                    "is_user": False,
+                    "is_user": is_user,
                 }
             )
             .execute()
@@ -183,7 +169,7 @@ class ChatState(AppState):
             ],
             temperature=7e-1,
         )
-        self.insert_bot_history(response.choices[0].message.content)
+        self.insert_history(response.choices[0].message.content, is_user=False)
         self.is_waiting = False
         yield
 
@@ -197,7 +183,7 @@ class ChatState(AppState):
         self.input_message = ""
 
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        self.insert_user_history(question)
+        self.insert_user_history(question, is_user=True)
         yield
 
         emotion = inference_model.predict(
@@ -216,6 +202,6 @@ class ChatState(AppState):
             messages=[{"role": "user", "content": question}],
             temperature=7e-1,
         )
-        self.insert_bot_history(response.choices[0].message.content)
+        self.insert_history(response.choices[0].message.content, is_user=False)
         self.is_waiting = False
         yield
