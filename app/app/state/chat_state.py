@@ -33,12 +33,11 @@ class ChatState(AppState):
         if not self.is_exist_chat:
             return False
 
-        user = supabase_client().auth.get_user(self.auth_token)
         chat = (
             supabase_client()
             .table("chat")
             .select("is_closed")
-            .eq("user_id", user.user.id)
+            .eq("user_id", self.decodeJWT["sub"])
             .eq("date", self._db_select_date)
             .single()
             .execute()
@@ -50,12 +49,11 @@ class ChatState(AppState):
         if not self.token_is_valid:
             return False
 
-        user = supabase_client().auth.get_user(self.auth_token)
         chat = (
             supabase_client()
             .table("chat")
             .select("*")
-            .eq("user_id", user.user.id)
+            .eq("user_id", self.decodeJWT["sub"])
             .eq("date", self._db_select_date)
             .execute()
         )
@@ -93,12 +91,11 @@ class ChatState(AppState):
         if not self.is_exist_chat:
             return ""
 
-        user = supabase_client().auth.get_user(self.auth_token)
         chat = (
             supabase_client()
             .table("chat")
             .select("emotion")
-            .eq("user_id", user.user.id)
+            .eq("user_id", self.decodeJWT["sub"])
             .eq("date", self._db_select_date)
             .single()
             .execute()
@@ -140,7 +137,6 @@ class ChatState(AppState):
     def evaluate_chat(self):
         if not self.token_is_valid:
             yield
-        supabase_client().auth.get_user(self.auth_token)
         (
             supabase_client()
             .table("chat")
@@ -161,13 +157,12 @@ class ChatState(AppState):
         self.is_waiting = True
         yield
 
-        user = supabase_client().auth.get_user(self.auth_token)
         chat = (
             supabase_client()
             .table("chat")
             .insert(
                 {
-                    "user_id": user.user.id,
+                    "user_id": self.decodeJWT["sub"],
                     "date": self._db_select_date,
                 }
             )
