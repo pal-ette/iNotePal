@@ -23,10 +23,6 @@ class ChatState(AppState):
 
     _db_select_date: str = datetime.today().strftime("%Y-%m-%d")
 
-    _db_chat: Dict
-
-    _dirty: bool = True
-
     @rx.cached_var
     def current_chat(self) -> Dict:
         if not self.token_is_valid:
