@@ -35,22 +35,6 @@ def chat_history() -> rx.Component:
     )
 
 
-def action_bar() -> rx.Component:
-    return rx.chakra.hstack(
-        rx.chakra.input(
-            value=ChatState.question,
-            placeholder="Ask a question",
-            on_change=ChatState.set_question,
-            style=style.input_style,
-        ),
-        rx.chakra.button(
-            "Ask",
-            on_click=ChatState.answer,
-            style=style.button_style,
-        ),
-    )
-
-
 @require_login
 def chat() -> rx.Component:
     """Render a chat page.
@@ -67,6 +51,5 @@ def chat() -> rx.Component:
         rx.chakra.link("Logout", href="/", on_click=ChatState.do_logout),
         chat_history(),
         rx.divider(),
-        action_bar(),
         align="center",
     )
