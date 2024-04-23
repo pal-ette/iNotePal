@@ -4,10 +4,11 @@ import os
 import reflex as rx
 from datetime import datetime
 from collections.abc import AsyncGenerator
-from openai import AsyncOpenAI
+from openai import OpenAI
 from app.app_state import AppState
 from app.model.inference_model import InferenceModel
 from app.supabase_client import supabase_client
+from typing import List, Tuple
 
 inference_model = InferenceModel("dummy-0.0.0")
 
@@ -17,15 +18,11 @@ class ChatState(AppState):
 
     input_message: str
 
-    select_date: str = datetime.today().strftime("%Y-%m-%d")
+    select_date: str = datetime.today().strftime("%a %b %d %Y")
 
-    chat_history: list[tuple[str, str]]
+    _db_select_date: str = datetime.today().strftime("%Y-%m-%d")
 
     _db_chat_id: int
-
-    @rx.cached_var
-    def is_selected_today(self):
-        return self.select_date == datetime.today().strftime("%Y-%m-%d")
 
     @rx.cached_var
     def is_exist_chat(self):
@@ -38,7 +35,7 @@ class ChatState(AppState):
             .table("chat")
             .select("*")
             .eq("user_id", user.user.id)
-            .eq("date", self.select_date)
+            .eq("date", self._db_select_date)
             .execute()
         )
         out_is_exist = len(chat.data) > 0
@@ -46,25 +43,34 @@ class ChatState(AppState):
             self._db_chat_id = chat.data[0]["id"]
         return out_is_exist
 
-    def switch_day(self, day):
-        self.select_date = datetime.strptime(day, "%a %b %d %Y").strftime("%Y-%m-%d")
-
-        if self.is_exist_chat:
-            chats = (
-                supabase_client()
-                .table("message")
-                .select("is_user, message")
-                .eq("chat_id", self._db_chat_id)
-                .order("created_at,id", desc=False)
-                .execute()
+    @rx.cached_var
+    def chat_history(self) -> List[Tuple[str, str, str]]:
+        if not self.is_exist_chat:
+            return []
+        chats = (
+            supabase_client()
+            .table("message")
+            .select("is_user, message, emotion")
+            .eq("chat_id", self._db_chat_id)
+            .order("created_at,id", desc=False)
+            .execute()
+        )
+        return [
+            (
+                "user" if chat_data["is_user"] else "ai",
+                chat_data["message"],
+                chat_data["emotion"],
             )
-            self.chat_history = [
-                ("user" if chat_data["is_user"] else "ai", chat_data["message"])
-                for chat_data in chats.data
-            ]
+            for chat_data in chats.data
+        ]
+
+    def switch_day(self, day):
+        self.select_date = day
+        self._db_select_date = datetime.strptime(day, "%a %b %d %Y").strftime(
+            "%Y-%m-%d"
+        )
 
     def insert_user_history(self, message):
-        user = supabase_client().auth.get_user(self.auth_token)
         (
             supabase_client()
             .table("message")
@@ -79,7 +85,6 @@ class ChatState(AppState):
         )
 
     def insert_bot_history(self, message):
-        user = supabase_client().auth.get_user(self.auth_token)
         (
             supabase_client()
             .table("message")
@@ -92,6 +97,9 @@ class ChatState(AppState):
             )
             .execute()
         )
+
+    def evaluate_chat(self):
+        pass
 
     async def start_new_chat(self):
         if not self.token_is_valid:
@@ -107,7 +115,7 @@ class ChatState(AppState):
             .insert(
                 {
                     "user_id": user.user.id,
-                    "date": self.select_date,
+                    "date": self._db_select_date,
                 }
             )
             .execute()
@@ -115,9 +123,9 @@ class ChatState(AppState):
 
         self._db_chat_id = chat.data[0]["id"]
 
-        _y, month, day = self.select_date.split("-")
-        client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        session = await client.chat.completions.create(
+        _y, month, day = self._db_select_date.split("-")
+        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {
@@ -125,20 +133,9 @@ class ChatState(AppState):
                     "content": f"당신은 심리상담사입니다. 오늘은 {month}월 {day}일 입니다. 오늘 날짜와 함께 오늘 기분이 어땠는지 물어봐줘.",
                 }
             ],
-            stop=None,
             temperature=7e-1,
-            stream=True,
         )
-        self.chat_history.append(("ai", ""))
-        answer = ""
-        async for item in session:
-            if hasattr(item.choices[0].delta, "content"):
-                if item.choices[0].delta.content is None:
-                    break
-                answer += item.choices[0].delta.content
-                self.chat_history[-1] = ("ai", answer)
-                yield
-        self.insert_bot_history(self.chat_history[-1][1])
+        self.insert_bot_history(response.choices[0].message.content)
         self.is_waiting = False
         yield
 
@@ -150,15 +147,11 @@ class ChatState(AppState):
         question = form_data["message"]
         self.input_message = ""
 
-        client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        session = await client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": question}],
-            stop=None,
-            temperature=7e-1,
-            stream=True,
-        )
-        emote = inference_model.predict(
+        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.insert_user_history(question)
+        yield
+
+        emotion = inference_model.predict(
             inference_model.padding(
                 inference_model.tokenize(
                     [
@@ -168,18 +161,12 @@ class ChatState(AppState):
             ),
         )
 
-        self.chat_history.append(("user", question))
-        self.insert_user_history(self.chat_history[-1][1])
-
-        self.chat_history.append(("ai", ""))
-        answer = ""
-        async for item in session:
-            if hasattr(item.choices[0].delta, "content"):
-                if item.choices[0].delta.content is None:
-                    break
-                answer += item.choices[0].delta.content
-                self.chat_history[-1] = ("ai", answer)
-                yield
-        self.insert_bot_history(self.chat_history[-1][1])
+        yield
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": question}],
+            temperature=7e-1,
+        )
+        self.insert_bot_history(response.choices[0].message.content)
         self.is_waiting = False
         yield

@@ -3,7 +3,7 @@ import reflex as rx
 from app.state.chat_state import ChatState
 
 
-def user_chat_bubble(message):
+def user_chat_bubble(message, emotion):
     return rx.hstack(
         rx.text(
             message,
@@ -16,7 +16,7 @@ def user_chat_bubble(message):
     )
 
 
-def ai_chat_bubble(message):
+def ai_chat_bubble(message, emotion):
     return rx.hstack(
         rx.icon("bot"),
         rx.text(
@@ -31,8 +31,8 @@ def ai_chat_bubble(message):
 def build_chat_bubble(chat):
     return rx.cond(
         chat[0] == "user",
-        user_chat_bubble(chat[1]),
-        ai_chat_bubble(chat[1]),
+        user_chat_bubble(chat[1], chat[2]),
+        ai_chat_bubble(chat[1], chat[2]),
     )
 
 

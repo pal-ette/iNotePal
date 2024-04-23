@@ -80,6 +80,7 @@ def dashboard():
                     locale="ko-KR",
                     width="100%",
                     on_change=ChatState.switch_day,
+                    value=ChatState.select_date,
                 ),
                 rx.card(
                     "graph",
@@ -103,11 +104,16 @@ def dashboard():
                     ),
                     rx.vstack(
                         chat_history(),
+                        rx.button(
+                            "대화 마치기",
+                            on_click=ChatState.evaluate_chat,
+                        ),
+                        align="center",
                         height="800px",
                         width="100%",
                     ),
                 ),
-                chat_input(),
+                chat_input(ChatState.is_exist_chat),
                 height="100%",
                 width="50%",
             ),

@@ -3,7 +3,7 @@ import reflex as rx
 from app.state.chat_state import ChatState
 
 
-def chat_input() -> rx.Component:
+def chat_input(can_input: bool) -> rx.Component:
     return rx.chakra.form(
         rx.hstack(
             rx.chakra.input(
@@ -13,6 +13,7 @@ def chat_input() -> rx.Component:
                 value=ChatState.input_message,
                 on_change=ChatState.set_input_message,
                 is_required=True,
+                is_disabled=~can_input,
             ),
             rx.cond(
                 ChatState.is_hydrated,
@@ -20,6 +21,7 @@ def chat_input() -> rx.Component:
                     "보내기",
                     type_="submit",
                     is_loading=ChatState.is_waiting,
+                    is_disabled=~can_input,
                 ),
             ),
             width="100%",
