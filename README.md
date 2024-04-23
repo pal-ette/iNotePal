@@ -31,6 +31,8 @@
 <a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/LLaMa_Alpaca_LoRA_파인튜닝.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
 `models/conv-7_KoBERT.ipynb`
 <a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/conv-7_KoBERT.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
+`models/kogpt_chatbot(v1).ipynb`
+<a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/kogpt_chatbot(v1).ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
 `models/merged_dataset_10k_KoBERT.ipynb`
 <a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/merged_dataset_10k_KoBERT.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
 `models/roberta_large_5k_samples_7_emotions.ipynb`
