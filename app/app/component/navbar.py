@@ -20,10 +20,6 @@ def navbar() -> rx.Component:
                 # search_bar(),
                 # github(),
                 rx.box(
-                    rx.card("B"),
-                    display=["none", "none", "none", "none", "flex", "flex"],
-                ),
-                rx.box(
                     rx.chakra.popover(
                         rx.chakra.popover_trigger(rx.chakra.button(rx.icon("user"))),
                         rx.chakra.popover_content(
@@ -41,7 +37,7 @@ def navbar() -> rx.Component:
                             rx.chakra.popover_close_button(),
                         ),
                     ),
-                    display=["flex", "flex", "flex", "flex", "none", "none"],
+                    display=["flex", "flex", "flex", "flex", "flex", "flex"],
                 ),
                 spacing="3",
                 align_items="center",

@@ -31,7 +31,10 @@ class LoginState(AppState):
 
         try:
             user_sign_in = supabase_client().auth.sign_in_with_password(
-                {"email": email, "password": password}
+                {
+                    "email": email,
+                    "password": password,
+                },
             )
             self.auth_token = user_sign_in.session.access_token
             self.error_message = ""

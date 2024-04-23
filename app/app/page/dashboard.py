@@ -80,10 +80,3 @@ def dashboard():
         direction="column",
         # **props,
     )
-    return rx.vstack(
-        navbar(),
-        rx.container(
-            height="70px",
-        ),
-        height="100vh",
-    )

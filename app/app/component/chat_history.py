@@ -38,6 +38,6 @@ def build_chat_bubble(chat):
 
 def chat_history() -> rx.Component:
     return rx.foreach(
-        ChatState.chat_history,
+        ChatState.current_messages,
         build_chat_bubble,
     )

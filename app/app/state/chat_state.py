@@ -8,7 +8,7 @@ from openai import OpenAI
 from app.app_state import AppState
 from app.model.inference_model import InferenceModel
 from app.supabase_client import supabase_client
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 from reflex_calendar import reformat_date
 
 inference_model = InferenceModel("dummy-0.0.0")
@@ -23,58 +23,40 @@ class ChatState(AppState):
 
     _db_select_date: str = datetime.today().strftime("%Y-%m-%d")
 
-    _db_chat_id: int
+    _db_chat: Dict
+
+    _dirty: bool = True
 
     @rx.cached_var
-    def is_closed(self) -> bool:
+    def current_chat(self) -> Dict:
         if not self.token_is_valid:
-            return False
+            return {}
 
-        if not self.is_exist_chat:
-            return False
-
-        user = supabase_client().auth.get_user(self.auth_token)
-        chat = (
-            supabase_client()
-            .table("chat")
-            .select("is_closed")
-            .eq("user_id", user.user.id)
-            .eq("date", self._db_select_date)
-            .single()
-            .execute()
-        )
-        return chat.data["is_closed"]
-
-    @rx.cached_var
-    def is_exist_chat(self) -> bool:
-        if not self.token_is_valid:
-            return False
-
-        user = supabase_client().auth.get_user(self.auth_token)
-        chat = (
+        print(f"REQUEST DB! {self._db_select_date}")
+        response = (
             supabase_client()
             .table("chat")
             .select("*")
-            .eq("user_id", user.user.id)
+            .eq("user_id", self.decodeJWT["sub"])
             .eq("date", self._db_select_date)
             .execute()
         )
-        out_is_exist = len(chat.data) > 0
-        if out_is_exist:
-            self._db_chat_id = chat.data[0]["id"]
-        return out_is_exist
+        if len(response.data) == 0:
+            return {}
+        return response.data[0]
 
     @rx.cached_var
-    def chat_history(self) -> List[Tuple[str, str, str]]:
+    def current_messages(self) -> List[Tuple[str, str, str]]:
         if not self.is_exist_chat:
             return []
         chats = (
             supabase_client()
             .table("message")
             .select("is_user, message, emotion")
-            .eq("chat_id", self._db_chat_id)
+            .eq("chat_id", self.current_chat["id"])
             .order("created_at,id", desc=False)
             .execute()
+            .data
         )
         return [
             (
@@ -82,56 +64,40 @@ class ChatState(AppState):
                 chat_data["message"],
                 chat_data["emotion"],
             )
-            for chat_data in chats.data
+            for chat_data in chats
         ]
+
+    @rx.var
+    def is_closed(self) -> bool:
+        if not self.is_exist_chat:
+            return False
+
+        return self.current_chat["is_closed"]
+
+    @rx.var
+    def is_exist_chat(self) -> bool:
+        return bool(self.current_chat)
 
     @rx.cached_var
     def chat_emotion(self) -> str:
-        if not self.token_is_valid:
-            return ""
-
         if not self.is_exist_chat:
-            return ""
+            return False
 
-        user = supabase_client().auth.get_user(self.auth_token)
-        chat = (
-            supabase_client()
-            .table("chat")
-            .select("emotion")
-            .eq("user_id", user.user.id)
-            .eq("date", self._db_select_date)
-            .single()
-            .execute()
-        )
-        return chat.data["emotion"]
+        return self.current_chat["emotion"]
 
     def switch_day(self, day):
         self.select_date = day
         self._db_select_date = reformat_date(day)
 
-    def insert_user_history(self, message):
+    def insert_history(self, chat_id, message, is_user):
         (
             supabase_client()
             .table("message")
             .insert(
                 {
-                    "chat_id": self._db_chat_id,
+                    "chat_id": chat_id,
                     "message": message,
-                    "is_user": True,
-                }
-            )
-            .execute()
-        )
-
-    def insert_bot_history(self, message):
-        (
-            supabase_client()
-            .table("message")
-            .insert(
-                {
-                    "chat_id": self._db_chat_id,
-                    "message": message,
-                    "is_user": False,
+                    "is_user": is_user,
                 }
             )
             .execute()
@@ -140,7 +106,6 @@ class ChatState(AppState):
     def evaluate_chat(self):
         if not self.token_is_valid:
             yield
-        supabase_client().auth.get_user(self.auth_token)
         (
             supabase_client()
             .table("chat")
@@ -150,7 +115,7 @@ class ChatState(AppState):
                     "is_closed": True,
                 }
             )
-            .eq("id", self._db_chat_id)
+            .eq("id", self.current_chat["id"])
             .execute()
         )
 
@@ -161,20 +126,18 @@ class ChatState(AppState):
         self.is_waiting = True
         yield
 
-        user = supabase_client().auth.get_user(self.auth_token)
-        chat = (
+        new_chat = (
             supabase_client()
             .table("chat")
             .insert(
                 {
-                    "user_id": user.user.id,
+                    "user_id": self.decodeJWT["sub"],
                     "date": self._db_select_date,
                 }
             )
             .execute()
+            .data[0]
         )
-
-        self._db_chat_id = chat.data[0]["id"]
 
         _y, month, day = self._db_select_date.split("-")
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -188,7 +151,11 @@ class ChatState(AppState):
             ],
             temperature=7e-1,
         )
-        self.insert_bot_history(response.choices[0].message.content)
+        self.insert_history(
+            new_chat["id"],
+            response.choices[0].message.content,
+            is_user=False,
+        )
         self.is_waiting = False
         yield
 
@@ -202,7 +169,7 @@ class ChatState(AppState):
         self.input_message = ""
 
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        self.insert_user_history(question)
+        self.insert_history(self.current_chat["id"], question, is_user=True)
         yield
 
         emotion = inference_model.predict(
@@ -221,6 +188,10 @@ class ChatState(AppState):
             messages=[{"role": "user", "content": question}],
             temperature=7e-1,
         )
-        self.insert_bot_history(response.choices[0].message.content)
+        self.insert_history(
+            self.current_chat["id"],
+            response.choices[0].message.content,
+            is_user=False,
+        )
         self.is_waiting = False
         yield

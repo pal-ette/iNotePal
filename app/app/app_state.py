@@ -34,8 +34,8 @@ class AppState(rx.State):
     def user_mail(self) -> str:
         if not self.token_is_valid:
             return ""
-        user = supabase_client().auth.get_user(self.auth_token)
-        return user.user.email
+
+        return self.decodeJWT["email"]
 
     @rx.cached_var
     def decodeJWT(self) -> dict:
