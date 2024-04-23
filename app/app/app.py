@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from app.app_state import AppState
 from app.page.registration import registration_page
 from app.page.login import login_page
-from app.page.chat import chat
+from app.page.dashboard import dashboard
 from app.routes import LOGIN_ROUTE, REGISTER_ROUTE
 
 # 외부 정의 DB 모델
@@ -36,23 +36,7 @@ def show_logout_or_login_comp() -> rx.Component:
     )
 
 
-def index() -> rx.Component:
-    """Render the index page.
-
-    Returns:
-        A reflex component.
-    """
-    return rx.fragment(
-        rx.chakra.color_mode_button(rx.chakra.color_mode_icon(), float="right"),
-        rx.chakra.vstack(
-            rx.chakra.heading("Welcome to my homepage!", font_size="2em"),
-            show_logout_or_login_comp(),
-        ),
-    )
-
-
 app = rx.App()
-app.add_page(index)
-app.add_page(chat, on_load=AppState.check_login)
+app.add_page(dashboard, route="/", on_load=AppState.check_login)
 app.add_page(registration_page, route=REGISTER_ROUTE)
 app.add_page(login_page, route=LOGIN_ROUTE)
