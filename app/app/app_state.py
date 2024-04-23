@@ -80,5 +80,8 @@ class AppState(rx.State):
             return False
 
     def check_login(self):
+        """
+        로그인이 안되어있으면 로그인 페이지로 redirect시킴
+        """
         if not self.token_is_valid:
             return rx.redirect(LOGIN_ROUTE)
