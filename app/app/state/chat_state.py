@@ -197,6 +197,7 @@ class ChatState(AppState):
 
     async def on_submit(self, form_data) -> AsyncGenerator[rx.event.EventSpec]:
         self.is_waiting = True
+        yield
         question = form_data["message"]
         self.input_message = ""
 

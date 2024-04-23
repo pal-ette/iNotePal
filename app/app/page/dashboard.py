@@ -43,21 +43,24 @@ def dashboard():
                         width="100%",
                         justify="center",
                     ),
-                    rx.vstack(
-                        chat_history(),
-                        rx.cond(
-                            ChatState.is_closed,
-                            rx.badge(
-                                ChatState.chat_emotion,
+                    rx.scroll_area(
+                        rx.vstack(
+                            chat_history(),
+                            rx.cond(
+                                ChatState.is_closed,
+                                rx.badge(
+                                    ChatState.chat_emotion,
+                                ),
+                                rx.button(
+                                    "대화 마치기",
+                                    on_click=ChatState.evaluate_chat,
+                                ),
                             ),
-                            rx.button(
-                                "대화 마치기",
-                                on_click=ChatState.evaluate_chat,
-                            ),
+                            align="center",
+                            width="100%",
                         ),
-                        align="center",
-                        height="800px",
                         width="100%",
+                        height="800px",
                     ),
                 ),
                 chat_input(ChatState.is_exist_chat),
