@@ -13,15 +13,27 @@
 <a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/dataset/페르소나_데이터_불러오기.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
 
 
-`models/1_5_공감형대화_데이터셋_BERT_0418.ipynb`
+`1_5_공감형대화_데이터셋_BERT_0418.ipynb`
 <a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/1_5_공감형대화_데이터셋_BERT_0418.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
-`models/5_공감형대화_데이터셋_BERT.ipynb`
+`1_empathy_only_BERT.ipynb`
+<a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/1_empathy_only_BERT.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
+`1_merged_dataset_BERT.ipynb`
+<a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/1_merged_dataset_BERT.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
+`5_공감형대화_데이터셋_BERT.ipynb`
 <a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/5_공감형대화_데이터셋_BERT.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
-`models/conv-7_KoBERT.ipynb`
+`LLaMa_Alpaca_LoRA_파인튜닝.ipynb`
+<a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/LLaMa_Alpaca_LoRA_파인튜닝.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
+`conv-7_KoBERT.ipynb`
 <a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/conv-7_KoBERT.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
-`models/ryugibo_simple_model.ipynb`
+`merged_dataset_10k_KoBERT.ipynb`
+<a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/merged_dataset_10k_KoBERT.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
+`roberta_large_5k_samples_7_emotions.ipynb`
+<a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/roberta_large_5k_samples_7_emotions.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
+`ryugibo_simple_model.ipynb`
 <a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/ryugibo_simple_model.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
-`models/감성대화_KoBERT.ipynb`
+`감성대화_BERT.ipynb`
+<a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/감성대화_BERT.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
+`감성대화_KoBERT.ipynb`
 <a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/감성대화_KoBERT.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
 
 
