@@ -28,13 +28,6 @@ class Roberta(InferenceModel):
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
 
-        self.y_label_binarizer = self.load_pickle_file(
-            self.download_file(self.paths["y_label_binarizer"])
-        )
-        self.seq_length = self.load_pickle_file(
-            self.download_file(self.paths["config"])
-        )["seq_length"]
-
     def tokenize(self, string):
         return self.tokenizer(
             string,
