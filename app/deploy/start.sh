@@ -8,4 +8,6 @@ else
     . $(pwd)/.venv/bin/activate
 fi;
 
-nohup reflex run --env=prod --backend-only &
+mkdir -p logs
+
+nohup time reflex run --env=prod --backend-only | ts '[%Y-%m-%d %H:%M:%S]' > logs/log-"`date +"%Y-%m-%d-%H:%M:%S"`".log &
