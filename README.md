@@ -52,5 +52,7 @@
   
 `scripts/model_deploy.ipynb`
 <a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/scripts/model_deploy.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
+`scripts/reflex_deploy.ipynb`
+<a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/scripts/reflex_deploy.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
 
 </details>
