@@ -27,15 +27,11 @@ def dashboard():
         ),
         rx.hstack(
             rx.vstack(
-                rx.link(
-                    calendar(
-                        locale="ko-KR",
-                        width="100%",
-                        on_change=ChatState.switch_day,
-                        value=ChatState.select_date,
-                    ),
-                    # 새로 생성해야 함
-                    href="/history",
+                calendar(
+                    locale="ko-KR",
+                    width="100%",
+                    on_change=ChatState.switch_day,
+                    value=ChatState.select_date,
                 ),
                 rx.flex(
                     rx.link(
