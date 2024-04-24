@@ -4,13 +4,18 @@ from app.state.chat_state import ChatState
 
 
 def user_chat_bubble(message, emotion):
-    return rx.hstack(
-        rx.text(
-            message,
+    return rx.vstack(
+        rx.hstack(
+            rx.text(
+                message,
+                width="100%",
+                text_align="right",
+            ),
+            rx.icon("user"),
             width="100%",
-            text_align="right",
+            align="end",
         ),
-        rx.icon("user"),
+        rx.badge(emotion),
         width="100%",
         align="end",
     )

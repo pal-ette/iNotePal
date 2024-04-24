@@ -7,11 +7,17 @@ from collections.abc import AsyncGenerator
 from openai import OpenAI
 from app.app_state import AppState
 from app.model.inference_model import InferenceModel
+from app.model.roberta7 import Roberta
 from app.supabase_client import supabase_client
 from typing import List, Tuple, Dict
 from reflex_calendar import reformat_date
+from reflex import constants
+
 
 inference_model = InferenceModel("dummy-0.0.0")
+env = os.environ.get(constants.ENV_MODE_ENV_VAR)
+if env == constants.Env.PROD:
+    inference_model = Roberta("model-0.0.1")
 
 
 class ChatState(AppState):
@@ -84,7 +90,7 @@ class ChatState(AppState):
         self.select_date = day
         self._db_select_date = reformat_date(day)
 
-    def insert_history(self, chat_id, message, is_user):
+    def insert_history(self, chat_id, message, is_user, emotion=None):
         (
             supabase_client()
             .table("message")
@@ -93,6 +99,7 @@ class ChatState(AppState):
                     "chat_id": chat_id,
                     "message": message,
                     "is_user": is_user,
+                    "emotion": emotion,
                 }
             )
             .execute()
@@ -164,8 +171,6 @@ class ChatState(AppState):
         self.input_message = ""
 
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        self.insert_history(self.current_chat["id"], question, is_user=True)
-        yield
 
         emotion = inference_model.predict(
             inference_model.padding(
@@ -177,7 +182,14 @@ class ChatState(AppState):
             ),
         )
 
+        self.insert_history(
+            self.current_chat["id"],
+            question,
+            is_user=True,
+            emotion=emotion,
+        )
         yield
+
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": question}],
