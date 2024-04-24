@@ -8,6 +8,4 @@ else
     . $(pwd)/.venv/bin/activate
 fi;
 
-pip install -r requirements.txt
-
 reflex export
