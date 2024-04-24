@@ -7,11 +7,17 @@ from collections.abc import AsyncGenerator
 from openai import OpenAI
 from app.app_state import AppState
 from app.model.inference_model import InferenceModel
+from app.model.roberta7 import Roberta
 from app.supabase_client import supabase_client
 from typing import List, Tuple, Dict
 from reflex_calendar import reformat_date
+from reflex import constants
+
 
 inference_model = InferenceModel("dummy-0.0.0")
+env = os.environ.get(constants.ENV_MODE_ENV_VAR)
+if env == constants.Env.PROD:
+    inference_model = Roberta("model-0.0.1")
 
 
 class ChatState(AppState):
