@@ -28,7 +28,6 @@ class ChatState(AppState):
         if not self.token_is_valid:
             return {}
 
-        print(f"REQUEST DB! {self._db_select_date}")
         response = (
             supabase_client()
             .table("chat")

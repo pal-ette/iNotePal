@@ -19,14 +19,12 @@ class ProdConfig(BaseConfg):
         "https://pal-ette.github.io",
     ]
 
-    api_url: str = "https://nvidia.edens.one:8000"
+    api_url: str = "https://nvidia.edens.one"
 
     frontend_path: str = "/iNotePal"
 
 
-config = BaseConfg()
+config = ProdConfig()
 env = os.environ.get(constants.ENV_MODE_ENV_VAR)
 if env == constants.Env.DEV:
     config = DevConfig()
-elif env == constants.Env.PROD:
-    config = ProdConfig()
