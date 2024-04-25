@@ -1,4 +1,4 @@
-import os, pickle, torch
+import os, pickle, torch, re
 from torch import nn
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from collections import OrderedDict
@@ -74,6 +74,7 @@ if __name__ == '__main__':
     model, label = load_dict(file_path, model)
 
     text = ''
+    text = re.sub(r"[^가-힣ㅏ-ㅣㄱ-ㅎA-Za-z0-9,!?]", " ", text)
 
     x = tokenizer(text, truncation=True, padding='max_length', max_length=64, return_tensors='pt')
     p_idx = inference(x, model)
