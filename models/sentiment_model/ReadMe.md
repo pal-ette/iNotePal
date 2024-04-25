@@ -43,6 +43,6 @@ Prediction :  혐오
 
 ### Model Evaluation
 
-<img src="https://github.com/mj0410/PythonCodes/assets/66175878/bf7e0f81-2200-4a9b-a75b-e16559f6857c" width="400">
+<img src="https://github.com/pal-ette/iNotePal/assets/66175878/6d235826-5f81-4acd-9fcb-562f2113c288" width="400">
 
-<img src="https://github.com/mj0410/PythonCodes/assets/66175878/1dba2452-ee05-4c52-8ae2-6e9fb52e156d" width="400">
+<img src="https://github.com/pal-ette/iNotePal/assets/66175878/3c77537d-fb19-4050-bd62-9c2a1c7e509b" width="400">
