@@ -4,13 +4,12 @@ from sentence_transformers import SentenceTransformer
 from supabase_client import supabase_client
 
 
-@st.cache_data()
+@st.cache_resource()
 def cached_model(model_name):
     return SentenceTransformer(model_name)
 
 
-if "model" not in st.session_state:
-    st.session_state["model"] = cached_model("jhgan/ko-sroberta-multitask")
+model = cached_model("jhgan/ko-sroberta-multitask")
 
 
 st.header("Supabase Vector DB 테스트")
@@ -26,7 +25,7 @@ with st.form("form", clear_on_submit=True):
     submitted = st.form_submit_button("전송")
 
 if submitted and user_input:
-    embedding = st.session_state["model"].encode(user_input)
+    embedding = model.encode(user_input)
 
     result = (
         supabase_client()
