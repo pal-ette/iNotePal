@@ -27,7 +27,7 @@ class ChatState(AppState):
 
     select_date: str = datetime.today().strftime("%a %b %d %Y")
 
-    _db_select_date: str = datetime.today().strftime("%Y-%m-%d")
+    db_select_date: str = datetime.today().strftime("%Y-%m-%d")
 
     @rx.cached_var
     def current_chat(self) -> Dict:
@@ -39,9 +39,10 @@ class ChatState(AppState):
             .table("chat")
             .select("*")
             .eq("user_id", self.decodeJWT["sub"])
-            .eq("date", self._db_select_date)
+            .eq("date", self.db_select_date)
             .execute()
         )
+        print("??:", response)
         if len(response.data) == 0:
             return {}
         return response.data[0]
@@ -79,7 +80,7 @@ class ChatState(AppState):
     def is_exist_chat(self) -> bool:
         return bool(self.current_chat)
 
-    @rx.cached_var
+    @rx.var
     def chat_emotion(self) -> str:
         if not self.is_exist_chat:
             return False
@@ -88,7 +89,10 @@ class ChatState(AppState):
 
     def switch_day(self, day):
         self.select_date = day
-        self._db_select_date = reformat_date(day)
+        self.db_select_date = reformat_date(day)
+        print(self.db_select_date)
+
+        self.start_new_chat()
 
     def insert_history(self, chat_id, message, is_user, emotion=None):
         (
@@ -121,12 +125,11 @@ class ChatState(AppState):
             .execute()
         )
 
-    async def start_new_chat(self):
+    def start_new_chat(self):
         if not self.token_is_valid:
-            yield
+            return
 
         self.is_waiting = True
-        yield
 
         new_chat = (
             supabase_client()
@@ -134,21 +137,21 @@ class ChatState(AppState):
             .insert(
                 {
                     "user_id": self.decodeJWT["sub"],
-                    "date": self._db_select_date,
+                    "date": self.db_select_date,
                 }
             )
             .execute()
             .data[0]
         )
 
-        _y, month, day = self._db_select_date.split("-")
+        _y, month, day = self.db_select_date.split("-")
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {
                     "role": "system",
-                    "content": f"당신은 심리상담사입니다. 오늘은 {month}월 {day}일 입니다. 오늘 날짜와 함께 오늘 기분이 어땠는지 물어봐줘.",
+                    "content": f"당신은 사람의 감정을 세심히 살필 수 있는 심리상담사입니다. 오늘은 {month}월 {day}일 입니다. 오늘 날짜와 함께 기분이 드러날 수 있는 질문을 해줘, 그런데 기분이라는 단어를 직접적으로 사용하지말고.",
                 }
             ],
             temperature=7e-1,
@@ -159,7 +162,6 @@ class ChatState(AppState):
             is_user=False,
         )
         self.is_waiting = False
-        yield
 
     def set_input_message(self, msg):
         self.input_message = msg

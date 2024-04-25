@@ -60,14 +60,22 @@ def dashboard():
             ),
             rx.spacer(),
             rx.vstack(
+                rx.chakra.heading(
+                    # ChatState에서 날짜를 바꿀때마다 self 내부 변수에서 날짜 값을 바꿔서 가지고 있어야 할것으로 보이는데, 왜 오늘날짜만 나오나.
+                    ChatState.db_select_date,
+                    size="xl",
+                    weight="bold",
+                    align="center",
+                    padding_bottom="2vh",
+                ),
                 rx.cond(
                     ~ChatState.is_exist_chat,
                     rx.flex(
-                        rx.button(
-                            "새로운 대화를 시작할까요?",
-                            on_click=ChatState.start_new_chat,
-                            disabled=ChatState.is_waiting,
-                        ),
+                        #     # rx.button(
+                        #     #     "새로운 대화를 시작할까요?",
+                        #     #     on_click=ChatState.start_new_chat,
+                        #     #     disabled=ChatState.is_waiting,
+                        #     # ),
                         align="center",
                         height="800px",
                         width="100%",
@@ -76,6 +84,7 @@ def dashboard():
                     rx.scroll_area(
                         rx.vstack(
                             chat_history(),
+                            chat_input(ChatState.is_exist_chat),
                             rx.cond(
                                 ChatState.is_closed,
                                 rx.badge(
@@ -84,16 +93,18 @@ def dashboard():
                                 rx.button(
                                     "대화 마치기",
                                     on_click=ChatState.evaluate_chat,
+                                    width="100%",
+                                    variant="soft",
+                                    size="4",
                                 ),
                             ),
                             align="center",
                             width="100%",
                         ),
                         width="100%",
-                        height="800px",
+                        # height="800px",
                     ),
                 ),
-                chat_input(ChatState.is_exist_chat),
                 height="100%",
                 width="50%",
             ),
