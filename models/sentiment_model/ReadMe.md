@@ -5,7 +5,7 @@
 ### Model Architecture
 
 ```mermaid
-graph DT;
+graph BT;
     emb[Roberta Embeddings];
     enc[Roberta Encoder];
     lstm[LSTM Layer];
@@ -43,6 +43,6 @@ Prediction :  혐오
 
 ### Model Evaluation
 
-<img src="img_1.png" width="200">
+<img src="https://github.com/mj0410/PythonCodes/assets/66175878/bf7e0f81-2200-4a9b-a75b-e16559f6857c" width="400">
 
-<img src="img_2.png" width="200">
+<img src="https://github.com/mj0410/PythonCodes/assets/66175878/1dba2452-ee05-4c52-8ae2-6e9fb52e156d" width="400">
