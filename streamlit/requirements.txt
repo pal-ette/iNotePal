@@ -84,3 +84,6 @@ urllib3==2.2.1
 watchdog==4.0.0
 Werkzeug==3.0.2
 wrapt==1.14.1
+supabase==2.4.3
+streamlit-chat==0.1.1
+sentence-transformers==2.7.0
