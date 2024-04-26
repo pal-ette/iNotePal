@@ -1,6 +1,7 @@
 import os
 import pickle
 import requests
+from app.util.emotion import random_emotion
 
 
 class InferenceModel:
@@ -23,7 +24,7 @@ class InferenceModel:
         pass
 
     def predict(self, padded_tokenized_string):
-        pass
+        return random_emotion()
 
     def download_file(self, url):
         response = requests.get(url)
