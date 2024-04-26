@@ -32,7 +32,7 @@ def navbar() -> rx.Component:
                         "Analysis",
                         color_scheme="gray",
                     ),
-                    href="/",
+                    href="/analysis",
                 ),
                 # navigation_section(),
                 rx.box(

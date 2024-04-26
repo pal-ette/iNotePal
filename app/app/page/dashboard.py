@@ -6,7 +6,7 @@ from app.component.navbar import navbar
 from app.state.chat_state import ChatState
 from app.page.login import require_login
 
-# 그래프 그리기 위한 임시 데이터.
+
 data = [
     {"name": "4/1", "pos": 4, "neg": 6, "neu": 0},
     {"name": "4/2", "pos": 5, "neg": 3, "neu": 0},
