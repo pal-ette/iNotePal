@@ -67,42 +67,38 @@ def dashboard():
                     align="center",
                     padding_bottom="2vh",
                 ),
-                rx.cond(
-                    ~ChatState.is_exist_chat,
-                    rx.flex(
-                        #     # rx.button(
-                        #     #     "새로운 대화를 시작할까요?",
-                        #     #     on_click=ChatState.start_new_chat,
-                        #     #     disabled=ChatState.is_waiting,
-                        #     # ),
-                        align="center",
-                        height="800px",
-                        width="100%",
-                        justify="center",
-                    ),
-                    rx.scroll_area(
-                        rx.vstack(
-                            chat_history(),
-                            chat_input(ChatState.is_exist_chat),
-                            rx.cond(
-                                ChatState.is_closed,
-                                rx.badge(
-                                    ChatState.chat_emotion,
+                rx.scroll_area(
+                    rx.vstack(
+                        rx.cond(
+                            ChatState.is_creating,
+                            rx.hstack(
+                                rx.chakra.circular_progress(
+                                    is_indeterminate=ChatState.is_creating
                                 ),
-                                rx.button(
-                                    "대화 마치기",
-                                    on_click=ChatState.evaluate_chat,
-                                    width="100%",
-                                    variant="soft",
-                                    size="4",
-                                ),
+                                rx.text("친구가 말 거는 중.."),
+                                align="center",
                             ),
-                            align="center",
-                            width="100%",
                         ),
+                        chat_history(),
+                        chat_input(ChatState.is_exist_chat),
+                        rx.cond(
+                            ChatState.is_closed,
+                            rx.badge(
+                                ChatState.chat_emotion,
+                            ),
+                            rx.button(
+                                "대화 마치기",
+                                on_click=ChatState.evaluate_chat,
+                                width="100%",
+                                variant="soft",
+                                size="4",
+                            ),
+                        ),
+                        align="center",
                         width="100%",
-                        # height="800px",
                     ),
+                    width="100%",
+                    # height="800px",
                 ),
                 height="100%",
                 width="50%",
