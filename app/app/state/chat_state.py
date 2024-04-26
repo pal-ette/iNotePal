@@ -34,6 +34,8 @@ class ChatState(AppState):
 
     is_creating: bool
 
+    _current_chat_index: int = 0
+
     _db_chats: Dict[str, List[Dict[str, str]]] = {}
 
     _db_messages: Dict[int, List[Tuple[str, str, str]]] = {}
@@ -61,11 +63,21 @@ class ChatState(AppState):
         return self._db_chats[self.db_select_date]
 
     @rx.var
-    def current_chat(self) -> Dict:
+    def past_chats(self) -> List[Dict[str, str]]:
+        return [
+            chat for i, chat in enumerate(self.chats) if i != self._current_chat_index
+        ]
+
+    @rx.var
+    def has_past_chats(self) -> bool:
+        return len(self.past_chats) > 0
+
+    @rx.var
+    def current_chat(self) -> Dict[str, str]:
         chats = self.chats
         if len(chats) < 1:
             return {}
-        return chats[0]
+        return chats[self._current_chat_index]
 
     @rx.var
     def current_messages(self) -> List[Tuple[str, str, str]]:
@@ -96,7 +108,6 @@ class ChatState(AppState):
     def is_closed(self) -> bool:
         if not self.is_exist_chat:
             return False
-
         return self.current_chat["is_closed"]
 
     @rx.var
@@ -110,7 +121,15 @@ class ChatState(AppState):
 
         return self.current_chat["emotion"]
 
+    def select_past_card(self, chat_id):
+        for i, chat in enumerate(self.chats):
+            if chat["id"] != chat_id:
+                continue
+            self._current_chat_index = i
+            break
+
     def switch_day(self, day):
+        self._current_chat_index = 0
         self.select_date = day
         self.db_select_date = reformat_date(day)
 
@@ -164,11 +183,11 @@ class ChatState(AppState):
         )
 
     async def start_new_chat(self):
+        if not self.is_hydrated:
+            return
+
         self.is_creating = True
         yield
-
-        if not self.is_hydrated:
-            yield
 
         new_chat = (
             supabase_client()
