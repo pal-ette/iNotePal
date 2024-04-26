@@ -21,7 +21,7 @@ if env == constants.Env.PROD:
 
 
 class ChatState(AppState):
-    is_waiting: bool
+    is_waiting: bool = False
 
     select_date: str = datetime.today().strftime("%a %b %d %Y")
 

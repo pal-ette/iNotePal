@@ -16,7 +16,6 @@ def chat_input(can_input: bool) -> rx.Component:
             rx.cond(
                 ChatState.is_hydrated,
                 rx.chakra.button(
-                    # o o가 왜 붙음.??
                     rx.icon("send"),
                     type_="submit",
                     is_loading=ChatState.is_waiting,
