@@ -6,6 +6,7 @@ from app.component.navbar import navbar
 from app.state.chat_state import ChatState
 from app.page.login import require_login
 
+
 from app.component.emotion_card import emotion_card
 
 # 그래프 그리기 위한 임시 데이터.
