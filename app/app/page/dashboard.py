@@ -1,7 +1,7 @@
 import reflex as rx
 from reflex_calendar import calendar
 from app.component.chat_input import chat_input
-from app.component.chat_history import chat_history
+from app.component.chat_history import chat_history, ai_chat_bubble
 from app.component.navbar import navbar
 from app.state.chat_state import ChatState
 from app.page.login import require_login
@@ -61,49 +61,44 @@ def dashboard():
             rx.spacer(),
             rx.vstack(
                 rx.chakra.heading(
-                    # ChatState에서 날짜를 바꿀때마다 self 내부 변수에서 날짜 값을 바꿔서 가지고 있어야 할것으로 보이는데, 왜 오늘날짜만 나오나.
                     ChatState.db_select_date,
                     size="xl",
                     weight="bold",
                     align="center",
                     padding_bottom="2vh",
                 ),
-                rx.cond(
-                    ~ChatState.is_exist_chat,
-                    rx.flex(
-                        #     # rx.button(
-                        #     #     "새로운 대화를 시작할까요?",
-                        #     #     on_click=ChatState.start_new_chat,
-                        #     #     disabled=ChatState.is_waiting,
-                        #     # ),
-                        align="center",
-                        height="800px",
-                        width="100%",
-                        justify="center",
-                    ),
-                    rx.scroll_area(
-                        rx.vstack(
-                            chat_history(),
-                            chat_input(ChatState.is_exist_chat),
-                            rx.cond(
-                                ChatState.is_closed,
-                                rx.badge(
-                                    ChatState.chat_emotion,
+                rx.scroll_area(
+                    rx.vstack(
+                        rx.cond(
+                            ChatState.is_creating,
+                            rx.hstack(
+                                rx.chakra.circular_progress(
+                                    is_indeterminate=ChatState.is_creating
                                 ),
-                                rx.button(
-                                    "대화 마치기",
-                                    on_click=ChatState.evaluate_chat,
-                                    width="100%",
-                                    variant="soft",
-                                    size="4",
-                                ),
+                                rx.text("친구가 말 거는 중.."),
+                                align="center",
                             ),
-                            align="center",
-                            width="100%",
                         ),
+                        chat_history(),
+                        chat_input(ChatState.is_exist_chat),
+                        rx.cond(
+                            ChatState.is_closed,
+                            rx.badge(
+                                ChatState.chat_emotion,
+                            ),
+                            rx.button(
+                                "대화 마치기",
+                                on_click=ChatState.evaluate_chat,
+                                width="100%",
+                                variant="soft",
+                                size="4",
+                            ),
+                        ),
+                        align="center",
                         width="100%",
-                        # height="800px",
                     ),
+                    width="100%",
+                    # height="800px",
                 ),
                 height="100%",
                 width="50%",

@@ -5,7 +5,6 @@
 .venv/
 .web
 __pycache__/
-logs/
-
-frontend.zip
 backend.zip
+frontend.zip
+logs/
