@@ -6,6 +6,8 @@ from app.component.navbar import navbar
 from app.state.chat_state import ChatState
 from app.page.login import require_login
 
+from app.component.emotion_card import emotion_card
+
 # 그래프 그리기 위한 임시 데이터.
 data = [
     {"name": "4/1", "pos": 4, "neg": 6, "neu": 0},
@@ -40,29 +42,25 @@ def dashboard():
                     on_change=ChatState.switch_day,
                     value=ChatState.select_date,
                 ),
-                rx.flex(
-                    rx.link(
-                        rx.recharts.bar_chart(
-                            rx.recharts.bar(
-                                data_key="pos", stroke="#8884d8", fill="#8884d8"
-                            ),
-                            rx.recharts.bar(
-                                data_key="neg", stroke="#82ca9d", fill="#82ca9d"
-                            ),
-                            rx.recharts.x_axis(data_key="name"),
-                            rx.recharts.y_axis(),
-                            rx.recharts.legend(),
-                            data=data,
-                        ),
-                        # 새로 생성해야 함
-                        # href="/analysis",
-                    ),
-                ),
-                # rx.card(
-                #     "graph",
-                #     width="100%",
-                #     height="100%",
+                # rx.flex(
+                #     rx.link(
+                #         rx.recharts.bar_chart(
+                #             rx.recharts.bar(
+                #                 data_key="pos", stroke="#8884d8", fill="#8884d8"
+                #             ),
+                #             rx.recharts.bar(
+                #                 data_key="neg", stroke="#82ca9d", fill="#82ca9d"
+                #             ),
+                #             rx.recharts.x_axis(data_key="name"),
+                #             rx.recharts.y_axis(),
+                #             rx.recharts.legend(),
+                #             data=data,
+                #         ),
+                #         # 새로 생성해야 함
+                #         # href="/analysis",
+                #     ),
                 # ),
+                # emotion_card(),
                 width="50%",
             ),
             rx.spacer(),
