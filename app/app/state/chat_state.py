@@ -7,17 +7,21 @@ from collections.abc import AsyncGenerator
 from openai import OpenAI
 from app.app_state import AppState
 from app.model.inference_model import InferenceModel
+from app.model.embedding_model import EmbeddingModel
 from app.model.roberta7 import Roberta
 from app.supabase_client import supabase_client
 from typing import List, Tuple, Dict
 from reflex_calendar import reformat_date
 from reflex import constants
+import random
 
 
 inference_model = InferenceModel("dummy-0.0.0")
 env = os.environ.get(constants.ENV_MODE_ENV_VAR)
 if env == constants.Env.PROD:
     inference_model = Roberta("model-0.0.1")
+
+embedding_model = EmbeddingModel("")
 
 
 class ChatState(AppState):
@@ -202,12 +206,42 @@ class ChatState(AppState):
         )
         self.is_creating = False
 
+    def _talk_to_open_ai(self, message):
+        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        response = (
+            client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": message}],
+                temperature=7e-1,
+            )
+            .choices[0]
+            .message.content
+        )
+        return response
+
+    def _talk_to_embed_db(self, message):
+        embedding = embedding_model.predict(message)
+        response = random.sample(
+            supabase_client()
+            .rpc(
+                "match_sentences",
+                {
+                    "query_embedding": str(embedding.tolist()),
+                    "match_threshold": 0.0,
+                    "match_count": 3,
+                },
+            )
+            .execute()
+            .data,
+            1,
+        )[0]["content"]
+
+        return response
+
     async def on_submit(self, form_data) -> AsyncGenerator[rx.event.EventSpec]:
         self.is_waiting = True
         yield
         question = form_data["message"]
-
-        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
         emotion = inference_model.predict(
             inference_model.padding(
@@ -227,14 +261,11 @@ class ChatState(AppState):
         )
         yield
 
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": question}],
-            temperature=7e-1,
-        )
+        response = self._talk_to_embed_db(question)
+
         self.insert_history(
             self.current_chat["id"],
-            response.choices[0].message.content,
+            response,
             is_user=False,
         )
         self.is_waiting = False
