@@ -29,10 +29,19 @@ class ChatState(AppState):
 
     db_select_date: str = datetime.today().strftime("%Y-%m-%d")
 
-    @rx.cached_var
-    def current_chat(self) -> Dict:
+    is_creating: bool
+
+    _db_chats: Dict[str, List[Dict[str, str]]] = {}
+
+    _db_messages: Dict[int, List[Tuple[str, str, str]]] = {}
+
+    @rx.var
+    def chats(self) -> List:
+        if self.db_select_date in self._db_chats:
+            return self._db_chats[self.db_select_date]
+
         if not self.token_is_valid:
-            return {}
+            return []
 
         response = (
             supabase_client()
@@ -40,18 +49,28 @@ class ChatState(AppState):
             .select("*")
             .eq("user_id", self.decodeJWT["sub"])
             .eq("date", self.db_select_date)
+            .order("id", desc=True)
             .execute()
         )
-        print("??:", response)
         if len(response.data) == 0:
-            return {}
-        return response.data[0]
-
-    @rx.cached_var
-    def current_messages(self) -> List[Tuple[str, str, str]]:
-        if not self.is_exist_chat:
             return []
-        chats = (
+        self._db_chats[self.db_select_date] = response.data
+        return self._db_chats[self.db_select_date]
+
+    @rx.var
+    def current_chat(self) -> Dict:
+        chats = self.chats
+        if len(chats) < 1:
+            return {}
+        return chats[0]
+
+    @rx.var
+    def current_messages(self) -> List[Tuple[str, str, str]]:
+        if not self.current_chat:
+            return []
+        if self.current_chat["id"] in self._db_messages:
+            return self._db_messages[self.current_chat["id"]]
+        messages = (
             supabase_client()
             .table("message")
             .select("is_user, message, emotion")
@@ -60,14 +79,15 @@ class ChatState(AppState):
             .execute()
             .data
         )
-        return [
+        self._db_messages[self.current_chat["id"]] = [
             (
                 "user" if chat_data["is_user"] else "ai",
                 chat_data["message"],
                 chat_data["emotion"],
             )
-            for chat_data in chats
+            for chat_data in messages
         ]
+        return self._db_messages[self.current_chat["id"]]
 
     @rx.var
     def is_closed(self) -> bool:
@@ -90,9 +110,9 @@ class ChatState(AppState):
     def switch_day(self, day):
         self.select_date = day
         self.db_select_date = reformat_date(day)
-        print(self.db_select_date)
 
-        self.start_new_chat()
+        if len(self.chats) == 0:
+            return self.start_new_chat()
 
     def insert_history(self, chat_id, message, is_user, emotion=None):
         (
@@ -108,28 +128,44 @@ class ChatState(AppState):
             )
             .execute()
         )
+        cache_item = ("user" if is_user else "ai", message, emotion)
+        if chat_id in self._db_messages:
+            self._db_messages[chat_id].append(cache_item)
+        else:
+            self._db_messages[chat_id] = [cache_item]
 
     def evaluate_chat(self):
-        if not self.token_is_valid:
-            yield
+        new_data = {
+            "emotion": "분노",
+            "is_closed": True,
+        }
         (
             supabase_client()
             .table("chat")
-            .update(
-                {
-                    "emotion": "분노",
-                    "is_closed": True,
-                }
-            )
+            .update(new_data)
             .eq("id", self.current_chat["id"])
             .execute()
+            .data[0]
         )
 
-    def start_new_chat(self):
-        if not self.token_is_valid:
-            return
+        def update_chat(chat):
+            if chat["id"] != self.current_chat["id"]:
+                return chat
+            return self.current_chat | new_data
 
-        self.is_waiting = True
+        self._db_chats[self.current_chat["date"]] = list(
+            map(
+                update_chat,
+                self._db_chats[self.current_chat["date"]],
+            ),
+        )
+
+    async def start_new_chat(self):
+        self.is_creating = True
+        yield
+
+        if not self.is_hydrated:
+            yield
 
         new_chat = (
             supabase_client()
@@ -143,6 +179,12 @@ class ChatState(AppState):
             .execute()
             .data[0]
         )
+
+        if self.db_select_date not in self._db_chats:
+            self._db_chats[self.db_select_date] = [new_chat]
+        else:
+            self._db_chats[self.db_select_date].insert(0, new_chat)
+
 
         _y, month, day = self.db_select_date.split("-")
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -161,7 +203,7 @@ class ChatState(AppState):
             response.choices[0].message.content,
             is_user=False,
         )
-        self.is_waiting = False
+        self.is_creating = False
 
     def set_input_message(self, msg):
         self.input_message = msg

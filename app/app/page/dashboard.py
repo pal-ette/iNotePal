@@ -1,7 +1,7 @@
 import reflex as rx
 from reflex_calendar import calendar
 from app.component.chat_input import chat_input
-from app.component.chat_history import chat_history
+from app.component.chat_history import chat_history, ai_chat_bubble
 from app.component.navbar import navbar
 from app.state.chat_state import ChatState
 from app.page.login import require_login
