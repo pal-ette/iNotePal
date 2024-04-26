@@ -21,9 +21,7 @@ if env == constants.Env.PROD:
 
 
 class ChatState(AppState):
-    is_waiting: bool
-
-    input_message: str
+    is_waiting: bool = False
 
     select_date: str = datetime.today().strftime("%a %b %d %Y")
 
@@ -185,7 +183,6 @@ class ChatState(AppState):
         else:
             self._db_chats[self.db_select_date].insert(0, new_chat)
 
-
         _y, month, day = self.db_select_date.split("-")
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         response = client.chat.completions.create(
@@ -205,14 +202,10 @@ class ChatState(AppState):
         )
         self.is_creating = False
 
-    def set_input_message(self, msg):
-        self.input_message = msg
-
     async def on_submit(self, form_data) -> AsyncGenerator[rx.event.EventSpec]:
         self.is_waiting = True
         yield
         question = form_data["message"]
-        self.input_message = ""
 
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
