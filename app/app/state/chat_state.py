@@ -13,6 +13,7 @@ from app.supabase_client import supabase_client
 from typing import List, Tuple, Dict
 from reflex_calendar import reformat_date
 from reflex import constants
+from app.util.emotion import random_emotion
 import random
 
 
@@ -138,7 +139,7 @@ class ChatState(AppState):
 
     def evaluate_chat(self):
         new_data = {
-            "emotion": "분노",
+            "emotion": random_emotion(),
             "is_closed": True,
         }
         (
