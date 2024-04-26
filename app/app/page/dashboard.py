@@ -18,6 +18,13 @@ data = [
 ]
 
 
+def build_past_card(chat):
+    return rx.button(
+        chat["id"],
+        on_click=lambda: ChatState.select_past_card(chat["id"]),
+    )
+
+
 @require_login
 def dashboard():
     return rx.flex(
@@ -60,6 +67,17 @@ def dashboard():
             ),
             rx.spacer(),
             rx.vstack(
+                rx.cond(
+                    ChatState.has_past_chats,
+                    rx.scroll_area(
+                        rx.hstack(
+                            rx.foreach(
+                                ChatState.past_chats,
+                                build_past_card,
+                            ),
+                        ),
+                    ),
+                ),
                 rx.chakra.heading(
                     ChatState.db_select_date,
                     size="xl",
@@ -68,34 +86,40 @@ def dashboard():
                     padding_bottom="2vh",
                 ),
                 rx.scroll_area(
-                    rx.vstack(
-                        rx.cond(
-                            ChatState.is_creating,
-                            rx.hstack(
-                                rx.chakra.circular_progress(
-                                    is_indeterminate=ChatState.is_creating
+                    rx.cond(
+                        ChatState.is_creating,
+                        rx.hstack(
+                            rx.chakra.circular_progress(
+                                is_indeterminate=ChatState.is_creating
+                            ),
+                            rx.text("친구가 말 거는 중.."),
+                            align="center",
+                        ),
+                        rx.vstack(
+                            chat_history(),
+                            chat_input(ChatState.is_exist_chat),
+                            rx.cond(
+                                ChatState.is_closed,
+                                rx.hstack(
+                                    rx.badge(
+                                        ChatState.chat_emotion,
+                                    ),
+                                    rx.button(
+                                        "대화 새로 시작하기",
+                                        on_click=ChatState.start_new_chat,
+                                    ),
                                 ),
-                                rx.text("친구가 말 거는 중.."),
-                                align="center",
+                                rx.button(
+                                    "대화 마치기",
+                                    on_click=ChatState.evaluate_chat,
+                                    width="100%",
+                                    variant="soft",
+                                    size="4",
+                                ),
                             ),
+                            align="center",
+                            width="100%",
                         ),
-                        chat_history(),
-                        chat_input(ChatState.is_exist_chat),
-                        rx.cond(
-                            ChatState.is_closed,
-                            rx.badge(
-                                ChatState.chat_emotion,
-                            ),
-                            rx.button(
-                                "대화 마치기",
-                                on_click=ChatState.evaluate_chat,
-                                width="100%",
-                                variant="soft",
-                                size="4",
-                            ),
-                        ),
-                        align="center",
-                        width="100%",
                     ),
                     width="100%",
                     # height="800px",
