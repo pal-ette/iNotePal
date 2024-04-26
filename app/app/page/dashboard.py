@@ -61,7 +61,6 @@ def dashboard():
             rx.spacer(),
             rx.vstack(
                 rx.chakra.heading(
-                    # ChatState에서 날짜를 바꿀때마다 self 내부 변수에서 날짜 값을 바꿔서 가지고 있어야 할것으로 보이는데, 왜 오늘날짜만 나오나.
                     ChatState.db_select_date,
                     size="xl",
                     weight="bold",
