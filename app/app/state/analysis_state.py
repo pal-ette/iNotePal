@@ -1,7 +1,7 @@
 from reflex_calendar import calendar
 
 import reflex as rx
-
+import datetime
 
 # related to calendar module
 
@@ -12,6 +12,8 @@ class aCalendar(rx.State):
     start_day: str = ""
     end_day: str = ""
     isStart: bool = True
+    date_valid_check: bool = True
+    graph_valid_check: bool = False
 
     def change_handler(self, var):
         self.selected_date = var
@@ -59,11 +61,72 @@ class aCalendar(rx.State):
 
     def setStartDay(self):
         self.start_day = self.selected_date
-        print("start_day : ", self.start_day)
+        if self.end_day != "":
+            self.compare_dates()
 
     def setEndDay(self):
         self.end_day = self.selected_date
-        print("end_day : ", self.end_day)
+        if self.start_day != "":
+            self.compare_dates()
+
+    def reset_date_valid_check(self):
+        self.date_valid_check = True
+
+    def reset_graph_valid_check(self):
+        self.graph_valid_check = False
+
+    # def get_date_input(year, month, day):
+    #     return datetime.date(year, month, day)
+
+    def compare_dates(self):
+        start_day_list = self.start_day.split()
+        end_day_list = self.end_day.split()
+
+        year_s, month_s, day_s = (
+            int(start_day_list[3]),
+            month_to_number(start_day_list[1]),
+            int(start_day_list[2]),
+        )
+        year_e, month_e, day_e = (
+            int(end_day_list[3]),
+            month_to_number(end_day_list[1]),
+            int(end_day_list[2]),
+        )
+
+        start_date_c = datetime.date(year_s, month_s, day_s)
+        end_date_c = datetime.date(year_e, month_e, day_e)
+
+        if end_date_c < start_date_c:
+            self.date_valid_check = False
+            self.graph_valid_check = False
+
+            print("종료 날짜가 시작 날짜보다 앞섭니다. 다시 입력하세요.")
+            self.start_day = ""
+            self.end_day = ""
+        else:
+            self.graph_valid_check = True
+
+
+def month_to_number(month_name):
+    months = {
+        "Jan": 1,
+        "Feb": 2,
+        "Mar": 3,
+        "Apr": 4,
+        "May": 5,
+        "Jun": 6,
+        "Jul": 7,
+        "Aug": 8,
+        "Sep": 9,
+        "Oct": 10,
+        "Nov": 11,
+        "Dec": 12,
+    }
+    return months[month_name]
+
+
+# 함수 호출
+# compare_dates()
 
 
 def logs():
@@ -107,20 +170,63 @@ def demo():
     )
 
 
-# def setStartDay(self):
-#     if isStart:
-#         self.start_day = self.selected_data
-#         print(f"start day: {self.start_day} ")
-#     else:
-#         self.end_day =  self.selected_data
-#         print(f"start day: {self.start_day} ")
+data2 = [
+    {
+        "emotion": "기쁨",
+        "count": 120,
+    },
+    {
+        "emotion": "놀람",
+        "count": 98,
+    },
+    {
+        "emotion": "분노",
+        "count": 86,
+    },
+    {
+        "emotion": "슬픔",
+        "count": 99,
+    },
+    {
+        "emotion": "중립",
+        "count": 85,
+    },
+    {
+        "emotion": "혐오",
+        "count": 65,
+    },
+    {
+        "emotion": "공포",
+        "count": 65,
+    },
+]
+
+# 공포 기쁨 놀람 분노 슬픔 중립 혐오
+data_funnel = [
+    {"value": 100, "enotion": "공포", "fill": "#8884d8"},
+    {"value": 80, "name": "기쁨", "fill": "#83a6ed"},
+    {"value": 50, "name": "놀람", "fill": "#8dd1e1"},
+    {"value": 40, "name": "분노", "fill": "#82ca9d"},
+    {"value": 26, "name": "슬픔", "fill": "#a4de6c"},
+    {"value": 40, "name": "중립", "fill": "#82ca9d"},
+    {"value": 26, "name": "혐오", "fill": "#a4de6c"},
+]
 
 
-# def setEndDay(self):
-#     self.end_day = self.selected_data
-#     print("end day: ", self.end_day)
+class chart(rx.State):
+    radar_chart_check: bool = False
+    funnel_chart_check: bool = False
+    bar_chart_check: bool = False
+    line_chart_check: bool = False
 
+    def radar_chart_status(self):
+        self.radar_chart_check = not (self.radar_chart_check)
 
-# @rx.var
-# def isStart(self) -> bool:
-#     return True
+    def funnel_chart_status(self):
+        self.funnel_chart_check = not (self.funnel_chart_check)
+
+    def bar_chart_status(self):
+        self.bar_chart_check = not (self.bar_chart_check)
+
+    def line_chart_status(self):
+        self.line_chart_check = not (self.line_chart_check)

@@ -17,7 +17,7 @@ def login_page() -> rx.Component:
         rx.fragment(
             rx.chakra.flex(
                 rx.chakra.heading(
-                    "Pal-ette", as_="h1", size="4xl", weight="bold", align="left"
+                    "iNotePal", as_="h1", size="4xl", weight="bold", align="left"
                 ),
                 padding_bottom="10vh",
             ),
