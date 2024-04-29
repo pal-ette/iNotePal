@@ -278,9 +278,7 @@ class ChatState(AppState):
         emotion = inference_model.predict(
             inference_model.padding(
                 inference_model.tokenize(
-                    [
-                        question,
-                    ],
+                    question,
                 ),
             ),
         )

@@ -26,7 +26,7 @@ class Ryugibo(InferenceModel):
         )["seq_length"]
 
     def tokenize(self, string):
-        return self.tokenizer.texts_to_sequences(string)
+        return self.tokenizer.texts_to_sequences([string])
 
     def padding(self, tokenzied_string):
         return pad_sequences(
