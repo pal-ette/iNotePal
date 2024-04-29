@@ -19,7 +19,7 @@ class Roberta(InferenceModel):
 
         roberta_model = AutoModelForSequenceClassification.from_pretrained(
             self.model_name,
-            num_labels=7,
+            num_labels=768,
         )
 
         roberta_model = roberta_model.to(self.device)
