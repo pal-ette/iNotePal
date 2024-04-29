@@ -61,7 +61,7 @@ def dashboard():
                 #         # href="/analysis",
                 #     ),
                 # ),
-                # emotion_card(),
+                emotion_card(),
                 width="50%",
             ),
             rx.spacer(),
