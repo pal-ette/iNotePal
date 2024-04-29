@@ -1,13 +1,8 @@
 import reflex as rx
-from datetime import datetime
 from collections import Counter
-from typing import List, Tuple, Dict
+from typing import List, Tuple
 
-from app.component.chat_input import chat_input
-from app.component.chat_history import chat_history
-from app.component.navbar import navbar
 from app.state.chat_state import ChatState
-from app.page.login import require_login
 
 # ['공포' '기쁨' '놀람' '분노' '슬픔' '중립' '혐오']
 
@@ -36,7 +31,7 @@ class EmotionState(ChatState):
 
         num_chat = len(emotions_of_the_day)
 
-        # height = str(int(100 / ((num_chat // 3) + 1))) + "%"
+        height = str(int(100 / ((num_chat // 3) + 1))) + "%"
         width = (
             str(100 if num_chat == 1 else 32 if num_chat == 3 or num_chat > 4 else 49)
             + "%"
@@ -60,7 +55,7 @@ class EmotionState(ChatState):
                 # print("bg_colors", bg_colors)
                 bg_colors = bg_colors[:-2] + ")"
 
-                box_params.append((bg_colors, width))
+                box_params.append((bg_colors, width, height))
 
         return box_params
 
@@ -71,7 +66,7 @@ def create_box(params):
         background=params[0],
         border_radius="10px",
         width=params[1],
-        height="10vh",
+        height=params[2],
     )
 
 
@@ -84,3 +79,16 @@ def emotion_card() -> rx.Component:
         height="30vh",
         flex_wrap="wrap",
     )
+
+
+def create_color_legend(color):
+
+    return rx.hstack(
+        rx.chakra.text("●", color=color[1], font_size="1em"),
+        rx.chakra.text(color[0], font_size="1em"),
+    )
+
+
+def show_emotion_colors() -> rx.Component:
+
+    return rx.hstack(rx.foreach(EmotionState.colors, create_color_legend))

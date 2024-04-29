@@ -1,6 +1,12 @@
 import reflex as rx
 from app.app_state import AppState
 
+# from app.component.sidebar import sidebar
+
+from app.state.chat_state import ChatState
+from reflex_calendar import calendar
+from app.component.emotion_card import emotion_card, show_emotion_colors
+
 
 def navbar() -> rx.Component:
     return rx.fragment(
@@ -12,6 +18,8 @@ def navbar() -> rx.Component:
                     as_="h1",
                     size="4xl",
                     weight="bold",
+                    bgGradient="linear(to-l, #f2ebc8, #de776c, #49312d)",
+                    bgClip="text",
                 ),
                 rx.link(
                     rx.text(
@@ -63,6 +71,54 @@ def navbar() -> rx.Component:
                             ),
                         ),
                         display=["flex", "flex", "flex", "flex", "flex", "flex"],
+                    ),
+                    rx.drawer.root(
+                        rx.drawer.trigger(rx.chakra.button(rx.icon("align-justify"))),
+                        rx.drawer.overlay(z_index="5"),
+                        rx.drawer.portal(
+                            rx.drawer.content(
+                                rx.vstack(
+                                    rx.chakra.heading(
+                                        "iNotePal",
+                                        as_="h1",
+                                        size="4xl",
+                                        weight="bold",
+                                    ),
+                                    rx.chakra.divider(border_color="black"),
+                                    rx.spacer(),
+                                    rx.chakra.text(
+                                        "Calendar",
+                                        as_="i",
+                                        font_size="2em",
+                                        weight="bold",
+                                    ),
+                                    calendar(
+                                        locale="ko-KR",
+                                        width="100%",
+                                        on_change=ChatState.switch_day,
+                                        value=ChatState.select_date,
+                                    ),
+                                    rx.spacer(),
+                                    rx.chakra.text(
+                                        ChatState.select_date[4:],
+                                        as_="i",
+                                        font_size="2em",
+                                        weight="bold",
+                                    ),
+                                    show_emotion_colors(),
+                                    emotion_card(),
+                                ),
+                                top="auto",
+                                right="auto",
+                                height="100%",
+                                width="52%",
+                                padding="1em",
+                                background_color="#FFF",
+                                # background_color=rx.color("green", 3)
+                            )
+                        ),
+                        direction="left",
+                        spacing="1",
                     ),
                     spacing="3",
                     align_items="center",

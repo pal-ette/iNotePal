@@ -6,9 +6,6 @@ from app.component.navbar import navbar
 from app.state.chat_state import ChatState
 from app.page.login import require_login
 
-
-from app.component.emotion_card import emotion_card
-
 # 그래프 그리기 위한 임시 데이터.
 data = [
     {"name": "4/1", "pos": 4, "neg": 6, "neu": 0},
@@ -22,9 +19,11 @@ data = [
 
 
 def build_past_card(chat):
-    return rx.button(
+    return rx.chakra.button(
         chat["id"],
         on_click=lambda: ChatState.select_past_card(chat["id"]),
+        bg="#f2ebc8",
+        color="#49312d",
     )
 
 
@@ -36,34 +35,7 @@ def dashboard():
             margin_top="120px",
         ),
         rx.hstack(
-            rx.vstack(
-                calendar(
-                    locale="ko-KR",
-                    width="100%",
-                    on_change=ChatState.switch_day,
-                    value=ChatState.select_date,
-                ),
-                # rx.flex(
-                #     rx.link(
-                #         rx.recharts.bar_chart(
-                #             rx.recharts.bar(
-                #                 data_key="pos", stroke="#8884d8", fill="#8884d8"
-                #             ),
-                #             rx.recharts.bar(
-                #                 data_key="neg", stroke="#82ca9d", fill="#82ca9d"
-                #             ),
-                #             rx.recharts.x_axis(data_key="name"),
-                #             rx.recharts.y_axis(),
-                #             rx.recharts.legend(),
-                #             data=data,
-                #         ),
-                #         # 새로 생성해야 함
-                #         # href="/analysis",
-                #     ),
-                # ),
-                emotion_card(),
-                width="50%",
-            ),
+            rx.container(margin_left="120px"),
             rx.spacer(),
             rx.vstack(
                 rx.cond(
@@ -100,20 +72,29 @@ def dashboard():
                             rx.cond(
                                 ChatState.is_closed,
                                 rx.hstack(
-                                    rx.badge(
+                                    rx.chakra.badge(
                                         ChatState.chat_emotion,
+                                        variant="subtle",
+                                        color_scheme="red",
                                     ),
-                                    rx.button(
+                                    rx.chakra.button(
                                         "대화 새로 시작하기",
                                         on_click=ChatState.start_new_chat,
+                                        size="sm",
+                                        bg="#ebb9b0",
+                                        color="#49312d",
+                                        border_radius="md",
                                     ),
                                 ),
-                                rx.button(
+                                rx.chakra.button(
                                     "대화 마치기",
                                     on_click=ChatState.evaluate_chat,
-                                    width="100%",
-                                    variant="soft",
-                                    size="4",
+                                    # width="100%",
+                                    # variant="solid",
+                                    size="sm",
+                                    bg="#ebb9b0",
+                                    color="#49312d",
+                                    border_radius="md",
                                 ),
                             ),
                             align="center",
@@ -126,12 +107,14 @@ def dashboard():
                 height="100%",
                 width="50%",
             ),
+            rx.spacer(),
+            rx.container(margin_right="120px"),
             height="100%",
             margin="10px",
         ),
         rx.box(flex_grow=1),
         # footer(),
-        align_items="center",
+        # align_items="center",
         justify_content="start",
         width="100%",
         height="100%",
