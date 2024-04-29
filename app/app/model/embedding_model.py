@@ -19,16 +19,14 @@ class EmbeddingModel(InferenceModel):
         self.input_queue = mp.Queue()
         self.output_queue = mp.Queue()
 
-        self.input_queue = mp.Queue()
-        self.output_queue = mp.Queue()
-
         cuda_process = mp.Process(
             target=cuda_worker,
             args=(
                 self.input_queue,
                 self.output_queue,
             ),
-        ).start()
+        )
+        cuda_process.start()
 
     def tokenize(self, string):
         return string

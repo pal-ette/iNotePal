@@ -114,7 +114,8 @@ class Roberta(InferenceModel):
                 self.input_queue,
                 self.output_queue,
             ),
-        ).start()
+        )
+        cuda_process.start()
 
     def tokenize(self, string):
         return string
