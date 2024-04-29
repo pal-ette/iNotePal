@@ -10,6 +10,7 @@ class RobertaClassifier(nn.Module):
     def __init__(self, base_model, num_classes, dr_rate, hidden_size):
         super().__init__()
 
+        self.hidden_size = hidden_size
         self.roberta = base_model.roberta
         self.lstm = nn.LSTM(hidden_size, hidden_size, batch_first=True)
         self.roberta_classifier = base_model.classifier
