@@ -14,7 +14,7 @@ def navbar() -> rx.Component:
             # banner(),
             rx.flex(
                 rx.chakra.heading(
-                    "Pal-ette",
+                    "iNotePal",
                     as_="h1",
                     size="4xl",
                     weight="bold",
@@ -24,13 +24,6 @@ def navbar() -> rx.Component:
                 rx.link(
                     rx.text(
                         "Home",
-                        color_scheme="gray",
-                    ),
-                    href="/",
-                ),
-                rx.link(
-                    rx.text(
-                        "History",
                         color_scheme="gray",
                     ),
                     href="/",
