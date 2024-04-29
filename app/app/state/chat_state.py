@@ -8,7 +8,7 @@ from openai import OpenAI
 from app.app_state import AppState
 from app.model.inference_model import InferenceModel
 from app.model.embedding_model import EmbeddingModel
-from app.model.roberta7 import Roberta
+from app.model.roberta_large import RobertaLarge
 from app.supabase_client import supabase_client
 from typing import List, Tuple, Dict
 from reflex_calendar import reformat_date
@@ -20,7 +20,7 @@ import random
 inference_model = InferenceModel("dummy-0.0.0")
 env = os.environ.get(constants.ENV_MODE_ENV_VAR)
 if env == constants.Env.PROD:
-    inference_model = Roberta("model-0.0.1")
+    inference_model = RobertaLarge("model-0.0.2")
 
 embedding_model = EmbeddingModel("")
 

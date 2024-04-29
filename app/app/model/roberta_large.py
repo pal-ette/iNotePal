@@ -5,7 +5,7 @@ from collections import OrderedDict
 from .inference_model import InferenceModel
 
 
-class Roberta(InferenceModel):
+class RobertaLarge(InferenceModel):
 
     def __init__(self, version) -> None:
         super().__init__(version)
@@ -19,7 +19,7 @@ class Roberta(InferenceModel):
 
         roberta_model = AutoModelForSequenceClassification.from_pretrained(
             self.model_name,
-            num_labels=768,
+            num_labels=7,
         )
 
         roberta_model = roberta_model.to(self.device)
