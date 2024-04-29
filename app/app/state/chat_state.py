@@ -8,7 +8,7 @@ from openai import OpenAI
 from app.app_state import AppState
 from app.model.inference_model import InferenceModel
 from app.model.embedding_model import EmbeddingModel
-from app.model.roberta_large import RobertaLarge
+from app.app.model.roberta import Roberta
 from app.supabase_client import supabase_client
 from typing import List, Tuple, Dict
 from reflex_calendar import reformat_date
