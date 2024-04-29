@@ -20,7 +20,7 @@ import random
 inference_model = InferenceModel("dummy-0.0.0")
 env = os.environ.get(constants.ENV_MODE_ENV_VAR)
 if env == constants.Env.PROD:
-    inference_model = RobertaLarge("model-0.0.2")
+    inference_model = Roberta("model-0.0.2")
 
 embedding_model = EmbeddingModel("")
 
@@ -69,6 +69,14 @@ class ChatState(AppState):
         ]
 
     @rx.var
+    def past_messages(self) -> List[Tuple[str, str, str]]:
+        return [
+            self.get_messages(chat["id"])
+            for i, chat in enumerate(self.chats)
+            if chat["is_closed"]
+        ]
+
+    @rx.var
     def has_past_chats(self) -> bool:
         return len(self.past_chats) > 0
 
@@ -83,26 +91,7 @@ class ChatState(AppState):
     def current_messages(self) -> List[Tuple[str, str, str]]:
         if not self.current_chat:
             return []
-        if self.current_chat["id"] in self._db_messages:
-            return self._db_messages[self.current_chat["id"]]
-        messages = (
-            supabase_client()
-            .table("message")
-            .select("is_user, message, emotion")
-            .eq("chat_id", self.current_chat["id"])
-            .order("created_at,id", desc=False)
-            .execute()
-            .data
-        )
-        self._db_messages[self.current_chat["id"]] = [
-            (
-                "user" if chat_data["is_user"] else "ai",
-                chat_data["message"],
-                chat_data["emotion"],
-            )
-            for chat_data in messages
-        ]
-        return self._db_messages[self.current_chat["id"]]
+        return self.get_messages(self.current_chat["id"])
 
     @rx.var
     def is_closed(self) -> bool:
@@ -120,6 +109,29 @@ class ChatState(AppState):
             return False
 
         return self.current_chat["emotion"]
+
+    def get_messages(self, chat_id):
+        if chat_id in self._db_messages:
+            # print("get_messages", self._db_messages[chat_id])
+            return self._db_messages[chat_id]
+        messages = (
+            supabase_client()
+            .table("message")
+            .select("is_user, message, emotion")
+            .eq("chat_id", chat_id)
+            .order("created_at,id", desc=False)
+            .execute()
+            .data
+        )
+        self._db_messages[chat_id] = [
+            (
+                "user" if chat_data["is_user"] else "ai",
+                chat_data["message"],
+                chat_data["emotion"],
+            )
+            for chat_data in messages
+        ]
+        return self._db_messages[chat_id]
 
     def select_past_card(self, chat_id):
         for i, chat in enumerate(self.chats):
