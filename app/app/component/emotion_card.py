@@ -20,7 +20,7 @@ class EmotionState(ChatState):
         "공포": "#af625c",
         "슬픔": "#de776c",
         "중립": "#e5988e",
-        "당황": "#ebb9b0",
+        "놀람": "#ebb9b0",
         "기쁨": "#f2ebc8",
     }
 
@@ -31,14 +31,14 @@ class EmotionState(ChatState):
         box_params = []
 
         emotions_of_the_day = [
-            [c[2] for c in chats if c[0] == "user"] for chats in past_chats
+            [c[2] for c in chats if c[0] == "user"] for chats in past_chats[::-1]
         ]
 
         num_chat = len(emotions_of_the_day)
 
-        height = str(int(100 / ((num_chat // 3) + 1))) + "%"
+        # height = str(int(100 / ((num_chat // 3) + 1))) + "%"
         width = (
-            str(100 if num_chat == 1 else 33 if num_chat == 3 or num_chat > 4 else 50)
+            str(100 if num_chat == 1 else 32 if num_chat == 3 or num_chat > 4 else 49)
             + "%"
         )
 
@@ -58,11 +58,9 @@ class EmotionState(ChatState):
                     ratio += round((emotion_count[k] / base) * 100)
 
                 # print("bg_colors", bg_colors)
-                bg_colors = bg_colors[:-6] + ")"
+                bg_colors = bg_colors[:-2] + ")"
 
-                box_params.append((bg_colors, width, height))
-
-        print(box_params)
+                box_params.append((bg_colors, width))
 
         return box_params
 
@@ -73,7 +71,7 @@ def create_box(params):
         background=params[0],
         border_radius="10px",
         width=params[1],
-        height=params[2],
+        height="10vh",
     )
 
 
@@ -83,5 +81,6 @@ def emotion_card() -> rx.Component:
         rx.foreach(EmotionState.get_box_params, create_box),
         spacing="2",
         width="100%",
-        height="20vh",
+        height="30vh",
+        flex_wrap="wrap",
     )
