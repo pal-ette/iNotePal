@@ -42,7 +42,7 @@ def navbar() -> rx.Component:
                 rx.flex(
                     # search_bar(),
                     # github(),
-                    rx.box(
+                    rx.flex(
                         rx.chakra.popover(
                             rx.chakra.popover_trigger(
                                 rx.chakra.button(rx.icon("user"))
@@ -63,7 +63,6 @@ def navbar() -> rx.Component:
                                 rx.chakra.popover_close_button(),
                             ),
                         ),
-                        display=["flex", "flex", "flex", "flex", "flex", "flex"],
                     ),
                     rx.drawer.root(
                         rx.drawer.trigger(rx.chakra.button(rx.icon("align-justify"))),
