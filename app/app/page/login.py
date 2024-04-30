@@ -109,6 +109,16 @@ def login_page() -> rx.Component:
                                 on_submit=ResetPasswordState.request_reset_password,
                             ),
                             rx.cond(
+                                ResetPasswordState.error_message != "",
+                                rx.chakra.alert(
+                                    rx.chakra.alert_icon(),
+                                    rx.chakra.alert_title(
+                                        ResetPasswordState.error_message
+                                    ),
+                                    status="error",
+                                ),
+                            ),
+                            rx.cond(
                                 ResetPasswordState.is_requested,
                                 rx.chakra.alert(
                                     rx.chakra.alert_icon(),
