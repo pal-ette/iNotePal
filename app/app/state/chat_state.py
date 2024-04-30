@@ -112,6 +112,19 @@ class ChatState(AppState):
 
         return self.current_chat["emotion"]
 
+    def get_chats_in_period(self, start_day, end_day):
+        return (
+            supabase_client()
+            .table("chat")
+            .select("*, message(*)")
+            .eq("user_id", self.decodeJWT["sub"])
+            .gte("date", start_day)
+            .lte("date", end_day)
+            .order("id", desc=True)
+            .execute()
+            .data
+        )
+
     def get_messages(self, chat_id):
         if chat_id in self._db_messages:
             # print("get_messages", self._db_messages[chat_id])
