@@ -48,14 +48,21 @@ def login_page() -> rx.Component:
                 direction="column",
                 padding_bottom="2vh",
             ),
-            rx.chakra.flex(
+            rx.chakra.hstack(
                 rx.chakra.button(
                     "Login",
                     type_="submit",
                     is_loading=LoginState.is_loading,
                     size="lg",
                     variant="outline",
-                )
+                ),
+                rx.chakra.button(
+                    rx.hstack(
+                        rx.icon("github"),
+                        rx.text("Login with Github"),
+                    ),
+                    on_click=LoginState.login_with_github,
+                ),
             ),
         ),
         width="100%",
