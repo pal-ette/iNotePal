@@ -2,10 +2,11 @@ from reflex_calendar import calendar
 
 import reflex as rx
 import datetime
+from app.state.chat_state import ChatState
+from typing import List, Dict
+
 
 # related to calendar module
-
-
 class aCalendar(rx.State):
     selected_date: str = ""
     logs: list[str] = []
@@ -75,9 +76,6 @@ class aCalendar(rx.State):
     def reset_graph_valid_check(self):
         self.graph_valid_check = False
 
-    # def get_date_input(year, month, day):
-    #     return datetime.date(year, month, day)
-
     def compare_dates(self):
         start_day_list = self.start_day.split()
         end_day_list = self.end_day.split()
@@ -125,10 +123,6 @@ def month_to_number(month_name):
     return months[month_name]
 
 
-# 함수 호출
-# compare_dates()
-
-
 def logs():
     return rx.vstack(
         rx.heading("Logs", size="6"),
@@ -149,7 +143,7 @@ def logs():
 
 def demo():
     return rx.vstack(
-        rx.heading("Calendar Demo", size="6"),
+        # rx.heading("Calendar Demo", size="6"),
         # rx.moment(Calendar.selected_date),
         calendar(
             go_to_range_start_on_select=True,
@@ -170,49 +164,6 @@ def demo():
     )
 
 
-data2 = [
-    {
-        "emotion": "기쁨",
-        "count": 120,
-    },
-    {
-        "emotion": "놀람",
-        "count": 98,
-    },
-    {
-        "emotion": "분노",
-        "count": 86,
-    },
-    {
-        "emotion": "슬픔",
-        "count": 99,
-    },
-    {
-        "emotion": "중립",
-        "count": 85,
-    },
-    {
-        "emotion": "혐오",
-        "count": 65,
-    },
-    {
-        "emotion": "공포",
-        "count": 65,
-    },
-]
-
-# 공포 기쁨 놀람 분노 슬픔 중립 혐오
-data_funnel = [
-    {"value": 100, "enotion": "공포", "fill": "#8884d8"},
-    {"value": 80, "name": "기쁨", "fill": "#83a6ed"},
-    {"value": 50, "name": "놀람", "fill": "#8dd1e1"},
-    {"value": 40, "name": "분노", "fill": "#82ca9d"},
-    {"value": 26, "name": "슬픔", "fill": "#a4de6c"},
-    {"value": 40, "name": "중립", "fill": "#82ca9d"},
-    {"value": 26, "name": "혐오", "fill": "#a4de6c"},
-]
-
-
 class chart(rx.State):
     radar_chart_check: bool = False
     funnel_chart_check: bool = False
@@ -230,3 +181,84 @@ class chart(rx.State):
 
     def line_chart_status(self):
         self.line_chart_check = not (self.line_chart_check)
+
+
+class getData(ChatState):
+
+    data_radar_check: bool = True
+    data_funnel_check: bool = True
+    data_bar_check: bool = True
+    data_line_check: bool = True
+    emotion_counts_check: bool = True
+
+    emotions_list: list[str] = []
+    emotion_counts = {}
+    data_emotion_frequency: List[Dict[str, int]] = []
+    data_funnel: List[Dict[int, str]] = []
+
+    def set_emotion_counts_state(self):
+        self.emotion_counts_check = False
+        print("emotion_counts_state->False")
+
+    def set_data_funnel_state(self):
+        self.data_funnel_check = False
+
+    def data_bar_state(self):
+        self.data_bar_check = False
+
+    def data_line_state(self):
+        self.data_line_check = False
+
+    def getDataDay(self):
+        past_chats = self.past_messages
+
+        self.emotions_list = [
+            [c[2] for c in chats if c[0] == "user"] for chats in past_chats[::-1]
+        ]
+        yield
+
+    def emotion_count_day(self):
+
+        if self.emotion_counts_check:
+            for sublist in self.emotions_list:
+                for emotion in sublist:
+                    if emotion in self.emotion_counts:
+                        self.emotion_counts[emotion] += 1
+                    else:
+                        self.emotion_counts[emotion] = 1
+
+            self.data_emotion_frequency = [
+                {"emotion": emotion, "count": count}
+                for emotion, count in self.emotion_counts.items()
+            ]
+            print(self.data_emotion_frequency)
+            self.set_emotion_counts_state()
+
+    def getDataFunnels(self):
+
+        fill_mapping = {
+            "혐오": "#49312d",
+            "분노": "#91615a",
+            "공포": "#af625c",
+            "슬픔": "#de776c",
+            "중립": "#e5988e",
+            "놀람": "#ebb9b0",
+            "기쁨": "#f2ebc8",
+        }
+        if self.emotion_counts_check:
+            self.emotion_count_day()
+
+        if self.data_funnel_check:
+            for emotion, count in self.emotion_counts.items():
+                if emotion in fill_mapping:
+                    new_dict = {
+                        "emotion": emotion,
+                        "count": count,
+                        "fill": fill_mapping[emotion],
+                    }
+                    self.data_funnel.append(new_dict)
+
+            self.data_funnel = sorted(
+                self.data_funnel, key=lambda x: x["count"], reverse=True
+            )
+            self.set_data_funnel_state()

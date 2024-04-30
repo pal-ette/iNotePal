@@ -115,77 +115,6 @@ dummy2 = [
     },
 ]
 
-# 그래프 확인용 연동 데이터
-data = [
-    {
-        "emotion": "기쁨",
-        "count": 120,
-        "fullMark": 150,
-    },
-    {
-        "emotion": "놀람",
-        "count": 98,
-        "fullMark": 150,
-    },
-    {
-        "emotion": "분노",
-        "count": 86,
-        "fullMark": 150,
-    },
-    {
-        "emotion": "슬픔",
-        "count": 99,
-        "fullMark": 150,
-    },
-    {
-        "emotion": "중립",
-        "count": 85,
-        "fullMark": 150,
-    },
-    {
-        "emotion": "혐오",
-        "count": 65,
-        "fullMark": 150,
-    },
-    {
-        "emotion": "공포",
-        "count": 65,
-        "fullMark": 150,
-    },
-]
-
-
-data2 = [
-    {
-        "emotion": "기쁨",
-        "count": 120,
-    },
-    {
-        "emotion": "놀람",
-        "count": 98,
-    },
-    {
-        "emotion": "분노",
-        "count": 86,
-    },
-    {
-        "emotion": "슬픔",
-        "count": 99,
-    },
-    {
-        "emotion": "중립",
-        "count": 85,
-    },
-    {
-        "emotion": "혐오",
-        "count": 65,
-    },
-    {
-        "emotion": "공포",
-        "count": 65,
-    },
-]
-
 data3 = [
     {
         "date": "0410",
@@ -230,7 +159,10 @@ def analysis_page() -> rx.Component:
         strategy="fixed",
         return_focus_on_close=True,
         match_width=True,
-        on_close=analysis_state.aCalendar.setStartDay,
+        on_close=[
+            analysis_state.aCalendar.setStartDay,
+            analysis_state.getData.getDataDay,
+        ],
     )
 
     end_calendar_form = rx.chakra.popover(
@@ -246,7 +178,10 @@ def analysis_page() -> rx.Component:
         strategy="fixed",
         return_focus_on_close=True,
         match_width=True,
-        on_close=analysis_state.aCalendar.setEndDay,
+        on_close=[
+            analysis_state.aCalendar.setEndDay,
+            analysis_state.getData.getDataDay,
+        ],
     )
 
     show_buttons_form = rx.chakra.button_group(
@@ -255,10 +190,17 @@ def analysis_page() -> rx.Component:
             # is_loading=True,
             # loading_text="Loading...",
             # spinner_placement="start",
-            on_click=analysis_state.chart.radar_chart_status,
+            on_click=[
+                analysis_state.chart.radar_chart_status,
+                analysis_state.getData.emotion_count_day,
+            ],
         ),
         rx.chakra.button(
-            "Funnel chart", on_click=analysis_state.chart.funnel_chart_status
+            "Funnel chart",
+            on_click=[
+                analysis_state.chart.funnel_chart_status,
+                analysis_state.getData.getDataFunnels,
+            ],
         ),
         rx.chakra.button("Bar chart", on_click=analysis_state.chart.bar_chart_status),
         rx.chakra.button("Line chart", on_click=analysis_state.chart.line_chart_status),
@@ -325,21 +267,24 @@ def analysis_page() -> rx.Component:
                         rx.cond(
                             analysis_state.chart.radar_chart_check,
                             rx.vstack(
-                                rx.heading("당신의 감정", size="4"),
+                                rx.heading("위 기간동안 당신의 감정상태는", size="4"),
                                 rx.recharts.radar_chart(
                                     rx.recharts.radar(
                                         data_key="count",
                                         stroke="#8884d8",
                                         fill="#8884d8",
+                                        # linear(to-l, #f2ebc8, #de776c, #49312d)",
                                     ),
                                     rx.recharts.polar_grid(),
                                     rx.recharts.polar_angle_axis(data_key="emotion"),
-                                    data=data2,
+                                    rx.recharts.graphing_tooltip(),
+                                    data=analysis_state.getData.data_emotion_frequency,
                                     width="100%",
                                     height=400,
                                 ),
                                 align="center",
                                 width="100%",
+                                margin_top="10px",
                             ),
                         ),
                         rx.cond(
@@ -352,16 +297,16 @@ def analysis_page() -> rx.Component:
                                 rx.recharts.funnel(
                                     rx.recharts.label_list(
                                         position="right",
-                                        data_key="name",
+                                        data_key="emotion",
                                         fill="#000",
                                         stroke="none",
                                     ),
-                                    data_key="value",
-                                    data=analysis_state.data_funnel,
+                                    data_key="count",
+                                    data=analysis_state.getData.data_funnel,
                                 ),
                                 rx.recharts.graphing_tooltip(),
-                                width=1000,
-                                height=250,
+                                width=500,
+                                height=400,
                             ),
                         ),
                         rx.cond(

@@ -10,7 +10,8 @@ from app.app_state import AppState
 from app.page.registration import registration_page
 from app.page.login import login_page
 from app.page.dashboard import dashboard
-from app.routes import LOGIN_ROUTE, REGISTER_ROUTE
+from app.page.analysis import analysis_page
+from app.routes import LOGIN_ROUTE, REGISTER_ROUTE, ANALYSIS_ROUTE
 import app.page.calendar
 
 # 외부 정의 DB 모델
@@ -22,3 +23,4 @@ app = rx.App()
 app.add_page(dashboard, route="/", on_load=AppState.check_login)
 app.add_page(registration_page, route=REGISTER_ROUTE)
 app.add_page(login_page, route=LOGIN_ROUTE)
+app.add_page(analysis_page, route=ANALYSIS_ROUTE)
