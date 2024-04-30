@@ -178,8 +178,12 @@ def require_login(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
                     LoginState.token_is_valid,
                     page(),
                 ),
-                rx.chakra.center(
+                rx.chakra.flex(
                     rx.chakra.spinner(),
+                    height="100vh",
+                    weight="100vw",
+                    align="center",
+                    justify="center",
                 ),
             )
         )
