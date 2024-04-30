@@ -26,11 +26,29 @@ def login_page() -> rx.Component:
                 padding_bottom="2vh",
             ),
             rx.chakra.flex(
-                rx.chakra.text(
-                    "Email Address", size="md", weight="medium", align="left"
+                rx.chakra.form_label(
+                    rx.chakra.text(
+                        "Email Address",
+                        size="md",
+                        weight="medium",
+                        align="left",
+                    ),
+                    html_for="email",
                 ),
-                rx.chakra.input(placeholder="email", id="email", type_="email"),
-                rx.chakra.text("Password", size="md", weight="bold", align="left"),
+                rx.chakra.input(
+                    placeholder="email",
+                    id="email",
+                    type_="email",
+                ),
+                rx.chakra.form_label(
+                    rx.chakra.text(
+                        "Password",
+                        size="md",
+                        weight="bold",
+                        align="left",
+                    ),
+                    html_for="password",
+                ),
                 rx.chakra.password(placeholder="password", id="password"),
                 direction="column",
                 padding_bottom="2vh",
