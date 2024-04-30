@@ -365,12 +365,12 @@ def index() -> rx.Component:
             calendar_grid,
         ),
         # task section
-        rx.hstack(
-            rx.foreach(
-                State.task_list,
-                task_row,
-            ),
-            padding="2rem 0rem",
-            spacing="4",
-        ),
+        # rx.hstack(
+        #     rx.foreach(
+        #         State.task_list,
+        #         task_row,
+        #     ),
+        #     padding="2rem 0rem",
+        #     spacing="4",
+        # ),
     )
