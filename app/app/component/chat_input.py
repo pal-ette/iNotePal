@@ -26,6 +26,7 @@ def chat_input(can_input: bool) -> rx.Component:
             width="100%",
         ),
         on_submit=ChatState.on_submit,
+        on_mount=ChatState.on_mount,
         reset_on_submit=True,
         width="100%",
     )

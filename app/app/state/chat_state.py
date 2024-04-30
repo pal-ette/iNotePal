@@ -274,6 +274,16 @@ class ChatState(AppState):
 
         return response
 
+    def on_mount(self):
+        if not self.is_hydrated:
+            return
+
+        if self.is_exist_chat:
+            return
+
+        if len(self.chats) == 0:
+            return self.start_new_chat()
+
     async def on_submit(self, form_data) -> AsyncGenerator[rx.event.EventSpec]:
         self.is_waiting = True
         yield
