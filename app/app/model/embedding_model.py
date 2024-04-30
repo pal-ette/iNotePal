@@ -16,15 +16,17 @@ def cuda_worker(input, output):
 class EmbeddingModel(InferenceModel):
 
     def __init__(self, version) -> None:
-        self.input_queue = mp.Queue()
-        self.output_queue = mp.Queue()
+        ctx = mp.get_context("spawn")
+        self.input_queue = ctx.Queue()
+        self.output_queue = ctx.Queue()
 
-        mp.Process(
+        ctx.Process(
             target=cuda_worker,
             args=(
                 self.input_queue,
                 self.output_queue,
             ),
+            daemon=True,
         ).start()
 
     def __del__(self):
