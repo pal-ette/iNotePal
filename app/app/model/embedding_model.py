@@ -26,6 +26,7 @@ class EmbeddingModel(InferenceModel):
                 self.input_queue,
                 self.output_queue,
             ),
+            daemon=True,
         ).start()
 
     def __del__(self):
