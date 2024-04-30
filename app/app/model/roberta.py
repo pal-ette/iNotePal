@@ -106,16 +106,17 @@ class Roberta(InferenceModel):
         self.input_queue = mp.Queue()
         self.output_queue = mp.Queue()
 
-        cuda_process = mp.Process(
-            target=cuda_worker,
-            args=(
-                self.model_name,
-                self.model_path,
-                self.input_queue,
-                self.output_queue,
-            ),
-        )
-        cuda_process.start()
+        if torch.cuda.is_available():
+            cuda_process = mp.Process(
+                target=cuda_worker,
+                args=(
+                    self.model_name,
+                    self.model_path,
+                    self.input_queue,
+                    self.output_queue,
+                ),
+            )
+            cuda_process.start()
 
     def tokenize(self, string):
         return string
