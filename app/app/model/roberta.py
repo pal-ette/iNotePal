@@ -103,10 +103,11 @@ class Roberta(InferenceModel):
         self.path = f"https://github.com/pal-ette/iNotePal/releases/download/{version}/roberta-small_7-emotions.pt"
         self.model_path = self.download_file(self.path)
 
-        self.input_queue = mp.Queue()
-        self.output_queue = mp.Queue()
+        ctx = mp.get_context("spawn")
+        self.input_queue = ctx.Queue()
+        self.output_queue = ctx.Queue()
 
-        mp.Process(
+        ctx.Process(
             target=cuda_worker,
             args=(
                 self.model_name,
