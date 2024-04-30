@@ -18,11 +18,13 @@ import random
 
 
 inference_model = InferenceModel("dummy-0.0.0")
+embedding_model = None
 env = os.environ.get(constants.ENV_MODE_ENV_VAR)
 if env == constants.Env.PROD:
     inference_model = Roberta("model-0.0.2")
-
-embedding_model = EmbeddingModel("")
+    embedding_model = EmbeddingModel("")
+elif env == constants.Env.DEV:
+    embedding_model = EmbeddingModel("")
 
 
 class ChatState(AppState):
@@ -252,6 +254,8 @@ class ChatState(AppState):
         return response
 
     def _talk_to_embed_db(self, message):
+        if embedding_model is None:
+            return None
         embedding = embedding_model.predict(message)
         response = random.sample(
             supabase_client()
@@ -292,6 +296,8 @@ class ChatState(AppState):
         yield
 
         response = self._talk_to_embed_db(question)
+        if response is None:
+            response = self._talk_to_open_ai(question)
 
         self.insert_history(
             self.current_chat["id"],
