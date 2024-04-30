@@ -12,7 +12,7 @@ from app.page.login import login_page
 from app.page.dashboard import dashboard
 from app.page.word_cloud import wordcloud_page
 from app.page.analysis import analysis_page
-from app.routes import LOGIN_ROUTE, REGISTER_ROUTE, ANALYSIS_ROUTE
+from app.routes import *
 import app.page.calendar
 
 load_dotenv()
