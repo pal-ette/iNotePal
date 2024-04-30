@@ -107,7 +107,7 @@ class Roberta(InferenceModel):
         self.input_queue = ctx.Queue()
         self.output_queue = ctx.Queue()
 
-        ctx.Process(
+        self.cuda_process = ctx.Process(
             target=cuda_worker,
             args=(
                 self.model_name,
@@ -116,10 +116,14 @@ class Roberta(InferenceModel):
                 self.output_queue,
             ),
             daemon=True,
-        ).start()
+        )
+        self.cuda_process.start()
 
     def __del__(self):
         self.input_queue.put("STOP")
+        self.cuda_process.terminate()
+        self.input_queue.close()
+        self.output_queue.close()
 
     def tokenize(self, string):
         return string
