@@ -3,7 +3,7 @@ from collections.abc import Generator
 
 from app.app_state import AppState
 from app.supabase_client import supabase_client
-from app.routes import LOGIN_ROUTE
+from app.routes import LOGIN_ROUTE, OAUTH_ROUTE
 
 
 class LoginState(AppState):
@@ -13,6 +13,35 @@ class LoginState(AppState):
     redirect_to: str = ""
 
     is_loading: bool = False
+
+    def on_load_oauth(self):
+        sharp_param = f"{OAUTH_ROUTE}/#"
+        if self.router.page.raw_path.startswith(sharp_param):
+            return rx.redirect(
+                self.router.page.raw_path.replace(sharp_param, f"{OAUTH_ROUTE}/?")
+            )
+
+        try:
+            auth_response = supabase_client().auth.set_session(
+                access_token=self.router.page.params["access_token"],
+                refresh_token=self.router.page.params["refresh_token"],
+            )
+            self.auth_token = auth_response.session.access_token
+            self.error_message = ""
+        except Exception as e:
+            print("oauth error:", str(e))
+
+        return rx.redirect("/")
+
+    def login_with_github(self):
+        redirect_to = f"{self.router.page.host}{OAUTH_ROUTE}"
+        data = supabase_client().auth.sign_in_with_oauth(
+            {
+                "provider": "github",
+                "options": {"redirect_to": redirect_to},
+            }
+        )
+        return rx.redirect(data.url)
 
     def on_submit(self, form_data) -> Generator[rx.event.EventSpec]:
         """Handle login form on_submit.
@@ -30,13 +59,13 @@ class LoginState(AppState):
         password = form_data["password"]
 
         try:
-            user_sign_in = supabase_client().auth.sign_in_with_password(
+            auth_response = supabase_client().auth.sign_in_with_password(
                 {
                     "email": email,
                     "password": password,
                 },
             )
-            self.auth_token = user_sign_in.session.access_token
+            self.auth_token = auth_response.session.access_token
             self.error_message = ""
             return LoginState.redir()
         except:
