@@ -103,10 +103,11 @@ class Roberta(InferenceModel):
         self.path = f"https://github.com/pal-ette/iNotePal/releases/download/{version}/roberta-small_7-emotions.pt"
         self.model_path = self.download_file(self.path)
 
-        self.input_queue = mp.Queue()
-        self.output_queue = mp.Queue()
+        ctx = mp.get_context("spawn")
+        self.input_queue = ctx.Queue()
+        self.output_queue = ctx.Queue()
 
-        cuda_process = mp.Process(
+        self.cuda_process = ctx.Process(
             target=cuda_worker,
             args=(
                 self.model_name,
@@ -114,8 +115,15 @@ class Roberta(InferenceModel):
                 self.input_queue,
                 self.output_queue,
             ),
+            daemon=True,
         )
-        cuda_process.start()
+        self.cuda_process.start()
+
+    def __del__(self):
+        self.input_queue.put("STOP")
+        self.cuda_process.terminate()
+        self.input_queue.close()
+        self.output_queue.close()
 
     def tokenize(self, string):
         return string
