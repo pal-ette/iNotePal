@@ -57,6 +57,19 @@ class EmotionState(ChatState):
         return bg_color[:-2] + ")"
 
     @rx.var  # return을 foreach 변수로 부를 수 있음!
+    def get_box_params_for_one(self) -> str:
+
+        current_chats = self.current_messages
+        box_params = []
+
+        emotions = [c[2] for c in current_chats if c[0] == "user"]
+
+        emotion_count = Counter(emotions)
+        bg_colors = self.get_bg_color(emotion_count)
+
+        return bg_colors
+
+    @rx.var  # return을 foreach 변수로 부를 수 있음!
     def get_box_params(self) -> List[Tuple[str, str, str]]:
 
         past_chats = self.past_messages
@@ -87,6 +100,16 @@ class EmotionState(ChatState):
     # def emotion_modal():
     #     bg = EmotionState.get_box_params[-1][1]
     #     return rx.chakra.box(bg=bg, border_radius="md", width="50%", height="50%")
+
+
+def create_box():
+
+    return rx.chakra.box(
+        bg=EmotionState.get_box_params_for_one,
+        border_radius="10px",
+        width="100%",
+        height="10vh",
+    )
 
 
 def create_boxes(params):

@@ -4,6 +4,7 @@ from app.component.chat_input import chat_input
 from app.component.chat_history import chat_history, ai_chat_bubble
 from app.component.navbar import navbar
 from app.state.chat_state import ChatState
+from app.component.emotion_card import create_box
 from app.page.login import require_login
 
 # 그래프 그리기 위한 임시 데이터.
@@ -112,7 +113,9 @@ def dashboard():
                         rx.chakra.modal_overlay(
                             rx.chakra.modal_content(
                                 rx.chakra.modal_header("오늘의 감정"),
-                                rx.chakra.modal_body("Hello"),
+                                rx.chakra.modal_body(
+                                    rx.flex(create_box())
+                                ),  # emotion_card
                                 rx.chakra.modal_footer(
                                     rx.chakra.button(
                                         "닫기",
