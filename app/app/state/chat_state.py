@@ -73,7 +73,7 @@ class ChatState(AppState):
     @rx.var
     def past_messages(self) -> List[Tuple[str, str, str]]:
         return [
-            self.get_messages(chat["id"])
+            (chat["id"], self.get_messages(chat["id"]))
             for i, chat in enumerate(self.chats)
             if chat["is_closed"]
         ]

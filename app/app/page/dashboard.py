@@ -18,6 +18,13 @@ data = [
 ]
 
 
+class ModalState(rx.State):
+    show: bool = False
+
+    def change(self):
+        self.show = not (self.show)
+
+
 def build_past_card(chat):
     return rx.chakra.button(
         chat["id"],
@@ -92,7 +99,7 @@ def dashboard():
                         ),
                         rx.chakra.button(
                             "대화 마치기",
-                            on_click=ChatState.evaluate_chat,
+                            on_click=[ChatState.evaluate_chat, ModalState.change],
                             # width="100%",
                             # variant="solid",
                             size="sm",
@@ -101,6 +108,24 @@ def dashboard():
                             border_radius="md",
                         ),
                     ),
+                    rx.chakra.modal(
+                        rx.chakra.modal_overlay(
+                            rx.chakra.modal_content(
+                                rx.chakra.modal_header("오늘의 감정"),
+                                rx.chakra.modal_body("Hello"),
+                                rx.chakra.modal_footer(
+                                    rx.chakra.button(
+                                        "닫기",
+                                        on_click=ModalState.change,
+                                    ),
+                                ),
+                            ),
+                        ),
+                        # close_on_overlay_click=True,
+                        is_centered=True,
+                        is_open=ModalState.show,
+                    ),
+                    # ),
                     align="center",
                     width="100%",
                 ),
