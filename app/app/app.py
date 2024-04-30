@@ -12,6 +12,7 @@ from app.page.login import login_page
 from app.page.dashboard import dashboard
 from app.page.word_cloud import wordcloud_page
 from app.page.analysis import analysis_page
+from app.page.reset_password import reset_password_page
 from app.routes import *
 import app.page.calendar
 
@@ -24,3 +25,4 @@ app.add_page(registration_page, route=REGISTER_ROUTE)
 app.add_page(login_page, route=LOGIN_ROUTE)
 app.add_page(wordcloud_page, route="/word_cloud")
 app.add_page(analysis_page, route=ANALYSIS_ROUTE)
+app.add_page(reset_password_page, route=RESET_PASSWORD_ROUTE)
