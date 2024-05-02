@@ -4,6 +4,7 @@ from collections.abc import Generator
 from app.app_state import AppState
 from app.supabase_client import supabase_client
 from app.routes import LOGIN_ROUTE, OAUTH_ROUTE
+from reflex.config import get_config
 
 
 class LoginState(AppState):
@@ -34,7 +35,9 @@ class LoginState(AppState):
         return rx.redirect("/")
 
     def login_with_github(self):
-        redirect_to = f"{self.router.page.host}{OAUTH_ROUTE}"
+        redirect_to = (
+            f"{self.router.page.host}{get_config().frontend_path}{OAUTH_ROUTE}"
+        )
         data = supabase_client().auth.sign_in_with_oauth(
             {
                 "provider": "github",
