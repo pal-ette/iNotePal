@@ -6,7 +6,7 @@ from app.app_state import AppState
 from app.state.chat_state import ChatState
 from reflex_calendar import calendar
 from app.component.emotion_card import emotion_card, show_emotion_colors
-
+# from app.page.calendar import calendar
 
 def navbar() -> rx.Component:
     return rx.fragment(
