@@ -160,8 +160,8 @@ def analysis_page() -> rx.Component:
         return_focus_on_close=True,
         match_width=True,
         on_close=[
-            analysis_state.aCalendar.setStartDay,
-            analysis_state.getData.getDataDay,
+            analysis_state.AnalysisState.setStartDay,
+            analysis_state.AnalysisState.getDataDay,
         ],
     )
 
@@ -179,8 +179,8 @@ def analysis_page() -> rx.Component:
         return_focus_on_close=True,
         match_width=True,
         on_close=[
-            analysis_state.aCalendar.setEndDay,
-            analysis_state.getData.getDataDay,
+            analysis_state.AnalysisState.setEndDay,
+            analysis_state.AnalysisState.getDataDay,
         ],
     )
 
@@ -191,19 +191,23 @@ def analysis_page() -> rx.Component:
             # loading_text="Loading...",
             # spinner_placement="start",
             on_click=[
-                analysis_state.chart.radar_chart_status,
-                analysis_state.getData.emotion_count_day,
+                analysis_state.AnalysisState.radar_chart_status,
+                analysis_state.AnalysisState.emotion_count_day,
             ],
         ),
         rx.chakra.button(
             "Funnel chart",
             on_click=[
-                analysis_state.chart.funnel_chart_status,
-                analysis_state.getData.getDataFunnels,
+                analysis_state.AnalysisState.funnel_chart_status,
+                analysis_state.AnalysisState.getDataFunnels,
             ],
         ),
-        rx.chakra.button("Bar chart", on_click=analysis_state.chart.bar_chart_status),
-        rx.chakra.button("Line chart", on_click=analysis_state.chart.line_chart_status),
+        rx.chakra.button(
+            "Bar chart", on_click=analysis_state.AnalysisState.bar_chart_status
+        ),
+        rx.chakra.button(
+            "Line chart", on_click=analysis_state.AnalysisState.line_chart_status
+        ),
         is_attached=True,
         variant="outline",
         size="lg",
@@ -215,7 +219,7 @@ def analysis_page() -> rx.Component:
     return rx.fragment(
         navbar(),
         rx.cond(
-            analysis_state.aCalendar.is_hydrated,
+            analysis_state.AnalysisState.is_hydrated,
             rx.alert_dialog.root(
                 rx.alert_dialog.content(
                     rx.alert_dialog.title("날짜 선택"),
@@ -226,13 +230,13 @@ def analysis_page() -> rx.Component:
                         rx.alert_dialog.action(
                             rx.button(
                                 "확인",
-                                on_click=analysis_state.aCalendar.reset_date_valid_check,
+                                on_click=analysis_state.AnalysisState.reset_date_valid_check,
                             ),
                         ),
                         spacing="3",
                     ),
                 ),
-                open=~analysis_state.aCalendar.date_valid_check,
+                open=~analysis_state.AnalysisState.date_valid_check,
             ),
         ),
         rx.container(
@@ -241,11 +245,11 @@ def analysis_page() -> rx.Component:
         rx.chakra.wrap(
             rx.chakra.wrap_item(
                 start_calendar_form,
-                rx.heading(analysis_state.aCalendar.start_day),
+                rx.heading(analysis_state.AnalysisState.start_day),
             ),
             rx.chakra.wrap_item(
                 end_calendar_form,
-                rx.heading(analysis_state.aCalendar.end_day),
+                rx.heading(analysis_state.AnalysisState.end_day),
             ),
             align="center",
             width="100%",
@@ -254,7 +258,7 @@ def analysis_page() -> rx.Component:
         # analysis_state.logs(),
         rx.chakra.wrap(
             rx.cond(
-                analysis_state.aCalendar.graph_valid_check,
+                analysis_state.AnalysisState.graph_valid_check,
                 rx.chakra.flex(
                     rx.container(
                         margin_top="20px",
@@ -265,7 +269,7 @@ def analysis_page() -> rx.Component:
                     ),
                     rx.chakra.vstack(
                         rx.cond(
-                            analysis_state.chart.radar_chart_check,
+                            analysis_state.AnalysisState.radar_chart_check,
                             rx.vstack(
                                 rx.heading("위 기간동안 당신의 감정상태는", size="4"),
                                 rx.recharts.radar_chart(
@@ -278,7 +282,7 @@ def analysis_page() -> rx.Component:
                                     rx.recharts.polar_grid(),
                                     rx.recharts.polar_angle_axis(data_key="emotion"),
                                     rx.recharts.graphing_tooltip(),
-                                    data=analysis_state.getData.data_emotion_frequency,
+                                    data=analysis_state.AnalysisState.data_emotion_frequency,
                                     width="100%",
                                     height=400,
                                 ),
@@ -288,11 +292,11 @@ def analysis_page() -> rx.Component:
                             ),
                         ),
                         rx.cond(
-                            ~analysis_state.chart.radar_chart_check,
+                            ~analysis_state.AnalysisState.radar_chart_check,
                             rx.chakra.text(" "),
                         ),
                         rx.cond(
-                            analysis_state.chart.funnel_chart_check,
+                            analysis_state.AnalysisState.funnel_chart_check,
                             rx.recharts.funnel_chart(
                                 rx.recharts.funnel(
                                     rx.recharts.label_list(
@@ -302,7 +306,7 @@ def analysis_page() -> rx.Component:
                                         stroke="none",
                                     ),
                                     data_key="count",
-                                    data=analysis_state.getData.data_funnel,
+                                    data=analysis_state.AnalysisState.data_funnel,
                                 ),
                                 rx.recharts.graphing_tooltip(),
                                 width=500,
@@ -310,11 +314,11 @@ def analysis_page() -> rx.Component:
                             ),
                         ),
                         rx.cond(
-                            ~analysis_state.chart.funnel_chart_check,
+                            ~analysis_state.AnalysisState.funnel_chart_check,
                             rx.chakra.text(""),
                         ),
                         rx.cond(
-                            analysis_state.chart.bar_chart_check,
+                            analysis_state.AnalysisState.bar_chart_check,
                             rx.recharts.bar_chart(
                                 rx.recharts.bar(
                                     data_key="count2", stroke="#8884d8", fill="#8884d8"
@@ -325,11 +329,11 @@ def analysis_page() -> rx.Component:
                             ),
                         ),
                         rx.cond(
-                            ~analysis_state.chart.bar_chart_check,
+                            ~analysis_state.AnalysisState.bar_chart_check,
                             rx.chakra.text(""),
                         ),
                         rx.cond(
-                            analysis_state.chart.line_chart_check,
+                            analysis_state.AnalysisState.line_chart_check,
                             rx.recharts.line_chart(
                                 rx.recharts.line(
                                     data_key="count",
@@ -345,7 +349,7 @@ def analysis_page() -> rx.Component:
                             ),
                         ),
                         rx.cond(
-                            ~analysis_state.chart.line_chart_check,
+                            ~analysis_state.AnalysisState.line_chart_check,
                             rx.chakra.text(""),
                         ),
                         # rx.chakra.table(
