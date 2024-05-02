@@ -174,6 +174,76 @@ class AnalysisState(ChatState):
     data_emotion_frequency: List[Dict[str, int]] = []
     data_funnel: List[Dict[int, str]] = []
 
+    @rx.var
+    def data_emotion(self):
+        if self.start_day == "":
+            return []
+
+        if self.end_day == "":
+            return []
+
+        period_data = self.get_chats_in_period(
+            format_date(self.start_day), format_date(self.end_day)
+        )
+        return [
+            message["emotion"]
+            for item in period_data
+            for message in item["message"]
+            if message["is_user"] and message["emotion"]
+        ]
+
+    @rx.var
+    def data_emotion_count(self):
+        emotion_count = {
+            "혐오": 0,
+            "분노": 0,
+            "공포": 0,
+            "슬픔": 0,
+            "중립": 0,
+            "놀람": 0,
+            "기쁨": 0,
+        }
+        for emotion in self.data_emotion:
+            if emotion in emotion_count:
+                emotion_count[emotion] += 1
+            else:
+                emotion_count[emotion] = 1
+        return emotion_count
+
+    @rx.var
+    def data_emotion_radar(self) -> List[Dict[str, str | int]]:
+        return [
+            {"emotion": emotion, "count": count}
+            for emotion, count in self.data_emotion_count.items()
+        ]
+
+    @rx.var
+    def data_emotion_funnel(self) -> List[Dict[str, str | int]]:
+        fill_mapping = {
+            "혐오": "#49312d",
+            "분노": "#91615a",
+            "공포": "#af625c",
+            "슬픔": "#de776c",
+            "중립": "#e5988e",
+            "놀람": "#ebb9b0",
+            "기쁨": "#f2ebc8",
+        }
+        data_funnel = []
+        for emotion, count in self.data_emotion_count.items():
+            if count == 0:
+                continue
+            if emotion in fill_mapping:
+                new_dict = {
+                    "emotion": emotion,
+                    "count": count,
+                    "fill": fill_mapping[emotion],
+                }
+                data_funnel.append(new_dict)
+
+        print(data_funnel)
+        data_funnel = sorted(data_funnel, key=lambda x: x["count"], reverse=True)
+        return data_funnel
+
     def set_emotion_counts_state(self):
         self.emotion_counts_check = False
         print("emotion_counts_state->False")

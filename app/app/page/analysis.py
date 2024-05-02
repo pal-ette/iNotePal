@@ -257,6 +257,69 @@ def analysis_page() -> rx.Component:
             width="100%",
             spacing="2em",
         ),
+        rx.container(
+            rx.vstack(
+                rx.heading("위 기간동안 당신의 감정상태는", size="4"),
+                rx.chakra.responsive_grid(
+                    rx.chakra.flex(
+                        rx.recharts.radar_chart(
+                            rx.recharts.radar(
+                                data_key="count",
+                                stroke="#8884d8",
+                                fill="#8884d8",
+                                # linear(to-l, #f2ebc8, #de776c, #49312d)",
+                            ),
+                            rx.recharts.polar_grid(),
+                            rx.recharts.polar_angle_axis(data_key="emotion"),
+                            rx.recharts.graphing_tooltip(),
+                            data=analysis_state.AnalysisState.data_emotion_radar,
+                            width="100%",
+                            height="100%",
+                        ),
+                        height="30em",
+                        width="100%",
+                    ),
+                    rx.chakra.flex(
+                        rx.recharts.funnel_chart(
+                            rx.recharts.funnel(
+                                rx.recharts.label_list(
+                                    position="right",
+                                    data_key="emotion",
+                                    fill="#000",
+                                    stroke="none",
+                                ),
+                                data_key="count",
+                                data=analysis_state.AnalysisState.data_emotion_funnel,
+                            ),
+                            rx.recharts.graphing_tooltip(),
+                            width=500,
+                            height=400,
+                        ),
+                        height="30em",
+                        width="100%",
+                        align="center",
+                        justify="center",
+                    ),
+                    rx.chakra.box(height="30em", width="100%", bg="purple"),
+                    rx.chakra.box(height="30em", width="100%", bg="tomato"),
+                    rx.chakra.box(height="30em", width="100%", bg="orange"),
+                    rx.chakra.box(height="30em", width="100%", bg="yellow"),
+                    grid_template_columns=[
+                        "repeat(1, 1fr)",
+                        "repeat(1, 1fr)",
+                        "repeat(2, 1fr)",
+                        "repeat(2, 1fr)",
+                        "repeat(2, 1fr)",
+                        "repeat(2, 1fr)",
+                    ],
+                    spacing="2",
+                    width="100%",
+                ),
+                width="100%",
+            ),
+            size="4",
+            width="100%",
+        ),
         # analysis_state.logs(),
         rx.chakra.wrap(
             rx.cond(
