@@ -35,6 +35,13 @@ def navbar() -> rx.Component:
                     ),
                     href="/analysis",
                 ),
+                # rx.link(
+                #     rx.text(
+                #         "Word Cloud",
+                #         color_scheme="gray",
+                #     ),
+                #     href="/word_cloud",
+                # ),
                 # navigation_section(),
                 rx.box(
                     flex_grow="1",
@@ -75,6 +82,8 @@ def navbar() -> rx.Component:
                                         as_="h1",
                                         size="4xl",
                                         weight="bold",
+                                        bgGradient="linear(to-l, #f2ebc8, #de776c, #49312d)",
+                                        bgClip="text",
                                     ),
                                     rx.chakra.divider(border_color="black"),
                                     rx.spacer(),
@@ -103,7 +112,7 @@ def navbar() -> rx.Component:
                                 top="auto",
                                 right="auto",
                                 height="100%",
-                                width="52%",
+                                width="40%",
                                 padding="1em",
                                 background_color="#FFF",
                                 # background_color=rx.color("green", 3)
