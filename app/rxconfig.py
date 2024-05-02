@@ -1,7 +1,7 @@
 import reflex as rx
 from reflex import constants
 import os
-from typing import List
+from typing import List, Optional
 
 
 class BaseConfg(rx.Config):
@@ -20,6 +20,8 @@ class ProdConfig(BaseConfg):
     ]
 
     api_url: str = "https://nvidia.edens.one"
+
+    deploy_url: Optional[str] = "https://pal-ette.github.io/iNotePal"
 
     frontend_path: str = "/iNotePal"
 
