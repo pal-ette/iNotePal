@@ -4,6 +4,7 @@ import reflex as rx
 from app.state.login_state import LoginState
 from app.component.navbar import navbar
 from app.state import analysis_state
+from app.page.login import require_login
 
 # 그래프 그리기 위한 임시 데이터.
 
@@ -144,6 +145,7 @@ data3 = [
 ]
 
 
+@require_login
 def analysis_page() -> rx.Component:
 
     start_calendar_form = rx.chakra.popover(
