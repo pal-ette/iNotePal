@@ -62,18 +62,18 @@ def calendar_grid(data):
 
 
 # Reflex 화면 정의
-@rx.page(route="/calendar", on_load=State.get_calendar_data)
+@rx.page(route="/calendar")
 def index() -> rx.Component:
     # vstack : 자식 요소(달/연 이동 버튼, 요일 표시, 캘린더 그리드)들을 세로로 쌓아 배치
-    return rx.vstack(                   
+    return rx.vstack(
         # calendar start ...
         # hsatack : 자식 요소들을 가로로 배치
         rx.hstack(
             rx.icon(
                 tag="chevron_left", cursor="pointer", on_click=State.delta_calendar(-1)
             ),
-            rx.spacer(),        # 빈 공간 생성
-            rx.text(            # 현재 월과 연도를 표시하는 텍스트
+            rx.spacer(),  # 빈 공간 생성
+            rx.text(  # 현재 월과 연도를 표시하는 텍스트
                 f"{State.month_class[State.month]} {State.year}",
                 width="150px",
                 display="flex",
