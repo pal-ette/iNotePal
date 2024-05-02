@@ -23,8 +23,8 @@ env = os.environ.get(constants.ENV_MODE_ENV_VAR)
 if env == constants.Env.PROD:
     inference_model = Roberta("model-0.0.2")
     embedding_model = EmbeddingModel("")
-elif env == constants.Env.DEV:
-    embedding_model = EmbeddingModel("")
+# elif env == constants.Env.DEV:
+#     embedding_model = EmbeddingModel("")
 
 
 class ChatState(AppState):
