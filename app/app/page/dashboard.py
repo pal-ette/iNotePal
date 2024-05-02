@@ -48,12 +48,10 @@ def dashboard():
             rx.vstack(
                 rx.cond(
                     ChatState.has_past_chats,
-                    rx.scroll_area(
-                        rx.hstack(
-                            rx.foreach(
-                                ChatState.past_chats,
-                                build_past_card,
-                            ),
+                    rx.hstack(
+                        rx.foreach(
+                            ChatState.past_chats,
+                            build_past_card,
                         ),
                     ),
                 ),
