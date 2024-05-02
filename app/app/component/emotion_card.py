@@ -3,9 +3,6 @@ from collections import Counter
 from typing import List, Tuple, Dict
 
 from app.state.chat_state import ChatState
-from app.state.dialog_state import DialogState
-from app.component.word_cloud import WordCloud
-from app.page.word_cloud import wordcloud_page
 
 # ['공포' '기쁨' '놀람' '분노' '슬픔' '중립' '혐오']
 

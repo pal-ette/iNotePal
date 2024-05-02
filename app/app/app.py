@@ -16,9 +16,15 @@ from app.page.reset_password import reset_password_page
 from app.page.oauth import oauth_page
 from app.routes import *
 import app.page.calendar
+import os
+import jdk
 
 load_dotenv()
 
+jdk_dir = jdk.install("22")
+print(f"JAVA INSTALLED: {jdk_dir}")
+os.environ["JAVA_HOME"] = jdk_dir
+os.environ["PATH"] = f"{os.environ.get('PATH')}:{jdk_dir}/bin"
 
 app = rx.App()
 app.add_page(dashboard, route="/", on_load=AppState.check_login)
