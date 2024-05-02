@@ -22,21 +22,6 @@ class EmotionState(ChatState):
         "기쁨": "#f2ebc8",
     }
 
-    # @rx.var
-    # def emotion_ratio(self, chat_id) -> Dict:
-    #     chats = self.get_messages(chat_id)
-    #     emotions = [c[2] for c in chats if c[0] == "user"]
-    #     emotion_count = Counter(emotions)
-
-    #     base = sum(emotion_count.values())
-
-    #     for i, (k, v) in enumerate(emotion_count.items()):
-    #         emotion_count[k] = f"{round((emotion_count[k] / base) * 100)}%"
-
-    #     print("emotion count : ", emotion_count)
-
-    #     return emotion_count
-
     def get_bg_color(self, emotion_count):
 
         if len(emotion_count) == 0:
@@ -53,10 +38,9 @@ class EmotionState(ChatState):
             )
             ratio += round((emotion_count[k] / base) * 100)
 
-        # print("bg_colors", bg_colors)
         return bg_color[:-2] + ")"
 
-    @rx.var  # return을 foreach 변수로 부를 수 있음!
+    @rx.var
     def get_box_params_for_one(self) -> str:
 
         current_chats = self.current_messages
@@ -69,7 +53,7 @@ class EmotionState(ChatState):
 
         return bg_colors
 
-    @rx.var  # return을 foreach 변수로 부를 수 있음!
+    @rx.var
     def get_box_params(self) -> List[Tuple[str, str, str]]:
 
         past_chats = self.past_messages
@@ -96,11 +80,6 @@ class EmotionState(ChatState):
                 box_params.append((id, bg_colors, width, height))
         return box_params
 
-    # @rx.var
-    # def emotion_modal():
-    #     bg = EmotionState.get_box_params[-1][1]
-    #     return rx.chakra.box(bg=bg, border_radius="md", width="50%", height="50%")
-
 
 def create_box():
 
@@ -114,71 +93,12 @@ def create_box():
 
 def create_boxes(params):
 
-    # dialog
-    return rx.flex(
-        rx.dialog.root(
-            rx.dialog.trigger(
-                rx.chakra.box(
-                    rx.center(
-                        rx.chakra.button(
-                            params[0],
-                            variant="unstyled",
-                            size="sm",
-                            # on_click=DialogState.change,
-                        ),
-                    ),
-                    bg=params[1],
-                    width="10vh",
-                    height="10vh",
-                    border_radius="10px",
-                    # padding=5,
-                ),
-            ),
-            rx.dialog.content(
-                rx.dialog.title("오늘의 감정"),
-                rx.dialog.description("Description"),
-                rx.flex(
-                    rx.hstack(
-                        rx.text("Emotion Ratio"),
-                        rx.spacer(),
-                        rx.text("Word Cloud"),
-                        # emotion_dialog(params[0]), rx.spacer(), rx.text("Word Cloud")
-                    )
-                ),
-                rx.flex(
-                    rx.dialog.close(
-                        rx.button("닫기", size="1"),
-                    ),
-                    justify="end",
-                ),
-            ),
-            on_open_change=DialogState.emotion_opens,
-        ),
+    return rx.chakra.box(
+        bg=params[1],
+        border_radius="10px",
+        width=params[2],
+        height=params[3],
     )
-
-    # simple boxes
-    # return rx.chakra.box(
-    #     bg=params[1],
-    #     border_radius="10px",
-    #     width=params[2],
-    #     height=params[3],
-    # )
-
-
-# def show_ratio(params):
-
-#     return rx.chakra.text(params)
-#     # return rx.hstack(
-#     #     rx.chakra.text(params[0], font_size="1em"),
-#     #     rx.chakra.text(params[1], font_size="1em"),
-#     # )
-
-
-# def emotion_dialog(chat_id) -> rx.Component:
-
-#     return rx.chakra.card(
-#         rx.chakra.vstack(rx.foreach(EmotionState.emotion_ratio(chat_id), show_ratio))
-#     )
 
 
 def emotion_card() -> rx.Component:
