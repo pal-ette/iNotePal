@@ -43,6 +43,8 @@
 <a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/감성대화_BERT.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
 `models/감성대화_KoBERT.ipynb`
 <a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/감성대화_KoBERT.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
+`models/심리_chatbot.ipynb`
+<a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/심리_chatbot.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
 
 </details>
 
