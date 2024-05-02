@@ -2,8 +2,134 @@ import reflex as rx
 from app.app_state import AppState
 import datetime
 import calendar
+from typing import List
 
 cal = calendar.Calendar()
+
+
+cal_days_style = {
+    "width": "50px",
+    "height": "50px",
+    "display": "flex",
+    "align_items": "center",
+    "justify_content": "center",
+    "border_radius": "6px",
+}
+# 캘린더 행 스타일 정의
+cal_row_style = {
+    "width": "50px",
+    "height": "50px",
+    "display": "flex",
+    "align_items": "center",
+    "justify_content": "center",
+    "border_radius": "6px",
+}
+date_class: dict[int, str] = {
+    0: "월",
+    1: "화",
+    2: "수",
+    3: "목",
+    4: "금",
+    5: "토",
+    6: "일",
+}
+
+
+class Calendar(rx.ComponentState):
+    year: int = datetime.datetime.now().year  # 연도 저장
+    month: int = datetime.datetime.now().month  # 표시할 월 저장
+    day: int | None = None
+
+    selected_date: str = ""
+
+    @rx.var
+    def monthdayscalendar(self) -> List[List[int]]:
+        c = cal.monthdayscalendar(self.year, self.month)
+        print("selected_date", self.selected_date)
+        print("monthdayscalendar", c)
+        return c
+
+    @classmethod
+    def get_component(cls, *children, **props) -> rx.Component:
+
+        on_change = props.pop("on_change")
+
+        return rx.vstack(
+            rx.hstack(
+                rx.icon(
+                    tag="chevron_left",
+                    cursor="pointer",
+                    on_click=State.delta_calendar(-1),
+                ),
+                rx.spacer(),  # 빈 공간 생성
+                rx.text(  # 현재 월과 연도를 표시하는 텍스트
+                    f"{State.month_class[State.month]} {State.year}",
+                    width="150px",
+                    display="flex",
+                    justify_content="center",
+                ),
+                rx.spacer(),
+                rx.icon(
+                    tag="chevron_right",
+                    cursor="pointer",
+                    on_click=State.delta_calendar(1),
+                ),
+                display="flex",
+                align_items="center",
+                justify_content="center",
+                spacing="2",
+            ),
+            rx.hstack(
+                *[
+                    rx.container(
+                        rx.text(
+                            date_class[data],
+                            font_size="16px",
+                            font_weight="bold",
+                            align="center",
+                        ),
+                        style=cal_days_style,
+                    )
+                    for data in date_class
+                ]
+            ),
+            rx.vstack(
+                rx.foreach(
+                    cls.monthdayscalendar,
+                    lambda week: rx.hstack(
+                        rx.foreach(
+                            week,
+                            lambda day: rx.container(
+                                rx.text(
+                                    day,
+                                    font_size="14px",
+                                    align="center",
+                                ),
+                                background_color=rx.cond(
+                                    cls.selected_date
+                                    == f"{cls.year}-{cls.month:02d}-{day}",
+                                    "rgba(0, 255, 0, 0.05)",
+                                    "rgba(255, 255, 255, 0.05)",
+                                ),
+                                style=cal_row_style,
+                                cursor="pointer",  # Make clickable
+                                on_click=[
+                                    lambda: cls.set_selected_date(
+                                        f"{cls.year}-{cls.month:02d}-{day}"
+                                    ),
+                                    lambda: on_change(
+                                        f"{cls.year}-{cls.month:02d}-{day}"
+                                    ),
+                                ],  # Update on click
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        )
+
+
+calendar_component = Calendar.create
 
 
 # class_State 분리
@@ -33,7 +159,7 @@ class State(rx.State):
     # 그리드를 채우는 방법 정의
     # python의 calendar 모듈 활용하여 선택된 연도와 월에 대한 캘린더 데이터 생성
     @rx.var
-    def calendar_data(self) ->list[list[str]]:
+    def calendar_data(self) -> list[list[str]]:
         calendar_data = []
         for week in cal.monthdayscalendar(
             self.year, self.month

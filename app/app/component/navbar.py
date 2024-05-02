@@ -5,13 +5,14 @@ from reflex_calendar import calendar
 from app.component.emotion_card import emotion_card, show_emotion_colors
 
 from app.page.calendar import calendar_grid, calendar_grid_row, calendar_days
-from app.state.calendar_state import State
+from app.state.calendar_state import State, calendar_component
 
 
 def navbar() -> rx.Component:
     return rx.fragment(
         rx.chakra.flex(
             # banner(),
+            calendar_component(on_change=ChatState.print_date),
             rx.flex(
                 rx.chakra.heading(
                     "iNotePal",
