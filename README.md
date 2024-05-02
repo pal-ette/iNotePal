@@ -45,6 +45,12 @@
 <a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/감성대화_KoBERT.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
 `models/심리_chatbot.ipynb`
 <a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/심리_chatbot.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
+`models/sentiment_model/roberta-small.ipynb`
+<a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/sentiment_model/roberta-small.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
+`models/sentiment_model/roberta_small_inference.ipynb`
+<a href="https://colab.research.google.com/github/pal-ette/iNotePal/blob/main/models/sentiment_model/roberta_small_inference.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>  
+
+
 
 </details>
 
