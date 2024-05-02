@@ -13,8 +13,8 @@ from app.supabase_client import supabase_client
 from typing import List, Tuple, Dict
 from reflex_calendar import reformat_date
 from reflex import constants
-from app.util.emotion import random_emotion
 import random
+from collections import Counter
 
 
 inference_model = InferenceModel("dummy-0.0.0")
@@ -183,9 +183,19 @@ class ChatState(AppState):
         else:
             self._db_messages[chat_id] = [cache_item]
 
+    def select_current_chat_emotion(self):
+        [(emotion, _count)] = Counter(
+            [
+                emotion
+                for type, message, emotion in self.current_messages
+                if type == "user"
+            ]
+        ).most_common(1)
+        return emotion
+
     def evaluate_chat(self):
         new_data = {
-            "emotion": random_emotion(),
+            "emotion": self.select_current_chat_emotion(),
             "is_closed": True,
         }
         (

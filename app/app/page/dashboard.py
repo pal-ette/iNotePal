@@ -96,15 +96,18 @@ def dashboard():
                                 border_radius="md",
                             ),
                         ),
-                        rx.chakra.button(
-                            "대화 마치기",
-                            on_click=[ChatState.evaluate_chat, ModalState.change],
-                            # width="100%",
-                            # variant="solid",
-                            size="sm",
-                            bg="#ebb9b0",
-                            color="#49312d",
-                            border_radius="md",
+                        rx.cond(
+                            ChatState.current_messages.length() > 2,
+                            rx.chakra.button(
+                                "대화 마치기",
+                                on_click=[ChatState.evaluate_chat, ModalState.change],
+                                # width="100%",
+                                # variant="solid",
+                                size="sm",
+                                bg="#ebb9b0",
+                                color="#49312d",
+                                border_radius="md",
+                            ),
                         ),
                     ),
                     rx.chakra.modal(
