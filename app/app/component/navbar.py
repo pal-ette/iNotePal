@@ -1,8 +1,5 @@
 import reflex as rx
 from app.app_state import AppState
-
-# from app.component.sidebar import sidebar
-
 from app.state.chat_state import ChatState
 from reflex_calendar import calendar
 from app.component.emotion_card import emotion_card, show_emotion_colors
@@ -35,13 +32,13 @@ def navbar() -> rx.Component:
                     ),
                     href="/analysis",
                 ),
-                # rx.link(
-                #     rx.text(
-                #         "Word Cloud",
-                #         color_scheme="gray",
-                #     ),
-                #     href="/word_cloud",
-                # ),
+                rx.link(
+                    rx.text(
+                        "Word Cloud",
+                        color_scheme="gray",
+                    ),
+                    href="/word_cloud",
+                ),
                 # navigation_section(),
                 rx.box(
                     flex_grow="1",
@@ -115,7 +112,6 @@ def navbar() -> rx.Component:
                                 width="40%",
                                 padding="1em",
                                 background_color="#FFF",
-                                # background_color=rx.color("green", 3)
                             )
                         ),
                         direction="left",
