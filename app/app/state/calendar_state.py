@@ -24,6 +24,22 @@ cal_row_style = {
     "justify_content": "center",
     "border_radius": "6px",
 }
+
+month_class: dict[int, str] = {
+    1: "1월",
+    2: "2월",
+    3: "3월",
+    4: "4월",
+    5: "5월",
+    6: "6월",
+    7: "7월",
+    8: "8월",
+    9: "9월",
+    10: "10월",
+    11: "11월",
+    12: "12월",
+}
+
 date_class: dict[int, str] = {
     0: "월",
     1: "화",
@@ -38,16 +54,45 @@ date_class: dict[int, str] = {
 class Calendar(rx.ComponentState):
     year: int = datetime.datetime.now().year  # 연도 저장
     month: int = datetime.datetime.now().month  # 표시할 월 저장
-    day: int | None = None
 
-    selected_date: str = ""
+    select_year: int | None = None
+    select_month: int | None = None
+    select_day: int | None = None
+
+    _selected_date: datetime.date = datetime.date.today()
+
+    @rx.var
+    def selected_date_str(self):
+        return str(self._selected_date)
 
     @rx.var
     def monthdayscalendar(self) -> List[List[int]]:
-        c = cal.monthdayscalendar(self.year, self.month)
-        print("selected_date", self.selected_date)
-        print("monthdayscalendar", c)
-        return c
+        return cal.monthdayscalendar(self.year, self.month)
+
+    def set_selected_date(self, day):
+        self.select_year = self.year
+        self.select_month = self.month
+        self.select_day = day
+
+        self._selected_date = datetime.date(self.year, self.month, day)
+
+    def delta_calendar(self, delta: int):
+        if delta == 1:
+            if (
+                self.month + delta > 12
+            ):  # # 12월을 넘어가면, 연도를 +1하고, 월을 1로 설정
+                self.month = 1
+                self.year += 1
+            else:
+                self.month += 1
+
+        # 1월 이전이면, 연도를 -1하고, 월을 12로 설정
+        if delta == -1:
+            if self.month + delta < 1:
+                self.month = 12
+                self.year -= 1
+            else:
+                self.month -= 1
 
     @classmethod
     def get_component(cls, *children, **props) -> rx.Component:
@@ -59,11 +104,11 @@ class Calendar(rx.ComponentState):
                 rx.icon(
                     tag="chevron_left",
                     cursor="pointer",
-                    on_click=State.delta_calendar(-1),
+                    on_click=cls.delta_calendar(-1),
                 ),
                 rx.spacer(),  # 빈 공간 생성
                 rx.text(  # 현재 월과 연도를 표시하는 텍스트
-                    f"{State.month_class[State.month]} {State.year}",
+                    f"{cls.month} {cls.year}",
                     width="150px",
                     display="flex",
                     justify_content="center",
@@ -72,7 +117,7 @@ class Calendar(rx.ComponentState):
                 rx.icon(
                     tag="chevron_right",
                     cursor="pointer",
-                    on_click=State.delta_calendar(1),
+                    on_click=cls.delta_calendar(1),
                 ),
                 display="flex",
                 align_items="center",
@@ -94,6 +139,9 @@ class Calendar(rx.ComponentState):
                 ]
             ),
             rx.vstack(
+                rx.text(
+                    cls.selected_date_str,
+                ),
                 rx.foreach(
                     cls.monthdayscalendar,
                     lambda week: rx.hstack(
@@ -106,21 +154,18 @@ class Calendar(rx.ComponentState):
                                     align="center",
                                 ),
                                 background_color=rx.cond(
-                                    cls.selected_date
-                                    == f"{cls.year}-{cls.month:02d}-{day}",
+                                    (cls.year == cls.select_year)
+                                    & (cls.month == cls.select_month)
+                                    & (day == cls.select_day),
                                     "rgba(0, 255, 0, 0.05)",
                                     "rgba(255, 255, 255, 0.05)",
                                 ),
                                 style=cal_row_style,
                                 cursor="pointer",  # Make clickable
                                 on_click=[
-                                    lambda: cls.set_selected_date(
-                                        f"{cls.year}-{cls.month:02d}-{day}"
-                                    ),
-                                    lambda: on_change(
-                                        f"{cls.year}-{cls.month:02d}-{day}"
-                                    ),
-                                ],  # Update on click
+                                    on_change(f"{cls.year}-{cls.month}-{day}"),
+                                    cls.set_selected_date(day),
+                                ],
                             ),
                         ),
                     ),
