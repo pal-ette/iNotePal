@@ -112,20 +112,6 @@ class ChatState(AppState):
 
         return self.current_chat["emotion"]
 
-    def get_chat_start_end_day(self):
-        if not self.token_is_valid:
-            return []
-
-        response = (
-            supabase_client()
-            .table("chat")
-            .select("date.min(), date.max()")
-            .eq("user_id", self.decodeJWT["sub"])
-            .execute()
-            .data[0]
-        )
-        return response["min"], response["max"]
-
     def get_chats_in_period(self, start_day, end_day):
         if not self.token_is_valid:
             return []
