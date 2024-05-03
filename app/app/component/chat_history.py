@@ -35,6 +35,7 @@ def user_chat_bubble(message, emotion):
             rx.icon("user"),
             width="100%",
             align="end",
+            justify="end",
         ),
         width="100%",
         align="end",

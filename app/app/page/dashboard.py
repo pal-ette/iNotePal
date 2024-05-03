@@ -79,7 +79,7 @@ def dashboard():
                         chat_history(),
                     ),
                     width="100%",
-                    min_height="580px",
+                    min_height="500px",
                 ),
                 rx.vstack(
                     chat_input(ChatState.is_exist_chat),
