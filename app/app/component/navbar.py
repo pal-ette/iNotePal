@@ -12,7 +12,6 @@ def navbar() -> rx.Component:
     return rx.fragment(
         rx.chakra.flex(
             # banner(),
-            calendar_component(on_change=ChatState.print_date),
             rx.flex(
                 rx.chakra.heading(
                     "iNotePal",
