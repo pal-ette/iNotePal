@@ -15,7 +15,6 @@ from app.page.analysis import analysis_page
 from app.page.reset_password import reset_password_page
 from app.page.oauth import oauth_page
 from app.routes import *
-import app.page.calendar
 import os
 import jdk
 
