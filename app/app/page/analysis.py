@@ -300,7 +300,10 @@ def analysis_page() -> rx.Component:
                         align="center",
                         justify="center",
                     ),
-                    rx.chakra.box(height="30em", width="100%", bg="purple"),
+                    rx.chakra.grid_item(
+                        rx.chakra.box(height="30em", width="100%", bg="purple"),
+                        col_span=2,
+                    ),
                     rx.chakra.box(height="30em", width="100%", bg="tomato"),
                     rx.chakra.box(height="30em", width="100%", bg="orange"),
                     rx.chakra.box(height="30em", width="100%", bg="yellow"),
