@@ -4,14 +4,12 @@ from app.state.chat_state import ChatState
 from reflex_calendar import calendar
 from app.component.emotion_card import emotion_card, show_emotion_colors
 
-from app.page.calendar import calendar_grid, calendar_grid_row, calendar_days
-from app.state.calendar_state import State
+from app.state.calendar_state import calendar_component
 
 
 def navbar() -> rx.Component:
     return rx.fragment(
         rx.chakra.flex(
-            # banner(),
             rx.flex(
                 rx.link(
                     rx.chakra.heading(
@@ -89,40 +87,8 @@ def navbar() -> rx.Component:
                                         font_size="2em",
                                         weight="bold",
                                     ),
-                                    rx.vstack(
-                                        rx.hstack(
-                                            rx.icon(
-                                                tag="chevron_left",
-                                                cursor="pointer",
-                                                on_click=State.delta_calendar(-1),
-                                            ),
-                                            rx.spacer(),  # 빈 공간 생성
-                                            rx.text(  # 현재 월과 연도를 표시하는 텍스트
-                                                f"{State.month_class[State.month]} {State.year}",
-                                                width="150px",
-                                                display="flex",
-                                                justify_content="center",
-                                            ),
-                                            rx.spacer(),
-                                            rx.icon(
-                                                tag="chevron_right",
-                                                cursor="pointer",
-                                                on_click=State.delta_calendar(1),
-                                            ),
-                                            display="flex",
-                                            align_items="center",
-                                            justify_content="center",
-                                            spacing="2",
-                                        ),
-                                        rx.hstack(
-                                            rx.foreach(
-                                                State.date_class, calendar_days
-                                            )  # Example
-                                        ),
-                                        rx.foreach(
-                                            State.calendar_data, calendar_grid
-                                        ),  # Example
-                                        align="center",
+                                    calendar_component(
+                                        on_change=ChatState.switch_day_ymd
                                     ),
                                     rx.spacer(),
                                     rx.chakra.text(
@@ -131,7 +97,6 @@ def navbar() -> rx.Component:
                                         as_="i",
                                         font_size="2em",
                                         weight="bold",
-                                    ),
                                     show_emotion_colors(),
                                     emotion_card(),
                                     # align_items="center",

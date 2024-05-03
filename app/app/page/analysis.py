@@ -3,6 +3,7 @@ import reflex as rx
 from app.component.navbar import navbar
 from app.state import analysis_state
 from app.page.login import require_login
+from app.state.calendar_state import calendar_component
 
 # 공포 기쁨 놀람 분노 슬픔 중립 혐오
 
@@ -16,9 +17,12 @@ def analysis_page() -> rx.Component:
         ),
         rx.chakra.popover_content(
             rx.chakra.popover_body(
-                analysis_state.demo(),
+                calendar_component(
+                    on_change=analysis_state.AnalysisState.on_change_calendar,
+                ),
             ),
             rx.chakra.popover_close_button(),
+            style={"width": 430},
         ),
         strategy="fixed",
         return_focus_on_close=True,
@@ -35,9 +39,12 @@ def analysis_page() -> rx.Component:
         ),
         rx.chakra.popover_content(
             rx.chakra.popover_body(
-                analysis_state.demo(),
+                calendar_component(
+                    on_change=analysis_state.AnalysisState.on_change_calendar
+                ),
             ),
             rx.chakra.popover_close_button(),
+            style={"width": 430},
         ),
         strategy="fixed",
         return_focus_on_close=True,
