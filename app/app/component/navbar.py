@@ -89,12 +89,6 @@ def navbar() -> rx.Component:
                                         font_size="2em",
                                         weight="bold",
                                     ),
-                                    calendar(
-                                        locale="ko-KR",
-                                        width="100%",
-                                        on_change=ChatState.switch_day,
-                                        value=ChatState.select_date,
-                                    ),
                                     rx.vstack(
                                         rx.hstack(
                                             rx.icon(
@@ -128,10 +122,11 @@ def navbar() -> rx.Component:
                                         rx.foreach(
                                             State.calendar_data, calendar_grid
                                         ),  # Example
+                                        align="center",
                                     ),
                                     rx.spacer(),
                                     rx.chakra.text(
-                                        State.selected_date,
+                                        ChatState.select_date[4:],
                                         # on_change=State.select_date,
                                         as_="i",
                                         font_size="2em",
@@ -139,18 +134,19 @@ def navbar() -> rx.Component:
                                     ),
                                     show_emotion_colors(),
                                     emotion_card(),
-                                ),
-                                top="auto",
+                                    # align_items="center",
+                                ),  # drawer content end
+                                # top="auto",
                                 right="auto",
                                 height="100%",
-                                width="40%",
+                                width="27em",
                                 padding="1em",
                                 background_color="#FFF",
                             )
                         ),
                         direction="left",
                         spacing="1",
-                    ),
+                    ),  # drawer root end
                     spacing="3",
                     align_items="center",
                 ),

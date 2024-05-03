@@ -93,8 +93,8 @@ def create_boxes(params):
     return rx.chakra.box(
         bg=params[1],
         border_radius="10px",
-        width=params[2],
-        height=params[3],
+        width="8em",  # params[2],
+        # height=params[3],
     )
 
 
