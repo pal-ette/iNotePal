@@ -95,6 +95,40 @@ class AnalysisState(ChatState):
     def reset_graph_valid_check(self):
         self.graph_valid_check = False
 
+    @rx.var
+    def print_start_day_text(self):
+
+        if self.start_day == "":
+            return " "
+
+        date_split = format_date(self.start_day).split("-")
+        text_date = (
+            date_split[0]
+            + "년 "
+            + str(int(date_split[1]))
+            + "월 "
+            + str(int(date_split[2]))
+            + "일"
+        )
+        return text_date
+
+    @rx.var
+    def print_end_day_text(self):
+
+        if self.end_day == "":
+            return " "
+
+        date_split = format_date(self.end_day).split("-")
+        text_date = (
+            date_split[0]
+            + "년 "
+            + str(int(date_split[1]))
+            + "월 "
+            + str(int(date_split[2]))
+            + "일"
+        )
+        return text_date
+
     def compare_dates(self):
 
         self.start_date_c = datetime.strptime(self.start_day, "%a %b %d %Y")

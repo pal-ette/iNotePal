@@ -84,11 +84,11 @@ def analysis_page() -> rx.Component:
         rx.chakra.wrap(
             rx.chakra.wrap_item(
                 start_calendar_form,
-                rx.heading(analysis_state.AnalysisState.start_day),
+                rx.heading(analysis_state.AnalysisState.print_start_day_text),
             ),
             rx.chakra.wrap_item(
                 end_calendar_form,
-                rx.heading(analysis_state.AnalysisState.end_day),
+                rx.heading(analysis_state.AnalysisState.print_end_day_text),
             ),
             align="center",
             width="100%",

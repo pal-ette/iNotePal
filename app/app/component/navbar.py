@@ -7,6 +7,10 @@ from app.component.emotion_card import emotion_card, show_emotion_colors
 from app.state.calendar_state import calendar_component
 
 
+def date_to_print(date):
+    return date.split("-")
+
+
 def navbar() -> rx.Component:
     return rx.fragment(
         rx.chakra.flex(
@@ -81,28 +85,22 @@ def navbar() -> rx.Component:
                                     ),
                                     rx.chakra.divider(border_color="black"),
                                     rx.spacer(),
-                                    rx.chakra.text(
-                                        "Calendar",
-                                        as_="i",
-                                        font_size="2em",
-                                        weight="bold",
-                                    ),
                                     calendar_component(
                                         on_change=ChatState.switch_day_ymd
                                     ),
                                     rx.spacer(),
                                     rx.chakra.text(
-                                        ChatState.select_date[4:],
+                                        f"{ChatState.print_date_text}의 감정",
                                         # on_change=State.select_date,
                                         as_="i",
-                                        font_size="2em",
+                                        font_size="1.5em",
                                         weight="bold",
                                     ),
                                     show_emotion_colors(),
                                     emotion_card(),
                                     # align_items="center",
                                 ),  # drawer content end
-                                # top="auto",
+                                top="auto",
                                 right="auto",
                                 height="100%",
                                 width="27em",

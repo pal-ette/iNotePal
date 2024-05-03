@@ -83,7 +83,7 @@ class ChatState(AppState):
 
     @rx.var
     def has_past_chats(self) -> bool:
-        return len(self.past_chats) > 0
+        return len(self.past_chats) > 1
 
     @rx.var
     def current_chat(self) -> Dict[str, str]:
@@ -132,6 +132,19 @@ class ChatState(AppState):
 
     def print_date(self, year, month, day):
         print("select_date", year, month, day)
+
+    @rx.var
+    def print_date_text(self):
+        date_split = self.db_select_date.split("-")
+        text_date = (
+            date_split[0]
+            + "년 "
+            + str(int(date_split[1]))
+            + "월 "
+            + str(int(date_split[2]))
+            + "일"
+        )
+        return text_date
 
     def get_messages(self, chat_id):
         if chat_id in self._db_messages:
