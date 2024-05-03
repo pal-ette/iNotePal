@@ -97,6 +97,7 @@ def navbar() -> rx.Component:
                                         as_="i",
                                         font_size="2em",
                                         weight="bold",
+                                    ),
                                     show_emotion_colors(),
                                     emotion_card(),
                                     # align_items="center",
