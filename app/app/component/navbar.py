@@ -90,20 +90,28 @@ def navbar() -> rx.Component:
                                     calendar_component(
                                         on_change=ChatState.switch_day_ymd
                                     ),
+                                    rx.spacer(),
+                                    rx.chakra.text(
+                                        ChatState.select_date[4:],
+                                        # on_change=State.select_date,
+                                        as_="i",
+                                        font_size="2em",
+                                        weight="bold",
                                     show_emotion_colors(),
                                     emotion_card(),
-                                ),
-                                top="auto",
+                                    # align_items="center",
+                                ),  # drawer content end
+                                # top="auto",
                                 right="auto",
                                 height="100%",
-                                width="40%",
+                                width="27em",
                                 padding="1em",
                                 background_color="#FFF",
                             )
                         ),
                         direction="left",
                         spacing="1",
-                    ),
+                    ),  # drawer root end
                     spacing="3",
                     align_items="center",
                 ),

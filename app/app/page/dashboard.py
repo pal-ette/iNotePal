@@ -28,8 +28,8 @@ class ModalState(rx.State):
 
 def build_past_card(chat):
     return rx.chakra.button(
-        chat["id"],
-        on_click=lambda: ChatState.select_past_card(chat["id"]),
+        chat[0],
+        on_click=lambda: ChatState.select_past_card(chat[1]["id"]),
         bg="#f2ebc8",
         color="#49312d",
     )
