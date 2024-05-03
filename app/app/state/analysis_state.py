@@ -1,7 +1,7 @@
 from reflex_calendar import calendar
 
 import reflex as rx
-from datetime import datetime
+from datetime import datetime, date
 from app.state.chat_state import ChatState
 from typing import List, Dict
 from reflex_calendar import reformat_date
@@ -20,6 +20,9 @@ class AnalysisState(ChatState):
 
     start_date_c: str = ""
     end_date_c: str = ""
+
+    def on_change_calendar(self, year, month, day):
+        self.selected_date = date(year, month, day).strftime("%a %b %d %Y")
 
     def change_handler(self, var):
         self.selected_date = var
