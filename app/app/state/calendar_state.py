@@ -167,7 +167,7 @@ class Calendar(rx.ComponentState):
                                         (cls.year == cls.select_year)
                                         & (cls.month == cls.select_month)
                                         & (day == cls.select_day),
-                                        "rgba(0, 255, 0, 0.05)",
+                                        "#e5988e",
                                         "rgba(255, 255, 255, 0.05)",
                                     ),
                                     style=cal_row_style,
