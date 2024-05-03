@@ -19,7 +19,7 @@ def wordcloud_page():
             rx.vstack(
                 rx.hstack(
                     rx.chakra.heading(
-                        WordCloudState.db_select_date,
+                        WordCloudState.print_date_text,
                         size="xl",
                         weight="bold",
                         align="center",

@@ -42,7 +42,7 @@ def dashboard():
         rx.container(
             margin_top=rx.cond(
                 ChatState.has_past_chats,
-                "0px",
+                "30px",
                 "120px",
             ),
         ),
@@ -60,7 +60,7 @@ def dashboard():
                     ),
                 ),
                 rx.chakra.heading(
-                    ChatState.db_select_date,
+                    ChatState.print_date_text,
                     size="xl",
                     weight="bold",
                     align="center",
