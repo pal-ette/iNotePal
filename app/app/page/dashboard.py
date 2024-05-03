@@ -82,11 +82,6 @@ def dashboard():
                     rx.cond(
                         ChatState.is_closed,
                         rx.hstack(
-                            rx.chakra.badge(
-                                ChatState.chat_emotion,
-                                variant="subtle",
-                                color_scheme="red",
-                            ),
                             rx.chakra.button(
                                 "대화 새로 시작하기",
                                 on_click=ChatState.start_new_chat,

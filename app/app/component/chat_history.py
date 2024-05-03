@@ -15,7 +15,6 @@ def user_chat_bubble(message, emotion):
             width="100%",
             align="end",
         ),
-        rx.badge(emotion),
         width="100%",
         align="end",
     )
