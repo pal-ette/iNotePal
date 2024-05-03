@@ -40,7 +40,11 @@ def dashboard():
     return rx.flex(
         navbar(),
         rx.container(
-            margin_top="120px",
+            margin_top=rx.cond(
+                ChatState.has_past_chats,
+                "0px",
+                "120px",
+            ),
         ),
         rx.hstack(
             rx.container(margin_left="120px"),
@@ -75,18 +79,13 @@ def dashboard():
                         chat_history(),
                     ),
                     width="100%",
-                    min_height="600px",
+                    min_height="580px",
                 ),
                 rx.vstack(
                     chat_input(ChatState.is_exist_chat),
                     rx.cond(
                         ChatState.is_closed,
                         rx.hstack(
-                            rx.chakra.badge(
-                                ChatState.chat_emotion,
-                                variant="subtle",
-                                color_scheme="red",
-                            ),
                             rx.chakra.button(
                                 "대화 새로 시작하기",
                                 on_click=ChatState.start_new_chat,
