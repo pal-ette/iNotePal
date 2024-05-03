@@ -15,6 +15,7 @@ from reflex_calendar import reformat_date
 from reflex import constants
 import random
 from collections import Counter
+from datetime import date
 
 
 inference_model = InferenceModel("dummy-0.0.0")
@@ -159,6 +160,9 @@ class ChatState(AppState):
                 continue
             self._current_chat_index = i
             break
+
+    def switch_day_ymd(self, year, month, day):
+        return self.switch_day(date(year, month, day).strftime("%a %b %d %Y"))
 
     def switch_day(self, day):
         self._current_chat_index = 0

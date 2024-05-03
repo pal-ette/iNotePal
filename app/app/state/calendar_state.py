@@ -55,9 +55,13 @@ class Calendar(rx.ComponentState):
     year: int = datetime.datetime.now().year  # 연도 저장
     month: int = datetime.datetime.now().month  # 표시할 월 저장
 
-    select_year: int | None = None
-    select_month: int | None = None
-    select_day: int | None = None
+    select_year: int = datetime.datetime.now().year
+    select_month: int = datetime.datetime.now().month
+    select_day: int = datetime.datetime.now().day
+
+    @rx.var
+    def current_month(self):
+        return month_class[self.month]
 
     @rx.var
     def monthdayscalendar(self) -> List[List[int]]:
@@ -111,7 +115,7 @@ class Calendar(rx.ComponentState):
                 ),
                 rx.spacer(),  # 빈 공간 생성
                 rx.text(  # 현재 월과 연도를 표시하는 텍스트
-                    f"{cls.month} {cls.year}",
+                    f"{cls.current_month} {cls.year}",
                     width="150px",
                     display="flex",
                     justify_content="center",
