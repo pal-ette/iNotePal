@@ -13,18 +13,14 @@ def navbar() -> rx.Component:
         rx.chakra.flex(
             # banner(),
             rx.flex(
-                rx.chakra.heading(
-                    "iNotePal",
-                    as_="h1",
-                    size="4xl",
-                    weight="bold",
-                    bgGradient="linear(to-l, #f2ebc8, #de776c, #49312d)",
-                    bgClip="text",
-                ),
                 rx.link(
-                    rx.text(
-                        "Home",
-                        color_scheme="gray",
+                    rx.chakra.heading(
+                        "iNotePal",
+                        as_="h1",
+                        size="4xl",
+                        weight="bold",
+                        bgGradient="linear(to-l, #f2ebc8, #de776c, #49312d)",
+                        bgClip="text",
                     ),
                     href="/",
                 ),
