@@ -59,22 +59,25 @@ class Calendar(rx.ComponentState):
     select_month: int | None = None
     select_day: int | None = None
 
-    _selected_date: datetime.date = datetime.date.today()
-
-    @rx.var
-    def selected_date_str(self):
-        return str(self._selected_date)
-
     @rx.var
     def monthdayscalendar(self) -> List[List[int]]:
         return cal.monthdayscalendar(self.year, self.month)
 
     def set_selected_date(self, day):
-        self.select_year = self.year
-        self.select_month = self.month
-        self.select_day = day
-
-        self._selected_date = datetime.date(self.year, self.month, day)
+        if day == 0:
+            return
+        if (
+            (self.select_year == self.year)
+            and (self.select_month == self.month)
+            and (self.select_day == day)
+        ):
+            self.select_year = None
+            self.select_month = None
+            self.select_day = None
+        else:
+            self.select_year = self.year
+            self.select_month = self.month
+            self.select_day = day
 
     def delta_calendar(self, delta: int):
         if delta == 1:
@@ -139,33 +142,41 @@ class Calendar(rx.ComponentState):
                 ]
             ),
             rx.vstack(
-                rx.text(
-                    cls.selected_date_str,
-                ),
                 rx.foreach(
                     cls.monthdayscalendar,
                     lambda week: rx.hstack(
                         rx.foreach(
                             week,
-                            lambda day: rx.container(
-                                rx.text(
-                                    day,
-                                    font_size="14px",
-                                    align="center",
+                            lambda day: rx.cond(
+                                day == 0,
+                                rx.container(
+                                    rx.text(
+                                        " ",
+                                        font_size="14px",
+                                        align="center",
+                                    ),
+                                    style=cal_row_style,
                                 ),
-                                background_color=rx.cond(
-                                    (cls.year == cls.select_year)
-                                    & (cls.month == cls.select_month)
-                                    & (day == cls.select_day),
-                                    "rgba(0, 255, 0, 0.05)",
-                                    "rgba(255, 255, 255, 0.05)",
+                                rx.container(
+                                    rx.text(
+                                        day,
+                                        font_size="14px",
+                                        align="center",
+                                    ),
+                                    background_color=rx.cond(
+                                        (cls.year == cls.select_year)
+                                        & (cls.month == cls.select_month)
+                                        & (day == cls.select_day),
+                                        "rgba(0, 255, 0, 0.05)",
+                                        "rgba(255, 255, 255, 0.05)",
+                                    ),
+                                    style=cal_row_style,
+                                    cursor="pointer",  # Make clickable
+                                    on_click=[
+                                        on_change(cls.year, cls.month, day),
+                                        cls.set_selected_date(day),
+                                    ],
                                 ),
-                                style=cal_row_style,
-                                cursor="pointer",  # Make clickable
-                                on_click=[
-                                    on_change(f"{cls.year}-{cls.month}-{day}"),
-                                    cls.set_selected_date(day),
-                                ],
                             ),
                         ),
                     ),

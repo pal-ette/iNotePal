@@ -127,8 +127,8 @@ class ChatState(AppState):
             .data
         )
 
-    def print_date(self, date):
-        print("select_date", date)
+    def print_date(self, year, month, day):
+        print("select_date", year, month, day)
 
     def get_messages(self, chat_id):
         if chat_id in self._db_messages:
