@@ -6,6 +6,7 @@ from app.state.chat_state import ChatState
 from typing import List, Dict
 from reflex_calendar import reformat_date
 import json
+from collections import defaultdict
 
 
 class AnalysisState(ChatState):
@@ -65,8 +66,6 @@ class AnalysisState(ChatState):
             self.logs.pop(0)
 
     def setStartDay(self):
-        print("end data pre set: ", self.end_day)
-
         if self.start_day != "":
             self.data_reset()
 
@@ -115,7 +114,6 @@ class AnalysisState(ChatState):
     line_chart_check: bool = False
 
     def data_reset(self):
-        print("RESET DATA")
         self.radar_chart_check = False
         self.funnel_chart_check = False
         self.bar_chart_check = False
@@ -174,17 +172,188 @@ class AnalysisState(ChatState):
     data_emotion_frequency: List[Dict[str, int]] = []
     data_funnel: List[Dict[int, str]] = []
 
+    @rx.var
+    def data_emotion(self):
+        if self.start_day == "":
+            return []
+
+        if self.end_day == "":
+            return []
+
+        period_data = self.get_chats_in_period(
+            format_date(self.start_day), format_date(self.end_day)
+        )
+        return [
+            message["emotion"]
+            for item in period_data
+            for message in item["message"]
+            if message["is_user"] and message["emotion"]
+        ]
+
+    @rx.var
+    def data_emotion_total(self):
+        start_day = "1970-01-01"
+        end_day = "2024-05-03"
+
+        total_data = self.get_chats_in_period(start_day, end_day)
+        return [
+            message["emotion"]
+            for item in total_data
+            for message in item["message"]
+            if message["is_user"] and message["emotion"]
+        ]
+
+    @rx.var
+    def data_emotion_count(self):
+        emotion_count = {
+            "혐오": 0,
+            "분노": 0,
+            "공포": 0,
+            "슬픔": 0,
+            "중립": 0,
+            "놀람": 0,
+            "기쁨": 0,
+        }
+        for emotion in self.data_emotion:
+            if emotion in emotion_count:
+                emotion_count[emotion] += 1
+            else:
+                emotion_count[emotion] = 1
+        return emotion_count
+
+    @rx.var
+    def data_emotion_count_total(self):
+        emotion_count_total = {
+            "혐오": 0,
+            "분노": 0,
+            "공포": 0,
+            "슬픔": 0,
+            "중립": 0,
+            "놀람": 0,
+            "기쁨": 0,
+        }
+        for emotion in self.data_emotion_total:
+            if emotion in emotion_count_total:
+                emotion_count_total[emotion] += 1
+            else:
+                emotion_count_total[emotion] = 1
+        return emotion_count_total
+
+    @rx.var
+    def data_emotion_radar(self) -> List[Dict[str, str | int]]:
+        data_radar = []
+        period = [
+            {"emotion": emotion, "count": count}
+            for emotion, count in self.data_emotion_count.items()
+        ]
+        total = [
+            {"emotion": emotion, "count": count}
+            for emotion, count in self.data_emotion_count_total.items()
+        ]
+        data_radar = [
+            {"emotion": p["emotion"], "period": p["count"], "total": t["count"]}
+            for p, t in zip(period, total)
+        ]
+        return data_radar
+
+    @rx.var
+    def data_emotion_funnel(self) -> List[Dict[str, str | int]]:
+        fill_mapping = {
+            "혐오": "#49312d",
+            "분노": "#91615a",
+            "공포": "#af625c",
+            "슬픔": "#de776c",
+            "중립": "#e5988e",
+            "놀람": "#ebb9b0",
+            "기쁨": "#f2ebc8",
+        }
+        data_funnel = []
+        for emotion, count in self.data_emotion_count.items():
+            if count == 0:
+                continue
+            if emotion in fill_mapping:
+                new_dict = {
+                    "emotion": emotion,
+                    "count": count,
+                    "fill": fill_mapping[emotion],
+                }
+                data_funnel.append(new_dict)
+
+        data_funnel = sorted(data_funnel, key=lambda x: x["count"], reverse=True)
+        return data_funnel
+
+    @rx.var
+    def count_emotions_by_date(self):
+        if self.start_day == "":
+            return []
+        if self.end_day == "":
+            return []
+
+        period_data = self.get_chats_in_period(
+            format_date(self.start_day), format_date(self.end_day)
+        )
+        emotions_by_date = defaultdict(lambda: defaultdict(int))
+
+        for entry in period_data:
+            if "message" in entry:
+                for message in entry["message"]:
+                    if message["emotion"] and message["is_user"]:
+                        emotion = message["emotion"]
+                        if emotion:
+                            emotions_by_date[entry["date"]][emotion] += 1
+
+        emotions_list = []
+        for date, emotions in emotions_by_date.items():
+            emotions_list.append({"date": date, "emotions": dict(emotions)})
+
+        return emotions_list
+
+    @rx.var
+    def data_emotion_bar(self) -> List[Dict[str, str | int]]:
+        emotion_totals = defaultdict(
+            lambda: {
+                "공포": 0,
+                "기쁨": 0,
+                "놀람": 0,
+                "분노": 0,
+                "슬픔": 0,
+                "중립": 0,
+                "혐오": 0,
+            }
+        )
+
+        data_bar = []
+        for entry in self.count_emotions_by_date:
+
+            date = entry["date"]
+            emotions = entry["emotions"]
+            for emotion, count in emotions.items():
+                emotion_totals[date][emotion] += count
+
+        transformed_data = [
+            {"date": date, **emotions} for date, emotions in emotion_totals.items()
+        ]
+        data_bar = sorted(transformed_data, key=lambda x: x["date"], reverse=False)
+        return data_bar
+
+    @rx.var
+    def data_emotion_line(self) -> List[Dict[str, str | int]]:
+
+        data_line = []
+        for emotion, count in self.data_emotion_count.items():
+            if count == 0:
+                continue
+
+        return data_line
+
     def set_emotion_counts_state(self):
         self.emotion_counts_check = False
-        print("emotion_counts_state->False")
 
     def set_data_radar_state(self):
         self.data_radar_check = False
-        print("data_radar_check --> False")
 
     def set_data_funnel_state(self):
         self.data_funnel_check = False
-        print("data_funnel_check --> False")
 
     def data_bar_state(self):
         self.data_bar_check = False
@@ -193,27 +362,20 @@ class AnalysisState(ChatState):
         self.data_line_check = False
 
     def getDataDay(self):
-        # past_chats = self.past_messages
 
         if self.start_day != "":
             formatted_date_s = format_date(str(self.start_day))
-            print("start day ", formatted_date_s)
 
         if self.end_day != "":
             formatted_date_e = format_date(str(self.end_day))
-            print("end day ", formatted_date_e)
 
         if self.start_day != "" and self.end_day != "":
             period_data = self.get_chats_in_period(formatted_date_s, formatted_date_e)
-            # print("period data: ", period_data)
 
             for item in period_data:
                 for message in item["message"]:
                     if message["is_user"] and message["emotion"] is not None:
                         self.emotions_list.append(message["emotion"])
-
-            print(self.emotions_list)
-
         yield
 
     def emotion_count_day(self):
@@ -229,17 +391,14 @@ class AnalysisState(ChatState):
                 for emotion, count in self.emotion_counts.items()
             ]
 
-            print(self.data_emotion_frequency)
             self.set_emotion_counts_state()
 
     def getDataRadar(self):
         if self.emotion_counts_check:
             self.emotion_count_day()
-            print("emotion_counts_check --> True")
 
         if self.data_radar_check:
             self.set_data_radar_state()
-            print("data_radar_check --> True")
 
     def getDataFunnels(self):
 
@@ -254,10 +413,9 @@ class AnalysisState(ChatState):
         }
         if self.emotion_counts_check:
             self.emotion_count_day()
-            print("emotion_counts_check --> True")
 
         if self.data_funnel_check:
-            print("data_funnel_check --> True")
+
             for emotion, count in self.emotion_counts.items():
                 if count == 0:
                     continue
@@ -338,7 +496,6 @@ def demo():
 
 
 def format_date(date_str):
-
     date_object = datetime.strptime(date_str, "%a %b %d %Y")
     return date_object.strftime("%Y-%m-%d")
 
