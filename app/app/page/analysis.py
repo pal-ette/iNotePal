@@ -5,6 +5,7 @@ from app.state.login_state import LoginState
 from app.component.navbar import navbar
 from app.state import analysis_state
 from app.page.login import require_login
+from app.state.calendar_state import calendar_component
 
 # 그래프 그리기 위한 임시 데이터.
 
@@ -154,9 +155,12 @@ def analysis_page() -> rx.Component:
         ),
         rx.chakra.popover_content(
             rx.chakra.popover_body(
-                analysis_state.demo(),
+                calendar_component(
+                    on_change=analysis_state.AnalysisState.on_change_calendar,
+                ),
             ),
             rx.chakra.popover_close_button(),
+            style={"width": 430},
         ),
         strategy="fixed",
         return_focus_on_close=True,
@@ -173,9 +177,12 @@ def analysis_page() -> rx.Component:
         ),
         rx.chakra.popover_content(
             rx.chakra.popover_body(
-                analysis_state.demo(),
+                calendar_component(
+                    on_change=analysis_state.AnalysisState.on_change_calendar
+                ),
             ),
             rx.chakra.popover_close_button(),
+            style={"width": 430},
         ),
         strategy="fixed",
         return_focus_on_close=True,
