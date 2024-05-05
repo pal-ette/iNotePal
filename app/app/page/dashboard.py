@@ -80,6 +80,7 @@ def dashboard():
                     ),
                     width="100%",
                     min_height="500px",
+                    id="chat_area",
                 ),
                 rx.vstack(
                     chat_input(ChatState.is_exist_chat),
