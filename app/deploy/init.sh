@@ -6,4 +6,4 @@ python -m venv .venv
 
 . $(pwd)/.venv/bin/activate
 
-pip install -r requirements.txt
+cat requirements.txt | xargs pip install

@@ -207,6 +207,14 @@ class ChatState(AppState):
         else:
             self._db_messages[chat_id] = [cache_item]
 
+    def scroll_to_bottom(self):
+        return rx.call_script(
+            """
+            var element = document.getElementById('chat_area');
+            element.scrollTop = element.scrollHeight;
+            """
+        )
+
     def select_current_chat_emotion(self):
         [(emotion, _count)] = Counter(
             [
@@ -362,4 +370,4 @@ class ChatState(AppState):
             is_user=False,
         )
         self.is_waiting = False
-        yield
+        yield self.scroll_to_bottom()
