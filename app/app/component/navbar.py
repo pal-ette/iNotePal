@@ -17,30 +17,63 @@ def navbar() -> rx.Component:
             rx.flex(
                 rx.link(
                     rx.chakra.heading(
+                        "iNP",
+                        as_="h1",
+                        size="4xl",
+                        weight="bold",
+                        bgGradient="linear(to-l, #f2ebc8, #de776c, #49312d)",
+                        bgClip="text",
+                        display=[
+                            "flex",
+                            "flex",
+                            "none",
+                            "none",
+                            "none",
+                            "none",
+                        ],
+                    ),
+                    rx.chakra.heading(
                         "iNotePal",
                         as_="h1",
                         size="4xl",
                         weight="bold",
                         bgGradient="linear(to-l, #f2ebc8, #de776c, #49312d)",
                         bgClip="text",
+                        display=[
+                            "none",
+                            "none",
+                            "flex",
+                            "flex",
+                            "flex",
+                            "flex",
+                        ],
                     ),
                     href="/",
                 ),
-                rx.link(
-                    rx.text(
-                        "Analysis",
-                        color_scheme="gray",
+                rx.chakra.hstack(
+                    rx.link(
+                        rx.text(
+                            "Analysis",
+                            color_scheme="gray",
+                        ),
+                        href="/analysis",
                     ),
-                    href="/analysis",
-                ),
-                rx.link(
-                    rx.text(
-                        "Word Cloud",
-                        color_scheme="gray",
+                    rx.link(
+                        rx.text(
+                            "Word Cloud",
+                            color_scheme="gray",
+                        ),
+                        href="/word_cloud",
                     ),
-                    href="/word_cloud",
+                    display=[
+                        "none",
+                        "none",
+                        "flex",
+                        "flex",
+                        "flex",
+                        "flex",
+                    ],
                 ),
-                # navigation_section(),
                 rx.box(
                     flex_grow="1",
                 ),
@@ -85,6 +118,35 @@ def navbar() -> rx.Component:
                                     ),
                                     rx.chakra.divider(border_color="black"),
                                     rx.spacer(),
+                                    rx.chakra.vstack(
+                                        rx.chakra.hstack(
+                                            rx.link(
+                                                rx.text(
+                                                    "Analysis",
+                                                    color_scheme="gray",
+                                                ),
+                                                href="/analysis",
+                                            ),
+                                            rx.link(
+                                                rx.text(
+                                                    "Word Cloud",
+                                                    color_scheme="gray",
+                                                ),
+                                                href="/word_cloud",
+                                            ),
+                                        ),
+                                        rx.chakra.divider(border_color="black"),
+                                        rx.spacer(),
+                                        width="100%",
+                                        display=[
+                                            "flex",
+                                            "flex",
+                                            "none",
+                                            "none",
+                                            "none",
+                                            "none",
+                                        ],
+                                    ),
                                     calendar_component(
                                         on_change=ChatState.switch_day_ymd
                                     ),
