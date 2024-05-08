@@ -47,97 +47,99 @@ def dashboard():
             ),
         ),
         rx.hstack(
-            rx.container(margin_left="120px"),
-            rx.spacer(),
-            rx.vstack(
-                rx.cond(
-                    ChatState.has_past_chats,
-                    rx.hstack(
-                        rx.foreach(
-                            ChatState.past_chats,
-                            build_past_card,
-                        ),
-                    ),
-                ),
-                rx.chakra.heading(
-                    ChatState.print_date_text,
-                    size="xl",
-                    weight="bold",
-                    align="center",
-                    padding_bottom="2vh",
-                ),
-                rx.scroll_area(
-                    rx.cond(
-                        ChatState.is_creating,
-                        rx.hstack(
-                            rx.chakra.circular_progress(
-                                is_indeterminate=ChatState.is_creating
-                            ),
-                            rx.text("친구가 말 거는 중.."),
-                            align="center",
-                        ),
-                        chat_history(),
-                    ),
-                    width="100%",
-                    min_height="500px",
-                    id="chat_area",
-                ),
+            rx.container(
                 rx.vstack(
-                    chat_input(ChatState.is_exist_chat),
                     rx.cond(
-                        ChatState.is_closed,
+                        ChatState.has_past_chats,
                         rx.hstack(
-                            rx.chakra.button(
-                                "대화 새로 시작하기",
-                                on_click=ChatState.start_new_chat,
-                                size="sm",
-                                bg="#ebb9b0",
-                                color="#49312d",
-                                border_radius="md",
-                            ),
-                        ),
-                        rx.cond(
-                            ChatState.current_messages.length() > 2,
-                            rx.chakra.button(
-                                "대화 마치기",
-                                on_click=[ChatState.evaluate_chat, ModalState.change],
-                                # width="100%",
-                                # variant="solid",
-                                size="sm",
-                                bg="#ebb9b0",
-                                color="#49312d",
-                                border_radius="md",
+                            rx.foreach(
+                                ChatState.past_chats,
+                                build_past_card,
                             ),
                         ),
                     ),
-                    rx.chakra.modal(
-                        rx.chakra.modal_overlay(
-                            rx.chakra.modal_content(
-                                rx.chakra.modal_header("오늘의 감정"),
-                                rx.chakra.modal_body(
-                                    rx.flex(create_box())
-                                ),  # emotion_card
-                                rx.chakra.modal_footer(
-                                    rx.chakra.button(
-                                        "닫기",
-                                        on_click=ModalState.change,
-                                    ),
+                    rx.chakra.heading(
+                        ChatState.print_date_text,
+                        size="xl",
+                        weight="bold",
+                        align="center",
+                        padding_bottom="2vh",
+                    ),
+                    rx.scroll_area(
+                        rx.cond(
+                            ChatState.is_creating,
+                            rx.hstack(
+                                rx.chakra.circular_progress(
+                                    is_indeterminate=ChatState.is_creating
+                                ),
+                                rx.text("친구가 말 거는 중.."),
+                                align="center",
+                            ),
+                            chat_history(),
+                        ),
+                        width="100%",
+                        min_height="500px",
+                        id="chat_area",
+                    ),
+                    rx.vstack(
+                        chat_input(ChatState.is_exist_chat),
+                        rx.cond(
+                            ChatState.is_closed,
+                            rx.hstack(
+                                rx.chakra.button(
+                                    "대화 새로 시작하기",
+                                    on_click=ChatState.start_new_chat,
+                                    size="sm",
+                                    bg="#ebb9b0",
+                                    color="#49312d",
+                                    border_radius="md",
+                                ),
+                            ),
+                            rx.cond(
+                                ChatState.current_messages.length() > 2,
+                                rx.chakra.button(
+                                    "대화 마치기",
+                                    on_click=[
+                                        ChatState.evaluate_chat,
+                                        ModalState.change,
+                                    ],
+                                    # width="100%",
+                                    # variant="solid",
+                                    size="sm",
+                                    bg="#ebb9b0",
+                                    color="#49312d",
+                                    border_radius="md",
                                 ),
                             ),
                         ),
-                        # close_on_overlay_click=True,
-                        is_centered=True,
-                        is_open=ModalState.show,
+                        rx.chakra.modal(
+                            rx.chakra.modal_overlay(
+                                rx.chakra.modal_content(
+                                    rx.chakra.modal_header("오늘의 감정"),
+                                    rx.chakra.modal_body(
+                                        rx.flex(create_box())
+                                    ),  # emotion_card
+                                    rx.chakra.modal_footer(
+                                        rx.chakra.button(
+                                            "닫기",
+                                            on_click=ModalState.change,
+                                        ),
+                                    ),
+                                ),
+                            ),
+                            # close_on_overlay_click=True,
+                            is_centered=True,
+                            is_open=ModalState.show,
+                        ),
+                        # ),
+                        align="center",
+                        width="100%",
                     ),
-                    # ),
-                    align="center",
+                    height="80vh",
                     width="100%",
                 ),
-                height="80vh",
-                width="50%",
+                size="2",
             ),
-            rx.spacer(),
-            rx.container(margin_right="120px"),
             height="100%",
             margin="10px",
         ),
