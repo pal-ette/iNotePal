@@ -1,4 +1,30 @@
-# iNotePal
+[<img src="https://github.com/pal-ette/iNotePal/assets/66175878/f8e3904b-8aa7-4baf-90d9-9c176ad1202e" width="300">](https://pal-ette.github.io/iNotePal/)
+
+
+> `iNotePal`은 감성 대화 챗봇과의 대화를 통해 나의 하루를 기록하고 그 날의 감정을 분석합니다. </br>
+> 챗봇과의 대화로 매일의 기분을 기록해보세요 :grinning:
+
+
+> [!TIP]
+> <details close>
+>   <summary>:raising_hand: 챗봇과 대화하고 대화를 저장할 수 있어요</summary>
+>   <img src="https://github.com/pal-ette/iNotePal/assets/66175878/5e83341e-3f45-48e2-9220-072682fe0ddc" width="400">
+>   <img src="https://github.com/pal-ette/iNotePal/assets/66175878/36707b50-a6a8-40f9-9a7d-de8294ded331" width="400"></br>
+> </details>
+> <details close>
+>   <summary>:art: 그날의 감정을 감정 카드로 확인해볼 수 있어요</summary>
+>   <img src="https://github.com/pal-ette/iNotePal/assets/66175878/1e3050a2-2103-4194-959b-d93eeab10271" width="800"></br>
+> </details>
+> <details close>
+>   <summary>:bar_chart: 원하는 기간의 감정을 그래프로 분석해볼 수 있어요</summary>
+>   <img src="https://github.com/pal-ette/iNotePal/assets/66175878/bd9f9418-2009-417d-af4d-dcdbf670a7e5" width="800"></br>
+> </details>
+> <details close>
+>   <summary>:cloud: 원하는 하루의 대화를 워드클라우드로 확인해볼 수 있어요 :running:원하는 기간으로 업데이트 중:running:</summary>
+>   <img src="https://github.com/pal-ette/iNotePal/assets/66175878/c8ba7de1-f3b2-4b4b-8fdc-1c407b35f34f" width="800"></br>
+> </details>
+
+------
 
 <details open>
 <summary>dataset/</summary>
