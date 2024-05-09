@@ -58,7 +58,7 @@ class LoginState(AppState):
         yield
 
         self.error_message = ""
-        email = form_data["email"]
+        email = form_data["login_email"]
         password = form_data["password"]
 
         try:
