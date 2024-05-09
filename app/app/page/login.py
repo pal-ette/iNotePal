@@ -32,7 +32,7 @@ def login_page() -> rx.Component:
                 ),
                 rx.chakra.input(
                     placeholder="email",
-                    id="email",
+                    id="login_email",
                     type_="email",
                 ),
                 rx.chakra.form_label(
@@ -97,7 +97,7 @@ def login_page() -> rx.Component:
                                 rx.hstack(
                                     rx.chakra.input(
                                         placeholder="email",
-                                        id="email",
+                                        id="password_reset_email",
                                         type_="email",
                                         width="100%",
                                     ),

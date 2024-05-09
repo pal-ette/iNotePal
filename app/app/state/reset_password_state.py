@@ -20,7 +20,7 @@ class ResetPasswordState(rx.State):
 
     def request_reset_password(self, form_data):
         self.error_message = ""
-        email = form_data["email"]
+        email = form_data["password_reset_email"]
         try:
             supabase_client().auth.reset_password_email(
                 email,
