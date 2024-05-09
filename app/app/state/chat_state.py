@@ -170,6 +170,8 @@ class ChatState(AppState):
         return self._db_messages[chat_id]
 
     def select_past_card(self, chat_id):
+        if self.current_chat and self.current_chat["id"] == chat_id:
+            return
         for i, chat in enumerate(self.chats):
             if chat["id"] != chat_id:
                 continue
