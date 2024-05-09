@@ -31,7 +31,11 @@ def build_past_card(chat):
     return rx.chakra.button(
         chat[0],
         on_click=lambda: ChatState.select_past_card(chat[1]["id"]),
-        bg="#f2ebc8",
+        bg=rx.cond(
+            ChatState.current_chat["id"] == chat[1]["id"],
+            "#e5988e",
+            "#f2ebc8",
+        ),
         color="#49312d",
     )
 
