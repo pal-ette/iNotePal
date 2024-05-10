@@ -159,3 +159,4 @@ Werkzeug==3.0.3
 wrapt==1.14.1
 wsproto==1.2.0
 zipp==3.18.1
+reflex-wordcloud @ git+https://github.com/pal-ette/reflex-wordcloud@cdda867630b284a03054a4adb70fb3896f824fcd
