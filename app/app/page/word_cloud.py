@@ -1,6 +1,6 @@
 import reflex as rx
+from reflex_wordcloud import wordcloud
 from app.component.navbar import navbar
-from app.component.word_cloud import word_cloud
 from app.state.word_cloud_state import *
 from app.page.login import require_login
 
@@ -33,7 +33,7 @@ def wordcloud_page():
                     ),
                 ),
                 rx.spacer(),
-                word_cloud(
+                wordcloud(
                     words=WordCloudState.display_words,
                     options={
                         "colors": [
