@@ -6,4 +6,4 @@ python -m venv .venv
 
 . $(pwd)/.venv/bin/activate
 
-cat requirements_ubuntu.txt | xargs pip install
+pip install -r requirements_ubuntu.txt 
