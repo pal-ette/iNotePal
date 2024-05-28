@@ -7,6 +7,10 @@ from typing import List, Optional
 class BaseConfg(rx.Config):
     app_name: str = "app"
 
+    backend_port: int = 8080
+
+    api_url: str = f"http://localhost:{backend_port}"
+
 
 class DevConfig(BaseConfg):
     cors_allowed_origins: List[str] = [
