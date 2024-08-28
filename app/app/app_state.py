@@ -30,14 +30,14 @@ class AppState(rx.State):
         self.auth_token = ""
         yield
 
-    @rx.cached_var
+    @rx.var(cache=True)
     def user_mail(self) -> str:
         if not self.token_is_valid:
             return ""
 
         return self.decodeJWT["email"]
 
-    @rx.cached_var
+    @rx.var(cache=True)
     def decodeJWT(self) -> dict:
         """
         Decode the JWT token.
