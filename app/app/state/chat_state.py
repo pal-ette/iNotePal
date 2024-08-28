@@ -281,7 +281,7 @@ class ChatState(AppState):
         _y, month, day = self.db_select_date.split("-")
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o-mini",
             messages=[
                 {
                     "role": "system",
@@ -301,7 +301,7 @@ class ChatState(AppState):
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         response = (
             client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4o-mini",
                 messages=[{"role": "user", "content": message}],
                 temperature=7e-1,
             )
