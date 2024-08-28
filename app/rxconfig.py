@@ -23,7 +23,7 @@ class ProdConfig(BaseConfg):
         "https://pal-ette.github.io",
     ]
 
-    api_url: str = "https://nvidia.edens.one"
+    api_url: str = "https://api.pal-ette.org"
 
     deploy_url: Optional[str] = "https://pal-ette.github.io/iNotePal"
 
