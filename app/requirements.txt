@@ -2,7 +2,7 @@ bcrypt==4.1.2
 openai==1.20.0
 PyJWT==2.8.0
 python-dotenv==1.0.1
-reflex==0.5.9
+reflex==0.5.10
 scikit-learn==1.2.2
 supabase==2.4.3
 tensorflow==2.15.0
@@ -14,4 +14,4 @@ sentence-transformers==2.7.0
 reflex-calendar==0.0.4
 konlpy==0.6.0
 install-jdk==1.1.0
-reflex-wordcloud @ git+https://github.com/pal-ette/reflex-wordcloud@main
+reflex-wordcloud==0.0.2
