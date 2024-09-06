@@ -1,4 +1,5 @@
 import reflex as rx
+import reflex_chakra as rc
 
 from app.component.navbar import navbar
 from app.state import analysis_state
@@ -11,17 +12,17 @@ from app.state.calendar_state import calendar_component
 @require_login
 def analysis_page() -> rx.Component:
 
-    start_calendar_form = rx.chakra.popover(
-        rx.chakra.popover_trigger(
-            rx.chakra.button("시작일", rx.icon("calendar-check"), variant="ghost"),
+    start_calendar_form = rc.popover(
+        rc.popover_trigger(
+            rc.button("시작일", rx.icon("calendar-check"), variant="ghost"),
         ),
-        rx.chakra.popover_content(
-            rx.chakra.popover_body(
+        rc.popover_content(
+            rc.popover_body(
                 calendar_component(
                     on_change=analysis_state.AnalysisState.on_change_calendar,
                 ),
             ),
-            rx.chakra.popover_close_button(),
+            rc.popover_close_button(),
             style={"width": 430},
         ),
         strategy="fixed",
@@ -33,17 +34,17 @@ def analysis_page() -> rx.Component:
         ],
     )
 
-    end_calendar_form = rx.chakra.popover(
-        rx.chakra.popover_trigger(
-            rx.chakra.button("종료일", rx.icon("calendar-check"), variant="ghost")
+    end_calendar_form = rc.popover(
+        rc.popover_trigger(
+            rc.button("종료일", rx.icon("calendar-check"), variant="ghost")
         ),
-        rx.chakra.popover_content(
-            rx.chakra.popover_body(
+        rc.popover_content(
+            rc.popover_body(
                 calendar_component(
                     on_change=analysis_state.AnalysisState.on_change_calendar
                 ),
             ),
-            rx.chakra.popover_close_button(),
+            rc.popover_close_button(),
             style={"width": 430},
         ),
         strategy="fixed",
@@ -81,12 +82,12 @@ def analysis_page() -> rx.Component:
         rx.container(
             margin_top="120px",
         ),
-        rx.chakra.wrap(
-            rx.chakra.wrap_item(
+        rc.wrap(
+            rc.wrap_item(
                 start_calendar_form,
                 rx.heading(analysis_state.AnalysisState.print_start_day_text),
             ),
-            rx.chakra.wrap_item(
+            rc.wrap_item(
                 end_calendar_form,
                 rx.heading(analysis_state.AnalysisState.print_end_day_text),
             ),
@@ -95,7 +96,7 @@ def analysis_page() -> rx.Component:
             spacing="2em",
         ),
         rx.container(
-            rx.chakra.flex(
+            rc.flex(
                 rx.heading(
                     "위 기간동안 당신의 감정상태는", size="4", color_scheme="gray"
                 ),
@@ -104,8 +105,8 @@ def analysis_page() -> rx.Component:
                 width="100%",
             ),
             rx.vstack(
-                rx.chakra.responsive_grid(
-                    rx.chakra.flex(
+                rc.responsive_grid(
+                    rc.flex(
                         rx.recharts.radar_chart(
                             rx.recharts.radar(
                                 data_key="total",
@@ -129,7 +130,7 @@ def analysis_page() -> rx.Component:
                         height="30em",
                         width="100%",
                     ),
-                    rx.chakra.flex(
+                    rc.flex(
                         rx.recharts.funnel_chart(
                             rx.recharts.funnel(
                                 rx.recharts.label_list(
@@ -150,8 +151,8 @@ def analysis_page() -> rx.Component:
                         align="center",
                         justify="center",
                     ),
-                    rx.chakra.grid_item(
-                        rx.chakra.flex(
+                    rc.grid_item(
+                        rc.flex(
                             rx.recharts.bar_chart(
                                 rx.recharts.bar(
                                     data_key="기쁨",
@@ -201,8 +202,8 @@ def analysis_page() -> rx.Component:
                         ),
                         col_span=2,
                     ),
-                    rx.chakra.grid_item(
-                        rx.chakra.box(
+                    rc.grid_item(
+                        rc.box(
                             rx.recharts.line_chart(
                                 rx.recharts.line(
                                     data_key="기쁨",

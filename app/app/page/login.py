@@ -1,6 +1,7 @@
 """Login page and authentication logic."""
 
 import reflex as rx
+import reflex_chakra as rc
 
 from app.routes import REGISTER_ROUTE
 from app.state.login_state import LoginState
@@ -14,15 +15,15 @@ def login_page() -> rx.Component:
         A reflex component.
     """
 
-    login_form = rx.chakra.form(
+    login_form = rc.form(
         rx.fragment(
-            rx.chakra.flex(
-                rx.chakra.heading("Log In", as_="h1", size="lg", align="left"),
+            rc.flex(
+                rc.heading("Log In", as_="h1", size="lg", align="left"),
                 padding_bottom="2vh",
             ),
-            rx.chakra.flex(
-                rx.chakra.form_label(
-                    rx.chakra.text(
+            rc.flex(
+                rc.form_label(
+                    rc.text(
                         "Email Address",
                         size="md",
                         weight="medium",
@@ -30,13 +31,13 @@ def login_page() -> rx.Component:
                     ),
                     html_for="email",
                 ),
-                rx.chakra.input(
+                rc.input(
                     placeholder="email",
                     id="login_email",
                     type_="email",
                 ),
-                rx.chakra.form_label(
-                    rx.chakra.text(
+                rc.form_label(
+                    rc.text(
                         "Password",
                         size="md",
                         weight="bold",
@@ -44,19 +45,19 @@ def login_page() -> rx.Component:
                     ),
                     html_for="password",
                 ),
-                rx.chakra.password(placeholder="password", id="password"),
+                rc.password(placeholder="password", id="password"),
                 direction="column",
                 padding_bottom="2vh",
             ),
-            rx.chakra.hstack(
-                rx.chakra.button(
+            rc.hstack(
+                rc.button(
                     "Login",
                     type_="submit",
                     is_loading=LoginState.is_loading,
                     size="lg",
                     variant="outline",
                 ),
-                rx.chakra.button(
+                rc.button(
                     rx.hstack(
                         rx.icon("github"),
                         rx.text("Login with Github"),
@@ -72,39 +73,39 @@ def login_page() -> rx.Component:
     return rx.fragment(
         rx.cond(
             LoginState.is_hydrated,
-            rx.chakra.vstack(
-                rx.chakra.flex(
-                    rx.chakra.heading(
+            rc.vstack(
+                rc.flex(
+                    rc.heading(
                         "iNotePal", as_="h1", size="4xl", weight="bold", align="left"
                     ),
                     padding_bottom="10vh",
                 ),
                 rx.cond(  # conditionally show error messages
                     LoginState.error_message != "",
-                    rx.chakra.alert(
-                        rx.chakra.alert_icon(),
-                        rx.chakra.alert_title(LoginState.error_message),
+                    rc.alert(
+                        rc.alert_icon(),
+                        rc.alert_title(LoginState.error_message),
                         status="error",
                     ),
                 ),
                 login_form,
-                rx.chakra.link("No account yet? Sign up.", href=REGISTER_ROUTE),
-                rx.chakra.modal(
-                    rx.chakra.modal_overlay(
-                        rx.chakra.modal_content(
-                            rx.chakra.modal_header("Password Reset"),
-                            rx.chakra.form(
+                rc.link("No account yet? Sign up.", href=REGISTER_ROUTE),
+                rc.modal(
+                    rc.modal_overlay(
+                        rc.modal_content(
+                            rc.modal_header("Password Reset"),
+                            rc.form(
                                 rx.hstack(
-                                    rx.chakra.input(
+                                    rc.input(
                                         placeholder="email",
                                         id="password_reset_email",
                                         type_="email",
                                         width="100%",
                                     ),
-                                    rx.chakra.box(
+                                    rc.box(
                                         width="15px",
                                     ),
-                                    rx.chakra.button(
+                                    rc.button(
                                         "Request",
                                         type_="submit",
                                         size="lg",
@@ -117,9 +118,9 @@ def login_page() -> rx.Component:
                             ),
                             rx.cond(
                                 ResetPasswordState.error_message != "",
-                                rx.chakra.alert(
-                                    rx.chakra.alert_icon(),
-                                    rx.chakra.alert_title(
+                                rc.alert(
+                                    rc.alert_icon(),
+                                    rc.alert_title(
                                         ResetPasswordState.error_message
                                     ),
                                     status="error",
@@ -127,17 +128,17 @@ def login_page() -> rx.Component:
                             ),
                             rx.cond(
                                 ResetPasswordState.is_requested,
-                                rx.chakra.alert(
-                                    rx.chakra.alert_icon(),
-                                    rx.chakra.alert_title(
+                                rc.alert(
+                                    rc.alert_icon(),
+                                    rc.alert_title(
                                         "Password reset mail requested."
                                     ),
                                     status="success",
                                     border="0.5",
                                 ),
                             ),
-                            rx.chakra.modal_footer(
-                                rx.chakra.button(
+                            rc.modal_footer(
+                                rc.button(
                                     "Close",
                                     on_click=ResetPasswordState.hide_reset_password,
                                 )
@@ -146,7 +147,7 @@ def login_page() -> rx.Component:
                     ),
                     is_open=ResetPasswordState.is_show_reset_password,
                 ),
-                rx.chakra.link(
+                rc.link(
                     "Forgot password?",
                     on_click=ResetPasswordState.show_reset_password,
                 ),
@@ -178,8 +179,8 @@ def require_login(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
                     LoginState.token_is_valid,
                     page(),
                 ),
-                rx.chakra.flex(
-                    rx.chakra.spinner(),
+                rc.flex(
+                    rc.spinner(),
                     height="100vh",
                     weight="100vw",
                     align="center",
