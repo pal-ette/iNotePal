@@ -1,4 +1,6 @@
 import reflex as rx
+import reflex_chakra as rc
+
 from reflex_calendar import calendar
 from app.component.chat_input import chat_input
 from app.component.chat_history import chat_history, ai_chat_bubble
@@ -28,7 +30,7 @@ class ModalState(rx.State):
 
 
 def build_past_card(chat):
-    return rx.chakra.button(
+    return rc.button(
         chat[0],
         on_click=lambda: ChatState.select_past_card(chat[1]["id"]),
         bg=rx.cond(
@@ -48,13 +50,13 @@ def dashboard():
             margin_top="30px",
         ),
         rx.hstack(
-            rx.chakra.container(
-                rx.chakra.responsive_grid(
+            rc.container(
+                rc.responsive_grid(
                     rx.vstack(
                         calendar_component(
                             on_change=ChatState.switch_day_ymd,
                         ),
-                        rx.chakra.text(
+                        rc.text(
                             f"{ChatState.print_date_text}의 감정",
                             # on_change=State.select_date,
                             as_="i",
@@ -75,7 +77,7 @@ def dashboard():
                                 ),
                             ),
                         ),
-                        rx.chakra.heading(
+                        rc.heading(
                             ChatState.print_date_text,
                             size="xl",
                             weight="bold",
@@ -86,7 +88,7 @@ def dashboard():
                             rx.cond(
                                 ChatState.is_creating,
                                 rx.hstack(
-                                    rx.chakra.circular_progress(
+                                    rc.circular_progress(
                                         is_indeterminate=ChatState.is_creating
                                     ),
                                     rx.text("친구가 말 거는 중.."),
@@ -103,7 +105,7 @@ def dashboard():
                             rx.cond(
                                 ChatState.is_closed,
                                 rx.hstack(
-                                    rx.chakra.button(
+                                    rc.button(
                                         "대화 새로 시작하기",
                                         on_click=ChatState.start_new_chat,
                                         size="sm",
@@ -114,7 +116,7 @@ def dashboard():
                                 ),
                                 rx.cond(
                                     ChatState.current_messages.length() > 2,
-                                    rx.chakra.button(
+                                    rc.button(
                                         "대화 마치기",
                                         on_click=[
                                             ChatState.evaluate_chat,
@@ -129,15 +131,15 @@ def dashboard():
                                     ),
                                 ),
                             ),
-                            rx.chakra.modal(
-                                rx.chakra.modal_overlay(
-                                    rx.chakra.modal_content(
-                                        rx.chakra.modal_header("오늘의 감정"),
-                                        rx.chakra.modal_body(
+                            rc.modal(
+                                rc.modal_overlay(
+                                    rc.modal_content(
+                                        rc.modal_header("오늘의 감정"),
+                                        rc.modal_body(
                                             rx.flex(create_box())
                                         ),  # emotion_card
-                                        rx.chakra.modal_footer(
-                                            rx.chakra.button(
+                                        rc.modal_footer(
+                                            rc.button(
                                                 "닫기",
                                                 on_click=ModalState.change,
                                             ),

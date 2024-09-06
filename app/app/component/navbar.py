@@ -1,4 +1,5 @@
 import reflex as rx
+import reflex_chakra as rc
 from app.app_state import AppState
 from app.state.chat_state import ChatState
 from reflex_calendar import calendar
@@ -13,10 +14,10 @@ def date_to_print(date):
 
 def navbar() -> rx.Component:
     return rx.fragment(
-        rx.chakra.flex(
+        rc.flex(
             rx.flex(
                 rx.link(
-                    rx.chakra.heading(
+                    rc.heading(
                         "iNP",
                         as_="h1",
                         size="4xl",
@@ -32,7 +33,7 @@ def navbar() -> rx.Component:
                             "none",
                         ],
                     ),
-                    rx.chakra.heading(
+                    rc.heading(
                         "iNotePal",
                         as_="h1",
                         size="4xl",
@@ -50,7 +51,7 @@ def navbar() -> rx.Component:
                     ),
                     href="/",
                 ),
-                rx.chakra.hstack(
+                rc.hstack(
                     rx.link(
                         rx.text(
                             "Analysis",
@@ -81,14 +82,14 @@ def navbar() -> rx.Component:
                     # search_bar(),
                     # github(),
                     rx.flex(
-                        rx.chakra.popover(
-                            rx.chakra.popover_trigger(
-                                rx.chakra.button(rx.icon("user"))
+                        rc.popover(
+                            rc.popover_trigger(
+                                rc.button(rx.icon("user"))
                             ),
-                            rx.chakra.popover_content(
-                                rx.chakra.popover_header(AppState.user_mail),
-                                rx.chakra.popover_body(
-                                    rx.chakra.button(
+                            rc.popover_content(
+                                rc.popover_header(AppState.user_mail),
+                                rc.popover_body(
+                                    rc.button(
                                         "Logout",
                                         width="100%",
                                         on_click=[
@@ -98,17 +99,17 @@ def navbar() -> rx.Component:
                                         variant="outline",
                                     ),
                                 ),
-                                rx.chakra.popover_close_button(),
+                                rc.popover_close_button(),
                             ),
                         ),
                     ),
                     rx.drawer.root(
-                        rx.drawer.trigger(rx.chakra.button(rx.icon("align-justify"))),
+                        rx.drawer.trigger(rc.button(rx.icon("align-justify"))),
                         rx.drawer.overlay(z_index="5"),
                         rx.drawer.portal(
                             rx.drawer.content(
                                 rx.vstack(
-                                    rx.chakra.heading(
+                                    rc.heading(
                                         "iNotePal",
                                         as_="h1",
                                         size="4xl",
@@ -116,10 +117,10 @@ def navbar() -> rx.Component:
                                         bgGradient="linear(to-l, #f2ebc8, #de776c, #49312d)",
                                         bgClip="text",
                                     ),
-                                    rx.chakra.divider(border_color="black"),
+                                    rc.divider(border_color="black"),
                                     rx.spacer(),
-                                    rx.chakra.vstack(
-                                        rx.chakra.hstack(
+                                    rc.vstack(
+                                        rc.hstack(
                                             rx.link(
                                                 rx.text(
                                                     "Analysis",
@@ -135,7 +136,7 @@ def navbar() -> rx.Component:
                                                 href="/word_cloud",
                                             ),
                                         ),
-                                        rx.chakra.divider(border_color="black"),
+                                        rc.divider(border_color="black"),
                                         rx.spacer(),
                                         width="100%",
                                         display=[
@@ -151,7 +152,7 @@ def navbar() -> rx.Component:
                                         on_change=ChatState.switch_day_ymd
                                     ),
                                     rx.spacer(),
-                                    rx.chakra.text(
+                                    rc.text(
                                         f"{ChatState.print_date_text}의 감정",
                                         # on_change=State.select_date,
                                         as_="i",
