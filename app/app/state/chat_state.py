@@ -43,7 +43,7 @@ class ChatState(AppState):
 
     _db_messages: Dict[int, List[Tuple[str, str, str]]] = {}
 
-    @rx.var
+    @rx.var(cache=True)
     def chats(self) -> List:
         if self.db_select_date in self._db_chats:
             return self._db_chats[self.db_select_date]
@@ -65,7 +65,7 @@ class ChatState(AppState):
         self._db_chats[self.db_select_date] = response.data
         return self._db_chats[self.db_select_date]
 
-    @rx.var
+    @rx.var(cache=True)
     def past_chats(self) -> List[Tuple[int, Dict[str, str]]]:
         return [
             (len(self.chats) - i, chat) if chat["is_closed"] else ("현재 대화", chat)
@@ -73,7 +73,7 @@ class ChatState(AppState):
             # if i != self._current_chat_index
         ][::-1]
 
-    @rx.var
+    @rx.var(cache=True)
     def past_messages(self) -> List[Tuple[str, str, str]]:
         return [
             (chat["id"], self.get_messages(chat["id"]))
@@ -81,34 +81,34 @@ class ChatState(AppState):
             if chat["is_closed"]
         ]
 
-    @rx.var
+    @rx.var(cache=True)
     def has_past_chats(self) -> bool:
         return len(self.past_chats) > 1
 
-    @rx.var
+    @rx.var(cache=True)
     def current_chat(self) -> Dict[str, str]:
         chats = self.chats
         if len(chats) < 1:
             return {}
         return chats[self._current_chat_index]
 
-    @rx.var
+    @rx.var(cache=True)
     def current_messages(self) -> List[Tuple[str, str, str]]:
         if not self.current_chat:
             return []
         return self.get_messages(self.current_chat["id"])
 
-    @rx.var
+    @rx.var(cache=True)
     def is_closed(self) -> bool:
         if not self.is_exist_chat:
             return False
         return self.current_chat["is_closed"]
 
-    @rx.var
+    @rx.var(cache=True)
     def is_exist_chat(self) -> bool:
         return bool(self.current_chat)
 
-    @rx.var
+    @rx.var(cache=True)
     def chat_emotion(self) -> str:
         if not self.is_exist_chat:
             return False
@@ -133,7 +133,7 @@ class ChatState(AppState):
     def print_date(self, year, month, day):
         print("select_date", year, month, day)
 
-    @rx.var
+    @rx.var(cache=True)
     def print_date_text(self):
         date_split = self.db_select_date.split("-")
         text_date = (

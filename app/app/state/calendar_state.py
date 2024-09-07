@@ -58,11 +58,11 @@ class Calendar(rx.ComponentState):
     select_month: int = datetime.datetime.now().month
     select_day: int = datetime.datetime.now().day
 
-    @rx.var
+    @rx.var(cache=True)
     def current_month(self):
         return month_class[self.month]
 
-    @rx.var
+    @rx.var(cache=True)
     def monthdayscalendar(self) -> List[List[int]]:
         return cal.monthdayscalendar(self.year, self.month)
 
