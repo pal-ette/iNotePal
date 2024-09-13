@@ -17,6 +17,7 @@ from app.page.oauth import oauth_page
 from app.routes import *
 import os
 import jdk
+from reflex.style import toggle_color_mode
 
 load_dotenv()
 
@@ -31,7 +32,14 @@ else:
 os.environ["JAVA_HOME"] = jdk_dir
 os.environ["PATH"] = f"{os.environ.get('PATH')}:{jdk_dir}/bin"
 
-app = rx.App()
+app = rx.App(
+    theme=rx.theme(
+        appearance="light",
+        has_background=True,
+        radius="large",
+        accent_color="teal",
+    )
+)
 app.add_page(dashboard, route="/", on_load=AppState.check_login)
 app.add_page(registration_page, route=REGISTER_ROUTE)
 app.add_page(login_page, route=LOGIN_ROUTE)
