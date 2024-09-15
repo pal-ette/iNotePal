@@ -24,31 +24,6 @@ cal_row_style = {
     "border_radius": "6px",
 }
 
-month_class: dict[int, str] = {
-    1: "1월",
-    2: "2월",
-    3: "3월",
-    4: "4월",
-    5: "5월",
-    6: "6월",
-    7: "7월",
-    8: "8월",
-    9: "9월",
-    10: "10월",
-    11: "11월",
-    12: "12월",
-}
-
-date_class: dict[int, str] = {
-    0: "월",
-    1: "화",
-    2: "수",
-    3: "목",
-    4: "금",
-    5: "토",
-    6: "일",
-}
-
 
 class Calendar(rx.ComponentState):
     year: int = datetime.datetime.now().year  # 연도 저장
@@ -57,10 +32,6 @@ class Calendar(rx.ComponentState):
     select_year: int = datetime.datetime.now().year
     select_month: int = datetime.datetime.now().month
     select_day: int = datetime.datetime.now().day
-
-    @rx.var(cache=True)
-    def current_month(self):
-        return month_class[self.month]
 
     @rx.var(cache=True)
     def monthdayscalendar(self) -> List[List[int]]:
@@ -114,7 +85,7 @@ class Calendar(rx.ComponentState):
                 ),
                 rx.spacer(),  # 빈 공간 생성
                 rx.text(  # 현재 월과 연도를 표시하는 텍스트
-                    f"{cls.current_month} {cls.year}",
+                    f"{cls.month}월 {cls.year}",
                     width="150px",
                     display="flex",
                     justify_content="center",
@@ -134,14 +105,22 @@ class Calendar(rx.ComponentState):
                 *[
                     rx.container(
                         rx.text(
-                            date_class[data],
+                            data,
                             font_size="16px",
                             font_weight="bold",
                             align="center",
                         ),
                         style=cal_days_style,
                     )
-                    for data in date_class
+                    for data in [
+                        "월",
+                        "화",
+                        "수",
+                        "목",
+                        "금",
+                        "토",
+                        "일",
+                    ]
                 ]
             ),
             rx.vstack(
