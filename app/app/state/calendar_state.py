@@ -26,6 +26,8 @@ cal_row_style = {
 
 
 class Calendar(rx.ComponentState):
+    date: str = datetime.datetime.now().strftime("%Y-%m-%d")
+
     year: int = datetime.datetime.now().year  # 연도 저장
     month: int = datetime.datetime.now().month  # 표시할 월 저장
 
@@ -74,7 +76,8 @@ class Calendar(rx.ComponentState):
     @classmethod
     def get_component(cls, *children, **props) -> rx.Component:
 
-        on_change = props.pop("on_change")
+        date = props.pop("date", cls.date)
+        on_change = props.pop("on_change", cls.set_date)
 
         return rx.vstack(
             rx.hstack(
@@ -123,6 +126,7 @@ class Calendar(rx.ComponentState):
                     ]
                 ]
             ),
+            rx.text(cls.date),
             rx.vstack(
                 rx.foreach(
                     cls.monthdayscalendar,
