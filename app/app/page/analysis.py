@@ -2,7 +2,7 @@ import reflex as rx
 import reflex_chakra as rc
 
 from app.component.navbar import navbar
-from app.state import analysis_state
+from app.state.analysis_state import AnalysisState
 from app.page.login import require_login
 from app.state.calendar_state import calendar_component
 
@@ -19,7 +19,14 @@ def analysis_page() -> rx.Component:
         rc.popover_content(
             rc.popover_body(
                 calendar_component(
-                    on_change=analysis_state.AnalysisState.on_change_calendar,
+                    year=AnalysisState.year,
+                    select_year=AnalysisState.select_year,
+                    month=AnalysisState.month,
+                    select_month=AnalysisState.select_month,
+                    day=AnalysisState.day,
+                    on_next_month=AnalysisState.on_next_month,
+                    on_prev_month=AnalysisState.on_prev_month,
+                    on_change_day=AnalysisState.on_change_day,
                 ),
             ),
             rc.popover_close_button(),
@@ -29,8 +36,8 @@ def analysis_page() -> rx.Component:
         return_focus_on_close=True,
         match_width=True,
         on_close=[
-            analysis_state.AnalysisState.setStartDay,
-            analysis_state.AnalysisState.getDataDay,
+            AnalysisState.setStartDay,
+            AnalysisState.getDataDay,
         ],
     )
 
@@ -41,7 +48,14 @@ def analysis_page() -> rx.Component:
         rc.popover_content(
             rc.popover_body(
                 calendar_component(
-                    on_change=analysis_state.AnalysisState.on_change_calendar
+                    year=AnalysisState.year,
+                    select_year=AnalysisState.select_year,
+                    month=AnalysisState.month,
+                    select_month=AnalysisState.select_month,
+                    day=AnalysisState.day,
+                    on_next_month=AnalysisState.on_next_month,
+                    on_prev_month=AnalysisState.on_prev_month,
+                    on_change_day=AnalysisState.on_change_day,
                 ),
             ),
             rc.popover_close_button(),
@@ -51,15 +65,15 @@ def analysis_page() -> rx.Component:
         return_focus_on_close=True,
         match_width=True,
         on_close=[
-            analysis_state.AnalysisState.setEndDay,
-            analysis_state.AnalysisState.getDataDay,
+            AnalysisState.setEndDay,
+            AnalysisState.getDataDay,
         ],
     )
 
     return rx.fragment(
         navbar(),
         rx.cond(
-            analysis_state.AnalysisState.is_hydrated,
+            AnalysisState.is_hydrated,
             rx.alert_dialog.root(
                 rx.alert_dialog.content(
                     rx.alert_dialog.title("날짜 선택"),
@@ -70,13 +84,13 @@ def analysis_page() -> rx.Component:
                         rx.alert_dialog.action(
                             rx.button(
                                 "확인",
-                                on_click=analysis_state.AnalysisState.reset_date_valid_check,
+                                on_click=AnalysisState.reset_date_valid_check,
                             ),
                         ),
                         spacing="3",
                     ),
                 ),
-                open=~analysis_state.AnalysisState.date_valid_check,
+                open=~AnalysisState.date_valid_check,
             ),
         ),
         rx.container(
@@ -85,11 +99,11 @@ def analysis_page() -> rx.Component:
         rc.wrap(
             rc.wrap_item(
                 start_calendar_form,
-                rx.heading(analysis_state.AnalysisState.print_start_day_text),
+                rx.heading(AnalysisState.print_start_day_text),
             ),
             rc.wrap_item(
                 end_calendar_form,
-                rx.heading(analysis_state.AnalysisState.print_end_day_text),
+                rx.heading(AnalysisState.print_end_day_text),
             ),
             align="center",
             width="100%",
@@ -123,7 +137,7 @@ def analysis_page() -> rx.Component:
                             rx.recharts.polar_angle_axis(data_key="emotion"),
                             rx.recharts.graphing_tooltip(),
                             rx.recharts.legend(),
-                            data=analysis_state.AnalysisState.data_emotion_radar,
+                            data=AnalysisState.data_emotion_radar,
                             width="100%",
                             height="100%",
                         ),
@@ -140,7 +154,7 @@ def analysis_page() -> rx.Component:
                                     stroke="none",
                                 ),
                                 data_key="count",
-                                data=analysis_state.AnalysisState.data_emotion_funnel,
+                                data=AnalysisState.data_emotion_funnel,
                             ),
                             rx.recharts.graphing_tooltip(),
                             width=500,
@@ -195,7 +209,7 @@ def analysis_page() -> rx.Component:
                                 rx.recharts.x_axis(data_key="date"),
                                 rx.recharts.y_axis(),
                                 rx.recharts.legend(),
-                                data=analysis_state.AnalysisState.data_emotion_bar,
+                                data=AnalysisState.data_emotion_bar,
                             ),
                             height="30em",
                             width="100%",
@@ -243,7 +257,7 @@ def analysis_page() -> rx.Component:
                                     "top": 20,
                                     "bottom": 10,
                                 },
-                                data=analysis_state.AnalysisState.data_emotion_bar,
+                                data=AnalysisState.data_emotion_bar,
                             ),
                             height="30em",
                             width="100%",

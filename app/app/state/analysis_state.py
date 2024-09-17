@@ -21,8 +21,13 @@ class AnalysisState(ChatState):
     start_date_c: str = ""
     end_date_c: str = ""
 
-    def on_change_calendar(self, year, month, day):
-        self.selected_date = date(year, month, day).strftime("%a %b %d %Y")
+    def on_change_day(self, day):
+        self.select_year = self.year
+        self.select_month = self.month
+        self.day = day
+        self.selected_date = date(self.year, self.month, self.day).strftime(
+            "%a %b %d %Y"
+        )
 
     def change_handler(self, var):
         self.selected_date = var
