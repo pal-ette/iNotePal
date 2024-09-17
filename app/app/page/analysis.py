@@ -19,7 +19,14 @@ def analysis_page() -> rx.Component:
         rc.popover_content(
             rc.popover_body(
                 calendar_component(
-                    on_change=AnalysisState.on_change_calendar,
+                    year=AnalysisState.year,
+                    select_year=AnalysisState.select_year,
+                    month=AnalysisState.month,
+                    select_month=AnalysisState.select_month,
+                    day=AnalysisState.day,
+                    on_next_month=AnalysisState.on_next_month,
+                    on_prev_month=AnalysisState.on_prev_month,
+                    on_change_day=AnalysisState.on_change_day,
                 ),
             ),
             rc.popover_close_button(),
@@ -40,7 +47,16 @@ def analysis_page() -> rx.Component:
         ),
         rc.popover_content(
             rc.popover_body(
-                calendar_component(on_change=AnalysisState.on_change_calendar),
+                calendar_component(
+                    year=AnalysisState.year,
+                    select_year=AnalysisState.select_year,
+                    month=AnalysisState.month,
+                    select_month=AnalysisState.select_month,
+                    day=AnalysisState.day,
+                    on_next_month=AnalysisState.on_next_month,
+                    on_prev_month=AnalysisState.on_prev_month,
+                    on_change_day=AnalysisState.on_change_day,
+                ),
             ),
             rc.popover_close_button(),
             style={"width": 430},
