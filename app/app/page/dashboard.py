@@ -54,7 +54,14 @@ def dashboard():
                 rc.responsive_grid(
                     rx.vstack(
                         calendar_component(
-                            on_change=ChatState.switch_day_ymd,
+                            year=ChatState.year,
+                            select_year=ChatState.select_year,
+                            month=ChatState.month,
+                            select_month=ChatState.select_month,
+                            day=ChatState.day,
+                            on_next_month=ChatState.on_next_month,
+                            on_prev_month=ChatState.on_prev_month,
+                            on_change_day=ChatState.on_change_day,
                         ),
                         rc.text(
                             f"{ChatState.print_date_text}의 감정",
