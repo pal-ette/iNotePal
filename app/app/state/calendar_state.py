@@ -138,8 +138,8 @@ class Calendar(rx.ComponentState):
                                         align="center",
                                     ),
                                     background_color=rx.cond(
-                                        (prop_year == cls.select_year)
-                                        & (prop_month == cls.select_month)
+                                        (prop_year == prop_select_year)
+                                        & (prop_month == prop_select_month)
                                         & (day == prop_day),
                                         "#e5988e",
                                         "rgba(255, 255, 255, 0.05)",
