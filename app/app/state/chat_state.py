@@ -50,7 +50,7 @@ class ChatState(AppState):
 
     @rx.var(cache=True)
     def db_select_date(self):
-        return str(date(self.year, self.month, self.day))
+        return str(date(self.select_year, self.select_month, self.day))
 
     @rx.var(cache=True)
     def chats(self) -> List:
