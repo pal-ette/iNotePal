@@ -31,9 +31,14 @@ if env == constants.Env.PROD:
 class ChatState(AppState):
     is_waiting: bool = False
 
-    select_date: str = datetime.today().strftime("%a %b %d %Y")
+    year: int = datetime.now().year
+    month: int = datetime.now().month
+    day: int = datetime.now().day
 
-    db_select_date: str = datetime.today().strftime("%Y-%m-%d")
+    select_year: int = datetime.now().year
+    select_month: int = datetime.now().month
+
+    select_date: str = datetime.today().strftime("%a %b %d %Y")
 
     is_creating: bool
 
@@ -42,6 +47,10 @@ class ChatState(AppState):
     _db_chats: Dict[str, List[Dict[str, str]]] = {}
 
     _db_messages: Dict[int, List[Tuple[str, str, str]]] = {}
+
+    @rx.var(cache=True)
+    def db_select_date(self):
+        return str(date(self.year, self.month, self.day))
 
     @rx.var(cache=True)
     def chats(self) -> List:
@@ -114,6 +123,29 @@ class ChatState(AppState):
             return False
 
         return self.current_chat["emotion"]
+
+    def on_next_month(self):
+        if self.month == 12:
+            self.year += 1
+            self.month = 1
+        else:
+            self.month += 1
+
+    def on_prev_month(self):
+        if self.month == 1:
+            self.year -= 1
+            self.month = 12
+        else:
+            self.month -= 1
+
+    def on_change_day(self, day):
+        self.select_year = self.year
+        self.select_month = self.month
+        self.day = day
+        self._current_chat_index = 0
+
+        if len(self.chats) == 0:
+            return self.start_new_chat()
 
     def get_chats_in_period(self, start_day, end_day):
         if not self.token_is_valid:
