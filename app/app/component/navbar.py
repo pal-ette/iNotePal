@@ -83,9 +83,7 @@ def navbar() -> rx.Component:
                     # github(),
                     rx.flex(
                         rc.popover(
-                            rc.popover_trigger(
-                                rc.button(rx.icon("user"))
-                            ),
+                            rc.popover_trigger(rc.button(rx.icon("user"))),
                             rc.popover_content(
                                 rc.popover_header(AppState.user_mail),
                                 rc.popover_body(
@@ -149,7 +147,14 @@ def navbar() -> rx.Component:
                                         ],
                                     ),
                                     calendar_component(
-                                        on_change=ChatState.switch_day_ymd
+                                        year=ChatState.year,
+                                        select_year=ChatState.select_year,
+                                        month=ChatState.month,
+                                        select_month=ChatState.select_month,
+                                        day=ChatState.day,
+                                        on_next_month=ChatState.on_next_month,
+                                        on_prev_month=ChatState.on_prev_month,
+                                        on_change_day=ChatState.on_change_day,
                                     ),
                                     rx.spacer(),
                                     rc.text(
