@@ -311,7 +311,10 @@ class ChatState(AppState):
             self._db_chats[self.db_select_date].insert(0, new_chat)
 
         _y, month, day = self.db_select_date.split("-")
-        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        client = OpenAI(
+            api_key=os.getenv("OPENAI_API_KEY"),
+            base_url=os.getenv("OPENAI_BASE_URL"),
+        )
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
@@ -330,7 +333,10 @@ class ChatState(AppState):
         self.is_creating = False
 
     def _talk_to_open_ai(self, message):
-        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        client = OpenAI(
+            api_key=os.getenv("OPENAI_API_KEY"),
+            base_url=os.getenv("OPENAI_BASE_URL"),
+        )
         response = (
             client.chat.completions.create(
                 model="gpt-4o-mini",
