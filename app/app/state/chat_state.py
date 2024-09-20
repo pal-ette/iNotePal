@@ -2,20 +2,20 @@
 
 import os
 import reflex as rx
-from datetime import datetime
+from datetime import datetime, date
 from collections.abc import AsyncGenerator
 from openai import OpenAI
 from app.app_state import AppState
 from app.model.inference_model import InferenceModel
 from app.model.embedding_model import EmbeddingModel
 from app.model.roberta import Roberta
+from app.schema.greeting import Greeting
 from app.supabase_client import supabase_client
 from typing import List, Tuple, Dict
 from reflex_calendar import reformat_date
 from reflex import constants
 import random
 from collections import Counter
-from datetime import date
 
 
 inference_model = InferenceModel("dummy-0.0.0")
@@ -285,6 +285,43 @@ class ChatState(AppState):
             ),
         )
 
+    def get_greeting(self):
+        greeting = None
+        with rx.session() as session:
+            greeting = session.exec(
+                Greeting.select().where(Greeting.date == self.db_select_date)
+            ).one_or_none()
+
+        if greeting is not None:
+            return greeting.message
+
+        _year, month, day = self.db_select_date.split("-")
+        client = OpenAI(
+            api_key=os.getenv("OPENAI_API_KEY"),
+            base_url=os.getenv("OPENAI_BASE_URL"),
+        )
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": f"당신은 사람의 감정을 세심히 살필 수 있는 심리상담사입니다. 오늘은 {month}월 {day}일 입니다. 기분이라는 단어를 직접적으로 사용하지말고 오늘 날짜와 함께 기분이 드러날 수 있는 질문을 해주세요.",
+                }
+            ],
+            temperature=7e-1,
+        )
+        out_greeting = response.choices[0].message.content
+        with rx.session() as session:
+            session.add(
+                Greeting(
+                    date=self.db_select_date,
+                    message=out_greeting,
+                ),
+            )
+            session.commit()
+
+        return out_greeting
+
     async def start_new_chat(self):
         if not self.is_hydrated:
             return
@@ -310,24 +347,10 @@ class ChatState(AppState):
         else:
             self._db_chats[self.db_select_date].insert(0, new_chat)
 
-        _y, month, day = self.db_select_date.split("-")
-        client = OpenAI(
-            api_key=os.getenv("OPENAI_API_KEY"),
-            base_url=os.getenv("OPENAI_BASE_URL"),
-        )
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {
-                    "role": "system",
-                    "content": f"당신은 사람의 감정을 세심히 살필 수 있는 심리상담사입니다. 오늘은 {month}월 {day}일 입니다. 오늘 날짜와 함께 기분이 드러날 수 있는 질문을 해줘, 그런데 기분이라는 단어를 직접적으로 사용하지말고.",
-                }
-            ],
-            temperature=7e-1,
-        )
+        greeting = self.get_greeting()
         self.insert_history(
             new_chat["id"],
-            response.choices[0].message.content,
+            greeting,
             is_user=False,
         )
         self.is_creating = False
