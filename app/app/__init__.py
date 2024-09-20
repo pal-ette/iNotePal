@@ -1,1 +1,1 @@
-from app.db import *
+from app.schema import *
