@@ -32,6 +32,8 @@ class ProdConfig(BaseConfg):
 
     frontend_path: str = "/iNotePal"
 
+    db_url = f"postgresql://{os.getenv('POSTGRESQL_USER')}:{os.getenv('POSTGRESQL_PW')}@{os.getenv('POSTGRESQL_HOST')}/postgres"
+
 
 config = ProdConfig()
 env = os.environ.get(constants.ENV_MODE_ENV_VAR)
