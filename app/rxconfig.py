@@ -2,6 +2,9 @@ import reflex as rx
 from reflex import constants
 import os
 from typing import List, Optional
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class BaseConfg(rx.Config):
