@@ -2,6 +2,9 @@ import reflex as rx
 from reflex import constants
 import os
 from typing import List, Optional
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class BaseConfg(rx.Config):
@@ -28,6 +31,8 @@ class ProdConfig(BaseConfg):
     deploy_url: Optional[str] = "https://pal-ette.github.io/iNotePal"
 
     frontend_path: str = "/iNotePal"
+
+    db_url = f"postgresql://{os.getenv('POSTGRESQL_USER')}:{os.getenv('POSTGRESQL_PW')}@{os.getenv('POSTGRESQL_HOST')}/postgres"
 
 
 config = ProdConfig()

@@ -2,9 +2,6 @@
 
 import reflex as rx
 
-from app import style
-from dotenv import load_dotenv
-
 from app.state.login_state import LoginState
 from app.app_state import AppState
 from app.page.registration import registration_page
@@ -17,8 +14,6 @@ from app.page.oauth import oauth_page
 from app.routes import *
 import os
 import jdk
-
-load_dotenv()
 
 jdk_dir = f"{os.getcwd()}/.cache/jdk"
 if os.path.isdir(jdk_dir):
