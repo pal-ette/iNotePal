@@ -16,3 +16,4 @@ konlpy==0.6.0
 install-jdk==1.1.0
 reflex-wordcloud==0.0.2
 reflex-chakra==0.5.10
+psycopg2-binary==2.9.9
