@@ -35,7 +35,9 @@ class ProdConfig(BaseConfg):
     db_url = f"postgresql://{os.getenv('POSTGRESQL_USER')}:{os.getenv('POSTGRESQL_PW')}@{os.getenv('POSTGRESQL_HOST')}/postgres"
 
 
-config = ProdConfig()
+config = BaseConfg()
 env = os.environ.get(constants.ENV_MODE_ENV_VAR)
 if env == constants.Env.DEV:
     config = DevConfig()
+elif env == constants.Env.PROD:
+    config = ProdConfig()
