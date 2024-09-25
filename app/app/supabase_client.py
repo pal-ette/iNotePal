@@ -1,15 +1,11 @@
 # supabase_client.py
 
 import os
-from dotenv import load_dotenv
 import logging
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("watchfiles").setLevel(logging.WARNING)
 import supabase
-
-# load env
-load_dotenv()
 
 
 def supabase_client():
