@@ -120,9 +120,7 @@ def login_page() -> rx.Component:
                                 ResetPasswordState.error_message != "",
                                 rc.alert(
                                     rc.alert_icon(),
-                                    rc.alert_title(
-                                        ResetPasswordState.error_message
-                                    ),
+                                    rc.alert_title(ResetPasswordState.error_message),
                                     status="error",
                                 ),
                             ),
@@ -130,9 +128,7 @@ def login_page() -> rx.Component:
                                 ResetPasswordState.is_requested,
                                 rc.alert(
                                     rc.alert_icon(),
-                                    rc.alert_title(
-                                        "Password reset mail requested."
-                                    ),
+                                    rc.alert_title("Password reset mail requested."),
                                     status="success",
                                     border="0.5",
                                 ),
@@ -147,7 +143,7 @@ def login_page() -> rx.Component:
                     ),
                     is_open=ResetPasswordState.is_show_reset_password,
                 ),
-                rc.link(
+                rx.text(
                     "Forgot password?",
                     on_click=ResetPasswordState.show_reset_password,
                 ),
