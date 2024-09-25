@@ -9,13 +9,9 @@ import os
 import jwt
 import time
 import reflex as rx
-from dotenv import load_dotenv
 from app.supabase_client import supabase_client
 
 from app.routes import LOGIN_ROUTE
-
-# load env
-load_dotenv()
 
 JWT_SECRET = os.getenv("JWT_SECRET")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
