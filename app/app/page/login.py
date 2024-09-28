@@ -1,7 +1,6 @@
 """Login page and authentication logic."""
 
 import reflex as rx
-import reflex_chakra as rc
 
 from app.routes import REGISTER_ROUTE
 from app.state.login_state import LoginState
@@ -15,49 +14,43 @@ def login_page() -> rx.Component:
         A reflex component.
     """
 
-    login_form = rc.form(
+    login_form = rx.form(
         rx.fragment(
-            rc.flex(
-                rc.heading("Log In", as_="h1", size="lg", align="left"),
+            rx.flex(
+                rx.heading("Log In", as_="h1", size="lg", align="left"),
                 padding_bottom="2vh",
             ),
-            rc.flex(
-                rc.form_label(
-                    rc.text(
-                        "Email Address",
-                        size="md",
-                        weight="medium",
-                        align="left",
-                    ),
-                    html_for="email",
+            rx.flex(
+                rx.text(
+                    "Email Address",
+                    size="md",
+                    weight="medium",
+                    align="left",
                 ),
-                rc.input(
+                rx.input(
                     placeholder="email",
                     id="login_email",
                     type_="email",
                 ),
-                rc.form_label(
-                    rc.text(
-                        "Password",
-                        size="md",
-                        weight="bold",
-                        align="left",
-                    ),
-                    html_for="password",
+                rx.text(
+                    "Password",
+                    size="md",
+                    weight="bold",
+                    align="left",
                 ),
-                rc.password(placeholder="password", id="password"),
+                rx.input(placeholder="password", id="password", type="password"),
                 direction="column",
                 padding_bottom="2vh",
             ),
-            rc.hstack(
-                rc.button(
+            rx.hstack(
+                rx.button(
                     "Login",
                     type_="submit",
                     is_loading=LoginState.is_loading,
                     size="lg",
                     variant="outline",
                 ),
-                rc.button(
+                rx.button(
                     rx.hstack(
                         rx.icon("github"),
                         rx.text("Login with Github"),
@@ -73,76 +66,76 @@ def login_page() -> rx.Component:
     return rx.fragment(
         rx.cond(
             LoginState.is_hydrated,
-            rc.vstack(
-                rc.flex(
-                    rc.heading(
+            rx.vstack(
+                rx.flex(
+                    rx.heading(
                         "iNotePal", as_="h1", size="4xl", weight="bold", align="left"
                     ),
                     padding_bottom="10vh",
                 ),
-                rx.cond(  # conditionally show error messages
-                    LoginState.error_message != "",
-                    rc.alert(
-                        rc.alert_icon(),
-                        rc.alert_title(LoginState.error_message),
-                        status="error",
-                    ),
-                ),
+                # rx.cond(  # conditionally show error messages
+                #     LoginState.error_message != "",
+                #     rx.alert(
+                #         rx.alert_icon(),
+                #         rx.alert_title(LoginState.error_message),
+                #         status="error",
+                #     ),
+                # ),
                 login_form,
-                rc.link("No account yet? Sign up.", href=REGISTER_ROUTE),
-                rc.modal(
-                    rc.modal_overlay(
-                        rc.modal_content(
-                            rc.modal_header("Password Reset"),
-                            rc.form(
-                                rx.hstack(
-                                    rc.input(
-                                        placeholder="email",
-                                        id="password_reset_email",
-                                        type_="email",
-                                        width="100%",
-                                    ),
-                                    rc.box(
-                                        width="15px",
-                                    ),
-                                    rc.button(
-                                        "Request",
-                                        type_="submit",
-                                        size="lg",
-                                        variant="outline",
-                                    ),
-                                    margin="0px 20px",
-                                    align="center",
-                                ),
-                                on_submit=ResetPasswordState.request_reset_password,
-                            ),
-                            rx.cond(
-                                ResetPasswordState.error_message != "",
-                                rc.alert(
-                                    rc.alert_icon(),
-                                    rc.alert_title(ResetPasswordState.error_message),
-                                    status="error",
-                                ),
-                            ),
-                            rx.cond(
-                                ResetPasswordState.is_requested,
-                                rc.alert(
-                                    rc.alert_icon(),
-                                    rc.alert_title("Password reset mail requested."),
-                                    status="success",
-                                    border="0.5",
-                                ),
-                            ),
-                            rc.modal_footer(
-                                rc.button(
-                                    "Close",
-                                    on_click=ResetPasswordState.hide_reset_password,
-                                )
-                            ),
-                        )
-                    ),
-                    is_open=ResetPasswordState.is_show_reset_password,
-                ),
+                rx.link("No account yet? Sign up.", href=REGISTER_ROUTE),
+                # rx.modal(
+                #     rx.modal_overlay(
+                #         rx.modal_content(
+                #             rx.modal_header("Password Reset"),
+                #             rx.form(
+                #                 rx.hstack(
+                #                     rx.input(
+                #                         placeholder="email",
+                #                         id="password_reset_email",
+                #                         type_="email",
+                #                         width="100%",
+                #                     ),
+                #                     rx.box(
+                #                         width="15px",
+                #                     ),
+                #                     rx.button(
+                #                         "Request",
+                #                         type_="submit",
+                #                         size="lg",
+                #                         variant="outline",
+                #                     ),
+                #                     margin="0px 20px",
+                #                     align="center",
+                #                 ),
+                #                 on_submit=ResetPasswordState.request_reset_password,
+                #             ),
+                #             rx.cond(
+                #                 ResetPasswordState.error_message != "",
+                #                 rx.alert(
+                #                     rx.alert_icon(),
+                #                     rx.alert_title(ResetPasswordState.error_message),
+                #                     status="error",
+                #                 ),
+                #             ),
+                #             rx.cond(
+                #                 ResetPasswordState.is_requested,
+                #                 rx.alert(
+                #                     rx.alert_icon(),
+                #                     rx.alert_title("Password reset mail requested."),
+                #                     status="success",
+                #                     border="0.5",
+                #                 ),
+                #             ),
+                #             rx.modal_footer(
+                #                 rx.button(
+                #                     "Close",
+                #                     on_click=ResetPasswordState.hide_reset_password,
+                #                 )
+                #             ),
+                #         )
+                #     ),
+                #     is_open=ResetPasswordState.is_show_reset_password,
+                # ),
                 rx.text(
                     "Forgot password?",
                     on_click=ResetPasswordState.show_reset_password,
@@ -175,8 +168,8 @@ def require_login(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
                     LoginState.token_is_valid,
                     page(),
                 ),
-                rc.flex(
-                    rc.spinner(),
+                rx.flex(
+                    rx.spinner(),
                     height="100vh",
                     weight="100vw",
                     align="center",
