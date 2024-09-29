@@ -1,5 +1,4 @@
 import reflex as rx
-import reflex_chakra as rc
 
 from reflex_calendar import calendar
 from app.component.chat_input import chat_input
@@ -30,7 +29,7 @@ class ModalState(rx.State):
 
 
 def build_past_card(chat):
-    return rc.button(
+    return rx.button(
         chat[0],
         on_click=lambda: ChatState.select_past_card(chat[1]["id"]),
         bg=rx.cond(
@@ -50,8 +49,8 @@ def dashboard():
             margin_top="30px",
         ),
         rx.hstack(
-            rc.container(
-                rc.responsive_grid(
+            rx.container(
+                rx.grid(
                     rx.vstack(
                         calendar_component(
                             year=ChatState.year,
@@ -63,7 +62,7 @@ def dashboard():
                             on_prev_month=ChatState.on_prev_month,
                             on_change_day=ChatState.on_change_day,
                         ),
-                        rc.text(
+                        rx.text(
                             f"{ChatState.print_date_text}의 감정",
                             # on_change=State.select_date,
                             as_="i",
@@ -84,7 +83,7 @@ def dashboard():
                                 ),
                             ),
                         ),
-                        rc.heading(
+                        rx.heading(
                             ChatState.print_date_text,
                             size="xl",
                             weight="bold",
@@ -95,9 +94,7 @@ def dashboard():
                             rx.cond(
                                 ChatState.is_creating,
                                 rx.hstack(
-                                    rc.circular_progress(
-                                        is_indeterminate=ChatState.is_creating
-                                    ),
+                                    rx.spinner(loading=ChatState.is_creating),
                                     rx.text("친구가 말 거는 중.."),
                                     align="center",
                                 ),
@@ -112,7 +109,7 @@ def dashboard():
                             rx.cond(
                                 ChatState.is_closed,
                                 rx.hstack(
-                                    rc.button(
+                                    rx.button(
                                         "대화 새로 시작하기",
                                         on_click=ChatState.start_new_chat,
                                         size="sm",
@@ -123,7 +120,7 @@ def dashboard():
                                 ),
                                 rx.cond(
                                     ChatState.current_messages.length() > 2,
-                                    rc.button(
+                                    rx.button(
                                         "대화 마치기",
                                         on_click=[
                                             ChatState.evaluate_chat,
@@ -138,25 +135,26 @@ def dashboard():
                                     ),
                                 ),
                             ),
-                            rc.modal(
-                                rc.modal_overlay(
-                                    rc.modal_content(
-                                        rc.modal_header("오늘의 감정"),
-                                        rc.modal_body(
-                                            rx.flex(create_box())
-                                        ),  # emotion_card
-                                        rc.modal_footer(
-                                            rc.button(
-                                                "닫기",
-                                                on_click=ModalState.change,
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                                # close_on_overlay_click=True,
-                                is_centered=True,
-                                is_open=ModalState.show,
-                            ),
+                            # [TODO] replace
+                            # rx.modal(
+                            #     rx.modal_overlay(
+                            #         rx.modal_content(
+                            #             rx.modal_header("오늘의 감정"),
+                            #             rx.modal_body(
+                            #                 rx.flex(create_box())
+                            #             ),  # emotion_card
+                            #             rx.modal_footer(
+                            #                 rx.button(
+                            #                     "닫기",
+                            #                     on_click=ModalState.change,
+                            #                 ),
+                            #             ),
+                            #         ),
+                            #     ),
+                            #     # close_on_overlay_click=True,
+                            #     is_centered=True,
+                            #     is_open=ModalState.show,
+                            # ),
                             # ),
                             align="center",
                             width="100%",
