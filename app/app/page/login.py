@@ -73,6 +73,7 @@ def login_page() -> rx.Component:
                     ),
                     padding_bottom="10vh",
                 ),
+                # [TODO] replace
                 # rx.cond(  # conditionally show error messages
                 #     LoginState.error_message != "",
                 #     rx.alert(
@@ -83,6 +84,7 @@ def login_page() -> rx.Component:
                 # ),
                 login_form,
                 rx.link("No account yet? Sign up.", href=REGISTER_ROUTE),
+                # [TODO] replace
                 # rx.modal(
                 #     rx.modal_overlay(
                 #         rx.modal_content(
