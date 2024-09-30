@@ -1,26 +1,25 @@
 import reflex as rx
-import reflex_chakra as rc
 
 from app.state.chat_state import ChatState
 
 
 def chat_input(can_input: bool) -> rx.Component:
-    return rc.form(
+    return rx.form(
         rx.hstack(
-            rc.input(
+            rx.input(
                 placeholder="대화를 입력하세요.",
                 id="message",
                 width="100%",
-                is_required=True,
-                is_disabled=~can_input,
+                required=True,
+                disabled=~can_input,
             ),
             rx.cond(
                 ChatState.is_hydrated,
-                rc.button(
+                rx.button(
                     rx.icon("send"),
                     type_="submit",
-                    is_loading=ChatState.is_waiting,
-                    is_disabled=~can_input,
+                    loading=ChatState.is_waiting,
+                    disabled=~can_input,
                     variant="outline",
                 ),
             ),
