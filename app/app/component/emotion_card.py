@@ -1,5 +1,4 @@
 import reflex as rx
-import reflex_chakra as rc
 from collections import Counter
 from typing import List, Tuple, Dict
 
@@ -81,7 +80,7 @@ class EmotionState(ChatState):
 
 def create_box():
 
-    return rc.box(
+    return rx.box(
         bg=EmotionState.get_box_params_for_one,
         border_radius="10px",
         width="100%",
@@ -91,7 +90,7 @@ def create_box():
 
 def create_boxes(params):
 
-    return rc.box(
+    return rx.box(
         bg=params[1],
         border_radius="10px",
         width="8em",  # params[2],
@@ -115,8 +114,8 @@ def emotion_card() -> rx.Component:
 def create_color_legend(color):
 
     return rx.hstack(
-        rc.text("●", color=color[1], font_size="1em"),
-        rc.text(color[0], font_size="1em"),
+        rx.text("●", color=color[1], font_size="1em"),
+        rx.text(color[0], font_size="1em"),
     )
 
 

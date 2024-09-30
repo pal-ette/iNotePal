@@ -1,5 +1,4 @@
 import reflex as rx
-import reflex_chakra as rc
 from reflex_wordcloud import wordcloud
 from app.component.navbar import navbar
 from app.state.word_cloud_state import *
@@ -19,7 +18,7 @@ def wordcloud_page():
             rx.spacer(),
             rx.vstack(
                 rx.hstack(
-                    rc.heading(
+                    rx.heading(
                         WordCloudState.print_date_text,
                         size="xl",
                         weight="bold",
