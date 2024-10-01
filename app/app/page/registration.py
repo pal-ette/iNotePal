@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import reflex as rx
-import reflex_chakra as rc
 
 from app.routes import REGISTER_ROUTE, LOGIN_ROUTE
 from app.state.registration_state import RegistrationState
@@ -15,30 +14,34 @@ def registration_page() -> rx.Component:
     Returns:
         A reflex component.
     """
-    register_form = rc.form(
+    register_form = rx.form(
         rx.fragment(
-            rc.flex(
-                rc.heading(
+            rx.flex(
+                rx.heading(
                     "iNotePal", as_="h1", size="4xl", weight="bold", align="left"
                 ),
                 padding_bottom="10vh",
             ),
-            rc.flex(
-                rc.heading("Sign up", as_="h1", size="lg", align="left"),
+            rx.flex(
+                rx.heading("Sign up", as_="h1", size="lg", align="left"),
                 padding_bottom="2vh",
             ),
-            rc.flex(
-                rc.text("Email Address", size="md", weight="medium", align="left"),
-                rc.input(placeholder="email", id="email", type_="email"),
-                rc.text("Password", size="md", weight="bold", align="left"),
-                rc.password(placeholder="password", id="password"),
-                rc.text("Confirm Password", size="md", weight="bold", align="left"),
-                rc.password(placeholder="confirm password", id="confirm_password"),
+            rx.flex(
+                rx.text("Email Address", size="md", weight="medium", align="left"),
+                rx.input(placeholder="email", id="email", type_="email"),
+                rx.text("Password", size="md", weight="bold", align="left"),
+                rx.input(placeholder="password", id="password", type="password"),
+                rx.text("Confirm Password", size="md", weight="bold", align="left"),
+                rx.input(
+                    placeholder="confirm password",
+                    id="confirm_password",
+                    type="password",
+                ),
                 direction="column",
                 padding_bottom="2vh",
             ),
-            rc.flex(
-                rc.button(
+            rx.flex(
+                rx.button(
                     "Register",
                     type_="submit",
                     is_loading=RegistrationState.is_loading,
@@ -54,19 +57,22 @@ def registration_page() -> rx.Component:
     return rx.fragment(
         rx.cond(
             RegistrationState.success,
-            rc.vstack(
-                rc.text(
+            rx.vstack(
+                rx.text(
                     "Registration successful, check your mail to confirm signup so as to login!"
                 ),
-                rc.spinner(),
+                rx.spinner(),
             ),
-            rc.vstack(
+            rx.vstack(
                 rx.cond(  # conditionally show error messages
                     RegistrationState.error_message != "",
-                    rc.text(RegistrationState.error_message),
+                    rx.text(RegistrationState.error_message),
                 ),
                 register_form,
-                rc.link("Already have an account?", href=LOGIN_ROUTE),
+                rx.link("Already have an account?", href=LOGIN_ROUTE),
+                padding_top="3vh",
+                margin="0px 10vw",
+                align="center",
             ),
         ),
     )
