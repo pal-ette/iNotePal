@@ -2,7 +2,7 @@ bcrypt==4.1.2
 openai==1.20.0
 PyJWT==2.8.0
 python-dotenv==1.0.1
-reflex==0.6.0
+reflex==0.6.1
 scikit-learn==1.2.2
 supabase==2.4.3
 tensorflow==2.15.0
