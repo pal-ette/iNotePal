@@ -1,8 +1,6 @@
 import reflex as rx
-import reflex_chakra as rc
 from app.app_state import AppState
 from app.state.chat_state import ChatState
-from reflex_calendar import calendar
 from app.component.emotion_card import emotion_card, show_emotion_colors
 
 from app.state.calendar_state import calendar_component
@@ -14,10 +12,10 @@ def date_to_print(date):
 
 def navbar() -> rx.Component:
     return rx.fragment(
-        rc.flex(
+        rx.flex(
             rx.flex(
                 rx.link(
-                    rc.heading(
+                    rx.heading(
                         "iNP",
                         as_="h1",
                         size="4xl",
@@ -33,7 +31,7 @@ def navbar() -> rx.Component:
                             "none",
                         ],
                     ),
-                    rc.heading(
+                    rx.heading(
                         "iNotePal",
                         as_="h1",
                         size="4xl",
@@ -51,7 +49,7 @@ def navbar() -> rx.Component:
                     ),
                     href="/",
                 ),
-                rc.hstack(
+                rx.hstack(
                     rx.link(
                         rx.text(
                             "Analysis",
@@ -82,32 +80,33 @@ def navbar() -> rx.Component:
                     # search_bar(),
                     # github(),
                     rx.flex(
-                        rc.popover(
-                            rc.popover_trigger(rc.button(rx.icon("user"))),
-                            rc.popover_content(
-                                rc.popover_header(AppState.user_mail),
-                                rc.popover_body(
-                                    rc.button(
-                                        "Logout",
-                                        width="100%",
-                                        on_click=[
-                                            AppState.do_logout,
-                                            AppState.check_login,
-                                        ],
-                                        variant="outline",
-                                    ),
+                        rx.popover.root(
+                            rx.popover.trigger(rx.button(rx.icon("user"))),
+                            rx.popover.content(
+                                rx.text(AppState.user_mail),
+                                rx.button(
+                                    "Logout",
+                                    width="100%",
+                                    on_click=[
+                                        AppState.do_logout,
+                                        AppState.check_login,
+                                    ],
+                                    variant="outline",
                                 ),
-                                rc.popover_close_button(),
+                                rx.popover.close(
+                                    rx.button("Close"),
+                                    width="100%",
+                                ),
                             ),
                         ),
                     ),
                     rx.drawer.root(
-                        rx.drawer.trigger(rc.button(rx.icon("align-justify"))),
+                        rx.drawer.trigger(rx.button(rx.icon("align-justify"))),
                         rx.drawer.overlay(z_index="5"),
                         rx.drawer.portal(
                             rx.drawer.content(
                                 rx.vstack(
-                                    rc.heading(
+                                    rx.heading(
                                         "iNotePal",
                                         as_="h1",
                                         size="4xl",
@@ -115,10 +114,10 @@ def navbar() -> rx.Component:
                                         bgGradient="linear(to-l, #f2ebc8, #de776c, #49312d)",
                                         bgClip="text",
                                     ),
-                                    rc.divider(border_color="black"),
+                                    rx.divider(border_color="black"),
                                     rx.spacer(),
-                                    rc.vstack(
-                                        rc.hstack(
+                                    rx.vstack(
+                                        rx.hstack(
                                             rx.link(
                                                 rx.text(
                                                     "Analysis",
@@ -134,7 +133,7 @@ def navbar() -> rx.Component:
                                                 href="/word_cloud",
                                             ),
                                         ),
-                                        rc.divider(border_color="black"),
+                                        rx.divider(border_color="black"),
                                         rx.spacer(),
                                         width="100%",
                                         display=[
@@ -157,7 +156,7 @@ def navbar() -> rx.Component:
                                         on_change_day=ChatState.on_change_day,
                                     ),
                                     rx.spacer(),
-                                    rc.text(
+                                    rx.text(
                                         f"{ChatState.print_date_text}의 감정",
                                         # on_change=State.select_date,
                                         as_="i",
