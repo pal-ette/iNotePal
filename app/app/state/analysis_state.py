@@ -73,6 +73,16 @@ class AnalysisState(ChatState):
         if len(self.logs) > 15:
             self.logs.pop(0)
 
+    def onOpenChangeStartDay(self, isOpen):
+        if not isOpen:
+            self.setStartDay()
+            self.getDataDay()
+
+    def onOpenChangeEndDay(self, isOpen):
+        if not isOpen:
+            self.setEndDay()
+            self.getDataDay()
+
     def setStartDay(self):
         if self.start_day != "":
             self.data_reset()

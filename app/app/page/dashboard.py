@@ -135,27 +135,19 @@ def dashboard():
                                     ),
                                 ),
                             ),
-                            # [TODO] replace
-                            # rx.modal(
-                            #     rx.modal_overlay(
-                            #         rx.modal_content(
-                            #             rx.modal_header("오늘의 감정"),
-                            #             rx.modal_body(
-                            #                 rx.flex(create_box())
-                            #             ),  # emotion_card
-                            #             rx.modal_footer(
-                            #                 rx.button(
-                            #                     "닫기",
-                            #                     on_click=ModalState.change,
-                            #                 ),
-                            #             ),
-                            #         ),
-                            #     ),
-                            #     # close_on_overlay_click=True,
-                            #     is_centered=True,
-                            #     is_open=ModalState.show,
-                            # ),
-                            # ),
+                            rx.dialog.root(
+                                rx.dialog.content(
+                                    rx.heading("오늘의 감정"),
+                                    rx.flex(create_box()),
+                                    rx.button(
+                                        "닫기",
+                                        on_click=ModalState.change,
+                                    ),
+                                ),
+                                # close_on_overlay_click=True,
+                                is_centered=True,
+                                open=ModalState.show,
+                            ),
                             align="center",
                             width="100%",
                         ),
