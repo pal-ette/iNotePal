@@ -1,5 +1,4 @@
 import reflex as rx
-import reflex_chakra as rc
 
 from app.component.navbar import navbar
 from app.state.analysis_state import AnalysisState
@@ -12,62 +11,56 @@ from app.state.calendar_state import calendar_component
 @require_login
 def analysis_page() -> rx.Component:
 
-    start_calendar_form = rc.popover(
-        rc.popover_trigger(
-            rc.button("시작일", rx.icon("calendar-check"), variant="ghost"),
+    start_calendar_form = rx.popover.root(
+        rx.popover.trigger(
+            rx.button("시작일", rx.icon("calendar-check"), variant="ghost"),
         ),
-        rc.popover_content(
-            rc.popover_body(
-                calendar_component(
-                    year=AnalysisState.year,
-                    select_year=AnalysisState.select_year,
-                    month=AnalysisState.month,
-                    select_month=AnalysisState.select_month,
-                    day=AnalysisState.day,
-                    on_next_month=AnalysisState.on_next_month,
-                    on_prev_month=AnalysisState.on_prev_month,
-                    on_change_day=AnalysisState.on_change_day,
-                ),
+        rx.popover.content(
+            calendar_component(
+                year=AnalysisState.year,
+                select_year=AnalysisState.select_year,
+                month=AnalysisState.month,
+                select_month=AnalysisState.select_month,
+                day=AnalysisState.day,
+                on_next_month=AnalysisState.on_next_month,
+                on_prev_month=AnalysisState.on_prev_month,
+                on_change_day=AnalysisState.on_change_day,
             ),
-            rc.popover_close_button(),
+            rx.popover.close(
+                rx.button("Close"),
+            ),
             style={"width": 430},
         ),
         strategy="fixed",
         return_focus_on_close=True,
         match_width=True,
-        on_close=[
-            AnalysisState.setStartDay,
-            AnalysisState.getDataDay,
-        ],
+        on_open_change=AnalysisState.onOpenChangeStartDay,
     )
 
-    end_calendar_form = rc.popover(
-        rc.popover_trigger(
-            rc.button("종료일", rx.icon("calendar-check"), variant="ghost")
+    end_calendar_form = rx.popover.root(
+        rx.popover.trigger(
+            rx.button("종료일", rx.icon("calendar-check"), variant="ghost")
         ),
-        rc.popover_content(
-            rc.popover_body(
-                calendar_component(
-                    year=AnalysisState.year,
-                    select_year=AnalysisState.select_year,
-                    month=AnalysisState.month,
-                    select_month=AnalysisState.select_month,
-                    day=AnalysisState.day,
-                    on_next_month=AnalysisState.on_next_month,
-                    on_prev_month=AnalysisState.on_prev_month,
-                    on_change_day=AnalysisState.on_change_day,
-                ),
+        rx.popover.content(
+            calendar_component(
+                year=AnalysisState.year,
+                select_year=AnalysisState.select_year,
+                month=AnalysisState.month,
+                select_month=AnalysisState.select_month,
+                day=AnalysisState.day,
+                on_next_month=AnalysisState.on_next_month,
+                on_prev_month=AnalysisState.on_prev_month,
+                on_change_day=AnalysisState.on_change_day,
             ),
-            rc.popover_close_button(),
+            rx.popover.close(
+                rx.button("Close"),
+            ),
             style={"width": 430},
         ),
         strategy="fixed",
         return_focus_on_close=True,
         match_width=True,
-        on_close=[
-            AnalysisState.setEndDay,
-            AnalysisState.getDataDay,
-        ],
+        on_open_change=AnalysisState.onOpenChangeEndDay,
     )
 
     return rx.fragment(
@@ -96,21 +89,22 @@ def analysis_page() -> rx.Component:
         rx.container(
             margin_top="120px",
         ),
-        rc.wrap(
-            rc.wrap_item(
+        rx.flex(
+            rx.flex(
                 start_calendar_form,
                 rx.heading(AnalysisState.print_start_day_text),
             ),
-            rc.wrap_item(
+            rx.flex(
                 end_calendar_form,
                 rx.heading(AnalysisState.print_end_day_text),
             ),
             align="center",
             width="100%",
             spacing="2em",
+            flex_wrap="wrap",
         ),
         rx.container(
-            rc.flex(
+            rx.flex(
                 rx.heading(
                     "위 기간동안 당신의 감정상태는", size="4", color_scheme="gray"
                 ),
@@ -119,8 +113,8 @@ def analysis_page() -> rx.Component:
                 width="100%",
             ),
             rx.vstack(
-                rc.responsive_grid(
-                    rc.flex(
+                rx.grid(
+                    rx.flex(
                         rx.recharts.radar_chart(
                             rx.recharts.radar(
                                 data_key="total",
@@ -144,7 +138,7 @@ def analysis_page() -> rx.Component:
                         height="30em",
                         width="100%",
                     ),
-                    rc.flex(
+                    rx.flex(
                         rx.recharts.funnel_chart(
                             rx.recharts.funnel(
                                 rx.recharts.label_list(
@@ -165,104 +159,100 @@ def analysis_page() -> rx.Component:
                         align="center",
                         justify="center",
                     ),
-                    rc.grid_item(
-                        rc.flex(
-                            rx.recharts.bar_chart(
-                                rx.recharts.bar(
-                                    data_key="기쁨",
-                                    stroke="#f2ebc8",
-                                    fill="#f2ebc8",
-                                ),
-                                rx.recharts.bar(
-                                    data_key="공포",
-                                    stroke="#af625c",
-                                    fill="#af625c",
-                                ),
-                                rx.recharts.bar(
-                                    data_key="슬픔",
-                                    stroke="#de776c",
-                                    fill="#de776c",
-                                ),
-                                rx.recharts.bar(
-                                    data_key="혐오",
-                                    stroke="#49312d",
-                                    fill="#49312d",
-                                ),
-                                rx.recharts.bar(
-                                    data_key="분노",
-                                    stroke="#91615a",
-                                    fill="#91615a",
-                                ),
-                                rx.recharts.bar(
-                                    data_key="놀람",
-                                    stroke="#ebb9b0",
-                                    fill="#ebb9b0",
-                                ),
-                                rx.recharts.bar(
-                                    data_key="중립",
-                                    stroke="#e5988e",
-                                    fill="#e5988e",
-                                ),
-                                rx.recharts.brush(
-                                    data_key="date", height=20, stroke="#e5988e"
-                                ),
-                                rx.recharts.x_axis(data_key="date"),
-                                rx.recharts.y_axis(),
-                                rx.recharts.legend(),
-                                data=AnalysisState.data_emotion_bar,
+                    rx.flex(
+                        rx.recharts.bar_chart(
+                            rx.recharts.bar(
+                                data_key="기쁨",
+                                stroke="#f2ebc8",
+                                fill="#f2ebc8",
                             ),
-                            height="30em",
-                            width="100%",
+                            rx.recharts.bar(
+                                data_key="공포",
+                                stroke="#af625c",
+                                fill="#af625c",
+                            ),
+                            rx.recharts.bar(
+                                data_key="슬픔",
+                                stroke="#de776c",
+                                fill="#de776c",
+                            ),
+                            rx.recharts.bar(
+                                data_key="혐오",
+                                stroke="#49312d",
+                                fill="#49312d",
+                            ),
+                            rx.recharts.bar(
+                                data_key="분노",
+                                stroke="#91615a",
+                                fill="#91615a",
+                            ),
+                            rx.recharts.bar(
+                                data_key="놀람",
+                                stroke="#ebb9b0",
+                                fill="#ebb9b0",
+                            ),
+                            rx.recharts.bar(
+                                data_key="중립",
+                                stroke="#e5988e",
+                                fill="#e5988e",
+                            ),
+                            rx.recharts.brush(
+                                data_key="date", height=20, stroke="#e5988e"
+                            ),
+                            rx.recharts.x_axis(data_key="date"),
+                            rx.recharts.y_axis(),
+                            rx.recharts.legend(),
+                            data=AnalysisState.data_emotion_bar,
                         ),
-                        col_span=2,
+                        height="30em",
+                        width="100%",
+                        grid_column="span 2",
                     ),
-                    rc.grid_item(
-                        rc.box(
-                            rx.recharts.line_chart(
-                                rx.recharts.line(
-                                    data_key="기쁨",
-                                    stroke="#f2ebc8",
-                                ),
-                                rx.recharts.line(
-                                    data_key="공포",
-                                    stroke="#af625c",
-                                ),
-                                rx.recharts.line(
-                                    data_key="슬픔",
-                                    stroke="#de776c",
-                                ),
-                                rx.recharts.line(
-                                    data_key="혐오",
-                                    stroke="#49312d",
-                                ),
-                                rx.recharts.line(
-                                    data_key="분노",
-                                    stroke="#91615a",
-                                ),
-                                rx.recharts.line(
-                                    data_key="놀람",
-                                    stroke="#ebb9b0",
-                                ),
-                                rx.recharts.line(
-                                    data_key="중립",
-                                    stroke="#e5988e",
-                                ),
-                                rx.recharts.x_axis(data_key="date"),
-                                rx.recharts.y_axis(),
-                                rx.recharts.legend(),
-                                rx.recharts.cartesian_grid(stroke_dasharray="3 3"),
-                                margin={
-                                    "left": 10,
-                                    "right": 0,
-                                    "top": 20,
-                                    "bottom": 10,
-                                },
-                                data=AnalysisState.data_emotion_bar,
+                    rx.box(
+                        rx.recharts.line_chart(
+                            rx.recharts.line(
+                                data_key="기쁨",
+                                stroke="#f2ebc8",
                             ),
-                            height="30em",
-                            width="100%",
+                            rx.recharts.line(
+                                data_key="공포",
+                                stroke="#af625c",
+                            ),
+                            rx.recharts.line(
+                                data_key="슬픔",
+                                stroke="#de776c",
+                            ),
+                            rx.recharts.line(
+                                data_key="혐오",
+                                stroke="#49312d",
+                            ),
+                            rx.recharts.line(
+                                data_key="분노",
+                                stroke="#91615a",
+                            ),
+                            rx.recharts.line(
+                                data_key="놀람",
+                                stroke="#ebb9b0",
+                            ),
+                            rx.recharts.line(
+                                data_key="중립",
+                                stroke="#e5988e",
+                            ),
+                            rx.recharts.x_axis(data_key="date"),
+                            rx.recharts.y_axis(),
+                            rx.recharts.legend(),
+                            rx.recharts.cartesian_grid(stroke_dasharray="3 3"),
+                            margin={
+                                "left": 10,
+                                "right": 0,
+                                "top": 20,
+                                "bottom": 10,
+                            },
+                            data=AnalysisState.data_emotion_bar,
                         ),
-                        col_span=2,
+                        height="30em",
+                        width="100%",
+                        grid_column="span 2",
                     ),
                     grid_template_columns=[
                         "repeat(1, 1fr)",

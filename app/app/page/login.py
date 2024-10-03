@@ -73,72 +73,68 @@ def login_page() -> rx.Component:
                     ),
                     padding_bottom="10vh",
                 ),
-                # [TODO] replace
-                # rx.cond(  # conditionally show error messages
-                #     LoginState.error_message != "",
-                #     rx.alert(
-                #         rx.alert_icon(),
-                #         rx.alert_title(LoginState.error_message),
-                #         status="error",
-                #     ),
-                # ),
+                rx.cond(  # conditionally show error messages
+                    LoginState.error_message != "",
+                    rx.callout(
+                        LoginState.error_message,
+                        icon="triangle_alert",
+                        color_scheme="red",
+                        role="alert",
+                    ),
+                ),
                 login_form,
                 rx.link("No account yet? Sign up.", href=REGISTER_ROUTE),
-                # [TODO] replace
-                # rx.modal(
-                #     rx.modal_overlay(
-                #         rx.modal_content(
-                #             rx.modal_header("Password Reset"),
-                #             rx.form(
-                #                 rx.hstack(
-                #                     rx.input(
-                #                         placeholder="email",
-                #                         id="password_reset_email",
-                #                         type_="email",
-                #                         width="100%",
-                #                     ),
-                #                     rx.box(
-                #                         width="15px",
-                #                     ),
-                #                     rx.button(
-                #                         "Request",
-                #                         type_="submit",
-                #                         size="lg",
-                #                         variant="outline",
-                #                     ),
-                #                     margin="0px 20px",
-                #                     align="center",
-                #                 ),
-                #                 on_submit=ResetPasswordState.request_reset_password,
-                #             ),
-                #             rx.cond(
-                #                 ResetPasswordState.error_message != "",
-                #                 rx.alert(
-                #                     rx.alert_icon(),
-                #                     rx.alert_title(ResetPasswordState.error_message),
-                #                     status="error",
-                #                 ),
-                #             ),
-                #             rx.cond(
-                #                 ResetPasswordState.is_requested,
-                #                 rx.alert(
-                #                     rx.alert_icon(),
-                #                     rx.alert_title("Password reset mail requested."),
-                #                     status="success",
-                #                     border="0.5",
-                #                 ),
-                #             ),
-                #             rx.modal_footer(
-                #                 rx.button(
-                #                     "Close",
-                #                     on_click=ResetPasswordState.hide_reset_password,
-                #                 )
-                #             ),
-                #         )
-                #     ),
-                #     is_open=ResetPasswordState.is_show_reset_password,
-                # ),
-                rx.text(
+                rx.dialog.root(
+                    rx.dialog.content(
+                        rx.heading("Password Reset"),
+                        rx.form(
+                            rx.hstack(
+                                rx.input(
+                                    placeholder="email",
+                                    id="password_reset_email",
+                                    type_="email",
+                                    width="100%",
+                                ),
+                                rx.box(
+                                    width="15px",
+                                ),
+                                rx.button(
+                                    "Request",
+                                    type_="submit",
+                                    size="lg",
+                                    variant="outline",
+                                ),
+                                rx.button(
+                                    "Close",
+                                    type="button",
+                                    on_click=ResetPasswordState.hide_reset_password,
+                                ),
+                                margin="0px 20px",
+                                align="center",
+                            ),
+                            on_submit=ResetPasswordState.request_reset_password,
+                        ),
+                        rx.cond(
+                            ResetPasswordState.error_message != "",
+                            rx.callout(
+                                ResetPasswordState.error_message,
+                                icon="triangle_alert",
+                                color_scheme="red",
+                                role="alert",
+                            ),
+                        ),
+                        rx.cond(
+                            ResetPasswordState.is_requested,
+                            rx.callout(
+                                "Password reset mail requested.",
+                                icon="info",
+                                color_scheme="green",
+                            ),
+                        ),
+                    ),
+                    open=ResetPasswordState.is_show_reset_password,
+                ),
+                rx.link(
                     "Forgot password?",
                     on_click=ResetPasswordState.show_reset_password,
                 ),
