@@ -17,11 +17,11 @@ def navbar() -> rx.Component:
                 rx.link(
                     rx.heading(
                         "iNP",
-                        as_="h1",
                         size="4xl",
                         weight="bold",
-                        bgGradient="linear(to-l, #f2ebc8, #de776c, #49312d)",
-                        bgClip="text",
+                        background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
+                        background_clip="text",
+                        color="transparent",
                         display=[
                             "flex",
                             "flex",
@@ -36,8 +36,9 @@ def navbar() -> rx.Component:
                         as_="h1",
                         size="4xl",
                         weight="bold",
-                        bgGradient="linear(to-l, #f2ebc8, #de776c, #49312d)",
-                        bgClip="text",
+                        background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
+                        background_clip="text",
+                        color="transparent",
                         display=[
                             "none",
                             "none",
@@ -48,6 +49,8 @@ def navbar() -> rx.Component:
                         ],
                     ),
                     href="/",
+                    color="initial",
+                    text_decoration="none",
                 ),
                 rx.hstack(
                     rx.link(
