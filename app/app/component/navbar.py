@@ -33,7 +33,6 @@ def navbar() -> rx.Component:
                     ),
                     rx.heading(
                         "iNotePal",
-                        as_="h1",
                         size="4xl",
                         weight="bold",
                         background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
