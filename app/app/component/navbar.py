@@ -113,8 +113,9 @@ def navbar() -> rx.Component:
                                         as_="h1",
                                         size="4xl",
                                         weight="bold",
-                                        bgGradient="linear(to-l, #f2ebc8, #de776c, #49312d)",
-                                        bgClip="text",
+                                        background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
+                                        background_clip="text",
+                                        color="transparent",
                                     ),
                                     rx.divider(border_color="black"),
                                     rx.spacer(),
@@ -174,7 +175,10 @@ def navbar() -> rx.Component:
                                 height="100%",
                                 width="27em",
                                 padding="1em",
-                                background_color="#FFF",
+                                background_color=rx.color_mode_cond(
+                                    light="white",
+                                    dark="black",
+                                ),
                             )
                         ),
                         direction="left",
