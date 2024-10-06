@@ -55,6 +55,7 @@ def login_page() -> rx.Component:
                         rx.icon("github"),
                         rx.text("Login with Github"),
                     ),
+                    type="button",
                     on_click=LoginState.login_with_github,
                 ),
             ),
