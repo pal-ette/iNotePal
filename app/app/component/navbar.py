@@ -1,8 +1,9 @@
 import reflex as rx
+from reflex.style import toggle_color_mode
+
 from app.app_state import AppState
 from app.state.chat_state import ChatState
 from app.component.emotion_card import emotion_card, show_emotion_colors
-
 from app.state.calendar_state import calendar_component
 
 
@@ -81,6 +82,13 @@ def navbar() -> rx.Component:
                 rx.flex(
                     # search_bar(),
                     # github(),
+                    rx.button(
+                        rx.color_mode_cond(
+                            light=rx.icon("moon"),
+                            dark=rx.icon("sun"),
+                        ),
+                        on_click=toggle_color_mode,
+                    ),
                     rx.flex(
                         rx.popover.root(
                             rx.popover.trigger(rx.button(rx.icon("user"))),
