@@ -38,8 +38,6 @@ class ChatState(AppState):
     select_year: int = datetime.now().year
     select_month: int = datetime.now().month
 
-    select_date: str = datetime.today().strftime("%a %b %d %Y")
-
     is_creating: bool
 
     _current_chat_index: int = 0
@@ -209,17 +207,6 @@ class ChatState(AppState):
                 continue
             self._current_chat_index = i
             break
-
-    def switch_day_ymd(self, year, month, day):
-        return self.switch_day(date(year, month, day).strftime("%a %b %d %Y"))
-
-    def switch_day(self, day):
-        self._current_chat_index = 0
-        self.select_date = day
-        self.db_select_date = reformat_date(day)
-
-        if len(self.chats) == 0:
-            return self.start_new_chat()
 
     def insert_history(self, chat_id, message, is_user, emotion=None):
         (
