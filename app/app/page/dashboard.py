@@ -107,31 +107,34 @@ def dashboard():
                         rx.vstack(
                             chat_input(ChatState.is_exist_chat),
                             rx.cond(
-                                ChatState.is_closed,
-                                rx.hstack(
-                                    rx.button(
-                                        "대화 새로 시작하기",
-                                        on_click=ChatState.start_new_chat,
-                                        size="sm",
-                                        bg="#ebb9b0",
-                                        color="#49312d",
-                                        border_radius="md",
-                                    ),
-                                ),
+                                ~ChatState.is_creating,
                                 rx.cond(
-                                    ChatState.current_messages.length() > 2,
-                                    rx.button(
-                                        "대화 마치기",
-                                        on_click=[
-                                            ChatState.evaluate_chat,
-                                            ModalState.change,
-                                        ],
-                                        # width="100%",
-                                        # variant="solid",
-                                        size="sm",
-                                        bg="#ebb9b0",
-                                        color="#49312d",
-                                        border_radius="md",
+                                    ~ChatState.is_exist_chat | ChatState.is_closed,
+                                    rx.hstack(
+                                        rx.button(
+                                            "대화 새로 시작하기",
+                                            on_click=ChatState.start_new_chat,
+                                            size="sm",
+                                            bg="#ebb9b0",
+                                            color="#49312d",
+                                            border_radius="md",
+                                        ),
+                                    ),
+                                    rx.cond(
+                                        ChatState.current_messages.length() > 2,
+                                        rx.button(
+                                            "대화 마치기",
+                                            on_click=[
+                                                ChatState.evaluate_chat,
+                                                ModalState.change,
+                                            ],
+                                            # width="100%",
+                                            # variant="solid",
+                                            size="sm",
+                                            bg="#ebb9b0",
+                                            color="#49312d",
+                                            border_radius="md",
+                                        ),
                                     ),
                                 ),
                             ),
