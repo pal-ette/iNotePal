@@ -160,21 +160,9 @@ class ChatState(AppState):
             .data
         )
 
-    def print_date(self, year, month, day):
-        print("select_date", year, month, day)
-
     @rx.var(cache=True)
     def print_date_text(self):
-        date_split = self.db_select_date.split("-")
-        text_date = (
-            date_split[0]
-            + "년 "
-            + str(int(date_split[1]))
-            + "월 "
-            + str(int(date_split[2]))
-            + "일"
-        )
-        return text_date
+        return f"{self.select_year}년 {self.select_month}월 {self.day}일"
 
     def get_messages(self, chat_id):
         if chat_id in self._db_messages:
