@@ -270,7 +270,6 @@ class ChatState(AppState):
         if greeting is not None:
             return greeting.message
 
-        _year, month, day = self.db_select_date.split("-")
         client = OpenAI(
             api_key=os.getenv("OPENAI_API_KEY"),
             base_url=os.getenv("OPENAI_BASE_URL"),
@@ -280,7 +279,7 @@ class ChatState(AppState):
             messages=[
                 {
                     "role": "system",
-                    "content": f"당신은 사람의 감정을 세심히 살필 수 있는 심리상담사입니다. 오늘은 {month}월 {day}일 입니다. 기분이라는 단어를 직접적으로 사용하지말고 오늘 날짜와 함께 기분이 드러날 수 있는 질문을 해주세요.",
+                    "content": f"당신은 사람의 감정을 세심히 살필 수 있는 심리상담사입니다. 오늘은 {self.select_month}월 {self.day}일 입니다. 기분이라는 단어를 직접적으로 사용하지말고 오늘 날짜와 함께 기분이 드러날 수 있는 질문을 해주세요.",
                 }
             ],
             temperature=7e-1,
