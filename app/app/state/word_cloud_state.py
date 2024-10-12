@@ -2,7 +2,6 @@ import reflex as rx
 from konlpy.tag import Kkma
 from collections import Counter
 from datetime import datetime
-from reflex_calendar import calendar
 from typing import List, Dict, Tuple
 from app.state.chat_state import ChatState
 

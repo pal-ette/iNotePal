@@ -1,11 +1,7 @@
-from reflex_calendar import calendar
-
 import reflex as rx
 from datetime import datetime, date
 from app.state.chat_state import ChatState
 from typing import List, Dict
-from reflex_calendar import reformat_date
-import json
 from collections import defaultdict
 
 
@@ -521,29 +517,6 @@ def logs():
         width="50%",
         height="100%",
         spacing="1",
-    )
-
-
-def demo():
-    return rx.vstack(
-        # rx.heading("Calendar Demo", size="6"),
-        # rx.moment(Calendar.selected_date),
-        calendar(
-            go_to_range_start_on_select=True,
-            locale="ko-KR",
-            on_active_start_date_change=AnalysisState.active_start_date_change_handler,
-            on_change=AnalysisState.change_handler,
-            on_click_day=AnalysisState.click_day_handler,
-            on_click_month=AnalysisState.click_month_handler,
-            on_click_decade=AnalysisState.click_decade_handler,
-            on_click_year=AnalysisState.click_year_handler,
-            on_click_week_number=AnalysisState.click_week_number_handler,
-            on_drill_down=AnalysisState.drill_down_handler,
-            on_drill_up=AnalysisState.drill_up_handler,
-            on_view_change=AnalysisState.view_change_handler,
-        ),
-        align="center",
-        width="100%",
     )
 
 
