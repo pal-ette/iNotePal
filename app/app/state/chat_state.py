@@ -39,6 +39,8 @@ class ChatState(AppState):
 
     is_creating: bool
 
+    show_result_modal: bool = False
+
     _current_chat_index: int = 0
 
     _db_chats: Dict[str, List[Dict[str, str]]] = {}
@@ -258,6 +260,19 @@ class ChatState(AppState):
                 self._db_chats[self.current_chat["date"]],
             ),
         )
+        self.open_result_modal()
+
+    def open_result_modal(self):
+        if self.show_result_modal:
+            return
+
+        self.show_result_modal = True
+
+    def close_result_modal(self):
+        if not self.show_result_modal:
+            return
+
+        self.show_result_modal = False
 
     def get_greeting(self):
         greeting = None
