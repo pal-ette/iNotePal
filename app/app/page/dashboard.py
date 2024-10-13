@@ -20,13 +20,6 @@ data = [
 ]
 
 
-class ModalState(rx.State):
-    show: bool = False
-
-    def change(self):
-        self.show = not (self.show)
-
-
 def build_past_card(chat):
     return rx.button(
         chat[0],
@@ -123,10 +116,7 @@ def dashboard():
                                         ChatState.current_messages.length() > 2,
                                         rx.button(
                                             "대화 마치기",
-                                            on_click=[
-                                                ChatState.evaluate_chat,
-                                                ModalState.change,
-                                            ],
+                                            on_click=ChatState.evaluate_chat,
                                             # width="100%",
                                             # variant="solid",
                                             size="sm",
@@ -143,12 +133,12 @@ def dashboard():
                                     rx.flex(create_box()),
                                     rx.button(
                                         "닫기",
-                                        on_click=ModalState.change,
+                                        on_click=ChatState.close_result_modal,
                                     ),
                                 ),
                                 # close_on_overlay_click=True,
                                 is_centered=True,
-                                open=ModalState.show,
+                                open=ChatState.show_result_modal,
                             ),
                             align="center",
                             width="100%",
