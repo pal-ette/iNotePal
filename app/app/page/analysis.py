@@ -89,29 +89,18 @@ def analysis_page() -> rx.Component:
         rx.container(
             margin_top="120px",
         ),
-        rx.flex(
-            rx.flex(
-                start_calendar_form,
-                rx.heading(AnalysisState.print_start_day_text),
-            ),
-            rx.flex(
-                end_calendar_form,
-                rx.heading(AnalysisState.print_end_day_text),
-            ),
-            align="center",
-            width="100%",
-            spacing="2em",
-            flex_wrap="wrap",
-        ),
         rx.container(
-            rx.flex(
-                rx.heading(
-                    "위 기간동안 당신의 감정상태는", size="4", color_scheme="gray"
+            rx.hstack(
+                rx.flex(
+                    start_calendar_form,
+                    rx.heading(AnalysisState.print_start_day_text),
                 ),
-                align="center",
-                justify="center",
-                width="100%",
+                rx.flex(
+                    end_calendar_form,
+                    rx.heading(AnalysisState.print_end_day_text),
+                ),
             ),
+            rx.heading("위 기간동안 당신의 감정상태는", size="4", color_scheme="gray"),
             rx.vstack(
                 rx.grid(
                     rx.flex(
