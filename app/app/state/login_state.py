@@ -3,7 +3,7 @@ from collections.abc import Generator
 
 from app.app_state import AppState
 from app.supabase_client import supabase_client
-from app.routes import LOGIN_ROUTE, OAUTH_ROUTE
+from app.routes import LOGIN_ROUTE, OAUTH_ROUTE, DASHBOARD_ROUTE
 from reflex.config import get_config
 
 
@@ -32,7 +32,7 @@ class LoginState(AppState):
         except Exception as e:
             print("oauth error:", str(e))
 
-        return rx.redirect("/")
+        return rx.redirect(DASHBOARD_ROUTE)
 
     def login_with_github(self):
         redirect_to = (
@@ -99,4 +99,4 @@ class LoginState(AppState):
             self.is_loading = False
             yield
 
-            return rx.redirect(self.redirect_to or "/")
+            return rx.redirect(self.redirect_to or DASHBOARD_ROUTE)

@@ -5,7 +5,7 @@ from app.app_state import AppState
 from app.state.chat_state import ChatState
 from app.component.emotion_card import emotion_card, show_emotion_colors
 from app.state.calendar_state import calendar_component
-from app.routes import WORDCLOUD_ROUTE
+from app.routes import WORDCLOUD_ROUTE, DASHBOARD_ROUTE, ANALYSIS_ROUTE
 
 
 def date_to_print(date):
@@ -49,7 +49,7 @@ def navbar() -> rx.Component:
                             "flex",
                         ],
                     ),
-                    href="/",
+                    href=DASHBOARD_ROUTE,
                     color="initial",
                     text_decoration="none",
                 ),
@@ -59,7 +59,7 @@ def navbar() -> rx.Component:
                             "Analysis",
                             color_scheme="gray",
                         ),
-                        href="/analysis",
+                        href=ANALYSIS_ROUTE,
                     ),
                     rx.link(
                         rx.text(
@@ -135,7 +135,7 @@ def navbar() -> rx.Component:
                                                     "Analysis",
                                                     color_scheme="gray",
                                                 ),
-                                                href="/analysis",
+                                                href=ANALYSIS_ROUTE,
                                             ),
                                             rx.link(
                                                 rx.text(
