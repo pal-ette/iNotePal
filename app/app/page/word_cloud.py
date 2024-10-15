@@ -3,8 +3,11 @@ from reflex_wordcloud import wordcloud
 from app.component.navbar import navbar
 from app.state.word_cloud_state import *
 from app.page.login import require_login
+from app.app_state import AppState
+from app.routes import WORDCLOUD_ROUTE
 
 
+@rx.page(route=WORDCLOUD_ROUTE, on_load=AppState.check_login)
 @require_login
 def wordcloud_page():
 
