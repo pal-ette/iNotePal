@@ -1,3 +1,4 @@
+DASHBOARD_ROUTE = "/"
 LOGIN_ROUTE = "/login"
 REGISTER_ROUTE = "/register"
 WORDCLOUD_ROUTE = "/word_cloud"

@@ -7,6 +7,7 @@ from app.state.chat_state import ChatState
 from app.component.emotion_card import create_box, emotion_card, show_emotion_colors
 from app.page.login import require_login
 from app.state.calendar_state import calendar_component
+from app.routes import DASHBOARD_ROUTE
 
 # 그래프 그리기 위한 임시 데이터.
 data = [
@@ -33,7 +34,7 @@ def build_past_card(chat):
     )
 
 
-@rx.page(route="/", on_load=ChatState.check_login)
+@rx.page(route=DASHBOARD_ROUTE, on_load=ChatState.check_login)
 @require_login
 def dashboard():
     return rx.flex(
