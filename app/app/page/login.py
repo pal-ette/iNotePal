@@ -2,11 +2,12 @@
 
 import reflex as rx
 
-from app.routes import REGISTER_ROUTE
 from app.state.login_state import LoginState
 from app.state.reset_password_state import ResetPasswordState
+from app.routes import LOGIN_ROUTE, REGISTER_ROUTE
 
 
+@rx.page(route=LOGIN_ROUTE)
 def login_page() -> rx.Component:
     """Render the login page.
 

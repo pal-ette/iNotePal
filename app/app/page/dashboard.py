@@ -33,6 +33,7 @@ def build_past_card(chat):
     )
 
 
+@rx.page(route="/", on_load=ChatState.check_login)
 @require_login
 def dashboard():
     return rx.flex(

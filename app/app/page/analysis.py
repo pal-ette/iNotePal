@@ -4,10 +4,13 @@ from app.component.navbar import navbar
 from app.state.analysis_state import AnalysisState
 from app.page.login import require_login
 from app.state.calendar_state import calendar_component
+from app.app_state import AppState
+from app.routes import ANALYSIS_ROUTE
 
 # 공포 기쁨 놀람 분노 슬픔 중립 혐오
 
 
+@rx.page(route=ANALYSIS_ROUTE, on_load=AppState.check_login)
 @require_login
 def analysis_page() -> rx.Component:
 
