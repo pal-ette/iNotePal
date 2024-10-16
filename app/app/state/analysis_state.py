@@ -6,24 +6,19 @@ from collections import defaultdict
 
 
 class AnalysisState(ChatState):
-    selected_date: str = ""
+    selected_date: date | None = None
     logs: list[str] = []
-    start_day: str = ""
-    end_day: str = ""
+    start_day: date | None = None
+    end_day: date | None = None
     isStart: bool = True
     date_valid_check: bool = True
     graph_valid_check: bool = False
-
-    start_date_c: str = ""
-    end_date_c: str = ""
 
     def on_change_day(self, day):
         self.select_year = self.year
         self.select_month = self.month
         self.day = day
-        self.selected_date = date(self.year, self.month, self.day).strftime(
-            "%a %b %d %Y"
-        )
+        self.selected_date = date(self.year, self.month, self.day)
 
     def change_handler(self, var):
         self.selected_date = var
@@ -80,24 +75,20 @@ class AnalysisState(ChatState):
             self.getDataDay()
 
     def setStartDay(self):
-        if self.start_day != "":
+        if self.start_day != None:
             self.data_reset()
 
         self.start_day = self.selected_date
-        if self.end_day and all(
-            [c.isalpha() or c.isdigit() or c.isspace() for c in self.end_day]
-        ):
+        if self.end_day:
             self.compare_dates()
 
     def setEndDay(self):
 
-        if self.end_day != "":
+        if self.end_day != None:
             self.data_reset()
 
         self.end_day = self.selected_date
-        if self.start_day and all(
-            [c.isalpha() or c.isdigit() or c.isspace() for c in self.start_day]
-        ):
+        if self.start_day:
             self.compare_dates()
 
     def reset_date_valid_check(self):
@@ -108,50 +99,31 @@ class AnalysisState(ChatState):
 
     @rx.var
     def print_start_day_text(self):
-
-        if self.start_day == "":
+        if self.start_day == None:
             return " "
 
-        date_split = format_date(self.start_day).split("-")
         text_date = (
-            date_split[0]
-            + "년 "
-            + str(int(date_split[1]))
-            + "월 "
-            + str(int(date_split[2]))
-            + "일"
+            f"{self.start_day.year}년 {self.start_day.month}월 {self.start_day.day}일"
         )
         return text_date
 
     @rx.var
     def print_end_day_text(self):
 
-        if self.end_day == "":
+        if self.end_day == None:
             return " "
 
-        date_split = format_date(self.end_day).split("-")
-        text_date = (
-            date_split[0]
-            + "년 "
-            + str(int(date_split[1]))
-            + "월 "
-            + str(int(date_split[2]))
-            + "일"
-        )
+        text_date = f"{self.end_day.year}년 {self.end_day.month}월 {self.end_day.day}일"
         return text_date
 
     def compare_dates(self):
-
-        self.start_date_c = datetime.strptime(self.start_day, "%a %b %d %Y")
-        self.end_date_c = datetime.strptime(self.end_day, "%a %b %d %Y")
-
-        if self.end_date_c < self.start_date_c:
+        if self.end_day < self.start_day:
             self.date_valid_check = False
             self.graph_valid_check = False
 
             print("종료 날짜가 시작 날짜보다 앞섭니다. 다시 입력하세요.")
-            self.start_day = ""
-            self.end_day = ""
+            self.start_day = None
+            self.end_day = None
         else:
             self.graph_valid_check = True
 
@@ -222,14 +194,15 @@ class AnalysisState(ChatState):
 
     @rx.var
     def data_emotion(self):
-        if self.start_day == "":
+        if self.start_day == None:
             return []
 
-        if self.end_day == "":
+        if self.end_day == None:
             return []
 
         period_data = self.get_chats_in_period(
-            format_date(self.start_day), format_date(self.end_day)
+            self.start_day.strftime("%Y-%m-%d"),
+            self.end_day.strftime("%Y-%m-%d"),
         )
         return [
             message["emotion"]
@@ -332,13 +305,14 @@ class AnalysisState(ChatState):
 
     @rx.var
     def count_emotions_by_date(self):
-        if self.start_day == "":
+        if self.start_day == None:
             return []
-        if self.end_day == "":
+        if self.end_day == None:
             return []
 
         period_data = self.get_chats_in_period(
-            format_date(self.start_day), format_date(self.end_day)
+            self.start_day.strftime("%Y-%m-%d"),
+            self.end_day.strftime("%Y-%m-%d"),
         )
         emotions_by_date = defaultdict(lambda: defaultdict(int))
 
@@ -410,15 +384,11 @@ class AnalysisState(ChatState):
         self.data_line_check = False
 
     def getDataDay(self):
-
-        if self.start_day != "":
-            formatted_date_s = format_date(str(self.start_day))
-
-        if self.end_day != "":
-            formatted_date_e = format_date(str(self.end_day))
-
         if self.start_day != "" and self.end_day != "":
-            period_data = self.get_chats_in_period(formatted_date_s, formatted_date_e)
+            period_data = self.get_chats_in_period(
+                self.start_day.strftime("%Y-%m-%d"),
+                self.end_day.strftime("%Y-%m-%d"),
+            )
 
             for item in period_data:
                 for message in item["message"]:
@@ -518,11 +488,6 @@ def logs():
         height="100%",
         spacing="1",
     )
-
-
-def format_date(date_str):
-    date_object = datetime.strptime(date_str, "%a %b %d %Y")
-    return date_object.strftime("%Y-%m-%d")
 
 
 # # 데이터 정의
