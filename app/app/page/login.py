@@ -47,7 +47,7 @@ def login_page() -> rx.Component:
                 rx.button(
                     "Login",
                     type_="submit",
-                    is_loading=LoginState.is_loading,
+                    loading=LoginState.is_loading,
                     size="lg",
                     variant="outline",
                 ),
@@ -57,6 +57,7 @@ def login_page() -> rx.Component:
                         rx.text("Login with Github"),
                     ),
                     type="button",
+                    loading=LoginState.is_loading,
                     on_click=LoginState.login_with_github,
                 ),
             ),
