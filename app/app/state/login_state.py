@@ -35,6 +35,8 @@ class LoginState(AppState):
         return rx.redirect(DASHBOARD_ROUTE)
 
     def login_with_github(self):
+        self.is_loading = True
+        yield
         redirect_to = (
             f"{self.router.page.host}{get_config().frontend_path}{OAUTH_ROUTE}"
         )
@@ -44,7 +46,9 @@ class LoginState(AppState):
                 "options": {"redirect_to": redirect_to},
             }
         )
-        return rx.redirect(data.url)
+        self.is_loading = False
+        self.redirect_to = data.url
+        return LoginState.redir()
 
     def on_submit(self, form_data) -> Generator[rx.event.EventSpec]:
         """Handle login form on_submit.
@@ -70,13 +74,13 @@ class LoginState(AppState):
             )
             self.auth_token = auth_response.session.access_token
             self.error_message = ""
+            self.redirect_to = ""
             return LoginState.redir()
         except:
             self.error_message = "There was a problem logging in, please try again."
 
             # reset state variable again
             self.is_loading = False
-            yield
 
     def redir(self) -> Generator[rx.event.EventSpec]:
         """Redirect to the redirect_to route if logged in, or to the login page if not."""
@@ -90,13 +94,11 @@ class LoginState(AppState):
 
             # reset state variable again
             self.is_loading = False
-            yield
 
             return rx.redirect(LOGIN_ROUTE)
         elif page == LOGIN_ROUTE:
 
             # reset state variable again
             self.is_loading = False
-            yield
 
             return rx.redirect(self.redirect_to or DASHBOARD_ROUTE)
