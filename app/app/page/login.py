@@ -47,7 +47,7 @@ def login_page() -> rx.Component:
                 rx.button(
                     "Login",
                     type_="submit",
-                    is_loading=LoginState.is_loading,
+                    loading=LoginState.is_loading,
                     size="lg",
                     variant="outline",
                 ),
