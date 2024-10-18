@@ -9,7 +9,7 @@ from app.app_state import AppState
 from app.routes import REGISTER_ROUTE, LOGIN_ROUTE
 
 
-@rx.page(route=REGISTER_ROUTE, on_load=AppState.check_login)
+@rx.page(route=REGISTER_ROUTE)
 def registration_page() -> rx.Component:
     """Render the registration page.
 
@@ -46,7 +46,7 @@ def registration_page() -> rx.Component:
                 rx.button(
                     "Register",
                     type_="submit",
-                    is_loading=RegistrationState.is_loading,
+                    loading=RegistrationState.is_loading,
                     size="lg",
                     variant="outline",
                 )
