@@ -1,17 +1,16 @@
 import random
 
 
-def emotions():
-    return [
-        "공포",
-        "기쁨",
-        "놀람",
-        "분노",
-        "슬픔",
-        "중립",
-        "혐오",
-    ]
+emotion_color_map = {
+    "혐오": "#49312d",
+    "분노": "#91615a",
+    "공포": "#af625c",
+    "슬픔": "#de776c",
+    "중립": "#e5988e",
+    "놀람": "#ebb9b0",
+    "기쁨": "#f2ebc8",
+}
 
 
 def random_emotion():
-    return random.sample(emotions(), 1)[0]
+    return random.sample(list(emotion_color_map.keys()), 1)[0]
