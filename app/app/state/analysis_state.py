@@ -3,6 +3,7 @@ from datetime import datetime, date
 from app.state.chat_state import ChatState
 from typing import List, Dict
 from collections import defaultdict
+from app.util.emotion import emotion_color_map
 
 
 class AnalysisState(ChatState):
@@ -97,6 +98,10 @@ class AnalysisState(ChatState):
     def reset_graph_valid_check(self):
         self.graph_valid_check = False
 
+    @rx.var
+    def emotion_color_map(self) -> Dict[str, str]:
+        return emotion_color_map
+    
     @rx.var
     def print_start_day_text(self):
         if self.start_day == None:
@@ -279,24 +284,15 @@ class AnalysisState(ChatState):
 
     @rx.var
     def data_emotion_funnel(self) -> List[Dict[str, str | int]]:
-        fill_mapping = {
-            "혐오": "#49312d",
-            "분노": "#91615a",
-            "공포": "#af625c",
-            "슬픔": "#de776c",
-            "중립": "#e5988e",
-            "놀람": "#ebb9b0",
-            "기쁨": "#f2ebc8",
-        }
         data_funnel = []
         for emotion, count in self.data_emotion_count.items():
             if count == 0:
                 continue
-            if emotion in fill_mapping:
+            if emotion in emotion_color_map:
                 new_dict = {
                     "emotion": emotion,
                     "count": count,
-                    "fill": fill_mapping[emotion],
+                    "fill": emotion_color_map[emotion],
                 }
                 data_funnel.append(new_dict)
 
@@ -419,16 +415,6 @@ class AnalysisState(ChatState):
             self.set_data_radar_state()
 
     def getDataFunnels(self):
-
-        fill_mapping = {
-            "혐오": "#49312d",
-            "분노": "#91615a",
-            "공포": "#af625c",
-            "슬픔": "#de776c",
-            "중립": "#e5988e",
-            "놀람": "#ebb9b0",
-            "기쁨": "#f2ebc8",
-        }
         if self.emotion_counts_check:
             self.emotion_count_day()
 
@@ -437,11 +423,11 @@ class AnalysisState(ChatState):
             for emotion, count in self.emotion_counts.items():
                 if count == 0:
                     continue
-                if emotion in fill_mapping:
+                if emotion in emotion_color_map:
                     new_dict = {
                         "emotion": emotion,
                         "count": count,
-                        "fill": fill_mapping[emotion],
+                        "fill": emotion_color_map[emotion],
                     }
                     self.data_funnel.append(new_dict)
 

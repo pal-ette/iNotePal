@@ -153,40 +153,21 @@ def analysis_page() -> rx.Component:
                     ),
                     rx.flex(
                         rx.recharts.bar_chart(
-                            rx.recharts.bar(
-                                data_key="기쁨",
-                                stroke="#f2ebc8",
-                                fill="#f2ebc8",
-                            ),
-                            rx.recharts.bar(
-                                data_key="공포",
-                                stroke="#af625c",
-                                fill="#af625c",
-                            ),
-                            rx.recharts.bar(
-                                data_key="슬픔",
-                                stroke="#de776c",
-                                fill="#de776c",
-                            ),
-                            rx.recharts.bar(
-                                data_key="혐오",
-                                stroke="#49312d",
-                                fill="#49312d",
-                            ),
-                            rx.recharts.bar(
-                                data_key="분노",
-                                stroke="#91615a",
-                                fill="#91615a",
-                            ),
-                            rx.recharts.bar(
-                                data_key="놀람",
-                                stroke="#ebb9b0",
-                                fill="#ebb9b0",
-                            ),
-                            rx.recharts.bar(
-                                data_key="중립",
-                                stroke="#e5988e",
-                                fill="#e5988e",
+                            rx.foreach(
+                                [
+                                    "기쁨",
+                                    "공포",
+                                    "슬픔",
+                                    "혐오",
+                                    "분노",
+                                    "놀람",
+                                    "중립",
+                                ],
+                                lambda key: rx.recharts.bar(
+                                    data_key=key,
+                                    stroke=AnalysisState.emotion_color_map[key],
+                                    fill=AnalysisState.emotion_color_map[key],
+                                ),
                             ),
                             rx.recharts.brush(
                                 data_key="date", height=20, stroke="#e5988e"
@@ -202,33 +183,20 @@ def analysis_page() -> rx.Component:
                     ),
                     rx.box(
                         rx.recharts.line_chart(
-                            rx.recharts.line(
-                                data_key="기쁨",
-                                stroke="#f2ebc8",
-                            ),
-                            rx.recharts.line(
-                                data_key="공포",
-                                stroke="#af625c",
-                            ),
-                            rx.recharts.line(
-                                data_key="슬픔",
-                                stroke="#de776c",
-                            ),
-                            rx.recharts.line(
-                                data_key="혐오",
-                                stroke="#49312d",
-                            ),
-                            rx.recharts.line(
-                                data_key="분노",
-                                stroke="#91615a",
-                            ),
-                            rx.recharts.line(
-                                data_key="놀람",
-                                stroke="#ebb9b0",
-                            ),
-                            rx.recharts.line(
-                                data_key="중립",
-                                stroke="#e5988e",
+                            rx.foreach(
+                                [
+                                    "기쁨",
+                                    "공포",
+                                    "슬픔",
+                                    "혐오",
+                                    "분노",
+                                    "놀람",
+                                    "중립",
+                                ],
+                                lambda key: rx.recharts.line(
+                                    data_key=key,
+                                    stroke=AnalysisState.emotion_color_map[key],
+                                ),
                             ),
                             rx.recharts.x_axis(data_key="date"),
                             rx.recharts.y_axis(),
