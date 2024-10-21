@@ -1,5 +1,5 @@
 import reflex as rx
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from app.state.chat_state import ChatState
 from typing import List, Dict
 from collections import defaultdict
@@ -9,11 +9,10 @@ from app.util.emotion import emotion_color_map
 class AnalysisState(ChatState):
     selected_date: date | None = None
     logs: list[str] = []
-    start_day: date | None = None
-    end_day: date | None = None
+    start_day: date | None = date.today() - timedelta(days=30)
+    end_day: date | None = date.today()
     isStart: bool = True
     date_valid_check: bool = True
-    graph_valid_check: bool = False
 
     def on_change_day(self, day):
         self.select_year = self.year
@@ -76,32 +75,38 @@ class AnalysisState(ChatState):
             self.getDataDay()
 
     def setStartDay(self):
+        if self.selected_date == None:
+            return
+
+        if not self.is_valid_date_range(self.selected_date, self.end_day):
+            self.date_valid_check = False
+            return
+
         if self.start_day != None:
             self.data_reset()
 
         self.start_day = self.selected_date
-        if self.end_day:
-            self.compare_dates()
 
     def setEndDay(self):
+        if self.selected_date == None:
+            return
 
-        if self.end_day != None:
+        if not self.is_valid_date_range(self.start_day, self.selected_date):
+            self.date_valid_check = False
+            return
+
+        if self.start_day != None:
             self.data_reset()
 
-        self.end_day = self.selected_date
-        if self.start_day:
-            self.compare_dates()
+        self.start_day = self.selected_date
 
     def reset_date_valid_check(self):
         self.date_valid_check = True
 
-    def reset_graph_valid_check(self):
-        self.graph_valid_check = False
-
     @rx.var
     def emotion_color_map(self) -> Dict[str, str]:
         return emotion_color_map
-    
+
     @rx.var
     def print_start_day_text(self):
         if self.start_day == None:
@@ -121,16 +126,8 @@ class AnalysisState(ChatState):
         text_date = f"{self.end_day.year}년 {self.end_day.month}월 {self.end_day.day}일"
         return text_date
 
-    def compare_dates(self):
-        if self.end_day < self.start_day:
-            self.date_valid_check = False
-            self.graph_valid_check = False
-
-            print("종료 날짜가 시작 날짜보다 앞섭니다. 다시 입력하세요.")
-            self.start_day = None
-            self.end_day = None
-        else:
-            self.graph_valid_check = True
+    def is_valid_date_range(self, start: date, end: date):
+        return end >= start
 
     # chart
     radar_chart_check: bool = False
