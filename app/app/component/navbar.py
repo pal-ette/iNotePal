@@ -5,7 +5,7 @@ from app.app_state import AppState
 from app.state.chat_state import ChatState
 from app.component.emotion_card import emotion_card, show_emotion_colors
 from app.state.calendar_state import calendar_component
-from app.routes import WORDCLOUD_ROUTE, DASHBOARD_ROUTE, ANALYSIS_ROUTE
+from app.routes import DASHBOARD_ROUTE, ANALYSIS_ROUTE
 
 
 def date_to_print(date):
@@ -60,13 +60,6 @@ def navbar() -> rx.Component:
                             color_scheme="gray",
                         ),
                         href=ANALYSIS_ROUTE,
-                    ),
-                    rx.link(
-                        rx.text(
-                            "Word Cloud",
-                            color_scheme="gray",
-                        ),
-                        href=WORDCLOUD_ROUTE,
                     ),
                     display=[
                         "none",
@@ -136,13 +129,6 @@ def navbar() -> rx.Component:
                                                     color_scheme="gray",
                                                 ),
                                                 href=ANALYSIS_ROUTE,
-                                            ),
-                                            rx.link(
-                                                rx.text(
-                                                    "Word Cloud",
-                                                    color_scheme="gray",
-                                                ),
-                                                href=WORDCLOUD_ROUTE,
                                             ),
                                         ),
                                         rx.divider(border_color="black"),
