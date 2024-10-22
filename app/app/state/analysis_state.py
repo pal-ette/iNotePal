@@ -1,9 +1,11 @@
 import reflex as rx
-from datetime import datetime, date, timedelta
+from datetime import date, timedelta
 from app.state.chat_state import ChatState
 from typing import List, Dict
 from collections import defaultdict
 from app.util.emotion import emotion_color_map
+from konlpy.tag import Kkma
+from collections import Counter
 
 
 class AnalysisState(ChatState):
@@ -360,6 +362,40 @@ class AnalysisState(ChatState):
                 continue
 
         return data_line
+
+    @rx.var
+    def display_words(self) -> List[Dict[str, str | int]]:
+        kkma = Kkma()
+        including = ["NNG", "NNM", "NNP", "NP"]  # , "VA", "VV", "MA"]
+
+        period_data = self.get_chats_in_period(
+            self.start_day.strftime("%Y-%m-%d"),
+            self.end_day.strftime("%Y-%m-%d"),
+        )
+        messages = [
+            message["message"]
+            for item in period_data
+            for message in item["message"]
+            if message["is_user"]
+        ]
+
+        if messages == []:
+            return messages
+
+        messages = " ".join(messages)
+        morphs = []
+        pos = kkma.pos(messages)
+        for w in pos:
+            if w[1] in including:
+                morphs.append(w[0])
+
+        words_count = Counter(morphs)
+        words = [
+            {"text": key, "value": value}
+            for i, (key, value) in enumerate(words_count.items())
+        ]
+
+        return words
 
     def set_emotion_counts_state(self):
         self.emotion_counts_check = False

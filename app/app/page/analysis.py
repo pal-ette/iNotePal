@@ -6,6 +6,7 @@ from app.page.login import require_login
 from app.state.calendar_state import calendar_component
 from app.app_state import AppState
 from app.routes import ANALYSIS_ROUTE
+from reflex_wordcloud import wordcloud
 
 # 공포 기쁨 놀람 분노 슬픔 중립 혐오
 
@@ -106,6 +107,30 @@ def analysis_page() -> rx.Component:
             rx.heading("위 기간동안 당신의 감정상태는", size="4", color_scheme="gray"),
             rx.vstack(
                 rx.grid(
+                    rx.flex(
+                        wordcloud(
+                            words=AnalysisState.display_words,
+                            options={
+                                "colors": [
+                                    "#49312d",
+                                    "#91615a",
+                                    "#af625c",
+                                    "#de776c",
+                                    "#e5988e",
+                                    "#ebb9b0",
+                                    "#f2ebc8",
+                                ],
+                                "rotations": 2,
+                                "rotationAngles": [-90, 0],
+                                "fontFamily": "impact",
+                                "padding": 1,
+                                "scale": "sqrt",
+                                "fontSizes": [10, 60],
+                                "fontStyle": "normal",
+                            },
+                        ),
+                        grid_column="span 2",
+                    ),
                     rx.flex(
                         rx.recharts.radar_chart(
                             rx.recharts.radar(
