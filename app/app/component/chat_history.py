@@ -1,6 +1,7 @@
 import reflex as rx
 
 from app.state.chat_state import ChatState
+from app.schema.chat import Message
 
 shadow = "rgba(0, 0, 0, 0.15) 0px 2px 8px"
 chat_margin = "20%"
@@ -55,11 +56,11 @@ def ai_chat_bubble(message, emotion):
     )
 
 
-def build_chat_bubble(chat):
+def build_chat_bubble(message: Message):
     return rx.cond(
-        chat[0] == "user",
-        user_chat_bubble(chat[1], chat[2]),
-        ai_chat_bubble(chat[1], chat[2]),
+        message.is_user,
+        user_chat_bubble(message.message, message.emotion),
+        ai_chat_bubble(message.message, message.emotion),
     )
 
 

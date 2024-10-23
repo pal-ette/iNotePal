@@ -205,27 +205,30 @@ class AnalysisState(ChatState):
             return []
 
         period_data = self.get_chats_in_period(
-            self.start_day.strftime("%Y-%m-%d"),
-            self.end_day.strftime("%Y-%m-%d"),
+            self.start_day,
+            self.end_day,
         )
         return [
-            message["emotion"]
+            message.emotion.value
             for item in period_data
-            for message in item["message"]
-            if message["is_user"] and message["emotion"]
+            for message in item.messages
+            if message.is_user and message.emotion
         ]
 
     @rx.var
     def data_emotion_total(self):
-        start_day = "1970-01-01"
-        end_day = "2024-05-03"
+        start_day = date(1970, 1, 1)
+        end_day = date(2999, 12, 31)
 
-        total_data = self.get_chats_in_period(start_day, end_day)
+        total_data = self.get_chats_in_period(
+            start_day,
+            end_day,
+        )
         return [
-            message["emotion"]
+            message.emotion.value
             for item in total_data
-            for message in item["message"]
-            if message["is_user"] and message["emotion"]
+            for message in item.messages
+            if message.is_user and message.emotion
         ]
 
     @rx.var
@@ -306,18 +309,17 @@ class AnalysisState(ChatState):
             return []
 
         period_data = self.get_chats_in_period(
-            self.start_day.strftime("%Y-%m-%d"),
-            self.end_day.strftime("%Y-%m-%d"),
+            self.start_day,
+            self.end_day,
         )
         emotions_by_date = defaultdict(lambda: defaultdict(int))
 
         for entry in period_data:
-            if "message" in entry:
-                for message in entry["message"]:
-                    if message["emotion"] and message["is_user"]:
-                        emotion = message["emotion"]
-                        if emotion:
-                            emotions_by_date[entry["date"]][emotion] += 1
+            for message in entry.messages:
+                if message.emotion and message.is_user:
+                    emotion = message.emotion.value
+                    if emotion:
+                        emotions_by_date[entry.date][emotion] += 1
 
         emotions_list = []
         for date, emotions in emotions_by_date.items():
@@ -369,14 +371,14 @@ class AnalysisState(ChatState):
         including = ["NNG", "NNM", "NNP", "NP"]  # , "VA", "VV", "MA"]
 
         period_data = self.get_chats_in_period(
-            self.start_day.strftime("%Y-%m-%d"),
-            self.end_day.strftime("%Y-%m-%d"),
+            self.start_day,
+            self.end_day,
         )
         messages = [
-            message["message"]
+            message.message
             for item in period_data
-            for message in item["message"]
-            if message["is_user"]
+            for message in item.messages
+            if message.is_user
         ]
 
         if messages == []:
@@ -415,14 +417,14 @@ class AnalysisState(ChatState):
     def getDataDay(self):
         if self.start_day != "" and self.end_day != "":
             period_data = self.get_chats_in_period(
-                self.start_day.strftime("%Y-%m-%d"),
-                self.end_day.strftime("%Y-%m-%d"),
+                self.start_day,
+                self.end_day,
             )
 
             for item in period_data:
-                for message in item["message"]:
-                    if message["is_user"] and message["emotion"] is not None:
-                        self.emotions_list.append(message["emotion"])
+                for message in item.messages:
+                    if message.is_user and message.emotion is not None:
+                        self.emotions_list.append(message.emotion.value)
         yield
 
     def emotion_count_day(self):
