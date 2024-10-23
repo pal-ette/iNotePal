@@ -1,11 +1,11 @@
-from enum import Enum, auto
+from enum import Enum
 
 
 class Emotion(Enum):
-    공포 = auto()
-    기쁨 = auto()
-    놀람 = auto()
-    분노 = auto()
-    슬픔 = auto()
-    중립 = auto()
-    혐오 = auto()
+    공포 = "공포"
+    기쁨 = "기쁨"
+    놀람 = "놀람"
+    분노 = "분노"
+    슬픔 = "슬픔"
+    중립 = "중립"
+    혐오 = "혐오"
