@@ -11,11 +11,11 @@ class Chat(rx.Model, table=True):
 
     user_id: str = sqlmodel.Field(index=True)  # uuid
 
-    is_closed: bool
+    is_closed: bool = False
 
-    created_at: time_type
+    created_at: time_type = time_type.now()
 
-    emotion: Emotion
+    emotion: Emotion = sqlmodel.Field(nullable=True)
 
     messages: List["Message"] = sqlmodel.Relationship(
         back_populates="chat",
@@ -24,7 +24,7 @@ class Chat(rx.Model, table=True):
 
 class Message(rx.Model, table=True):
 
-    created_at: time_type
+    created_at: time_type = time_type.now()
 
     chat_id: int = sqlmodel.Field(foreign_key="chat.id")
 
@@ -32,7 +32,7 @@ class Message(rx.Model, table=True):
 
     is_user: bool
 
-    emotion: Emotion
+    emotion: Emotion = sqlmodel.Field(nullable=True)
 
     chat: Optional["Chat"] = sqlmodel.Relationship(
         back_populates="messages",

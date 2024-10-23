@@ -33,7 +33,7 @@ class EmotionState(ChatState):
         current_chats = self.current_messages
         box_params = []
 
-        emotions = [c[2] for c in current_chats if c[0] == "user"]
+        emotions = [c.emotion.value for c in current_chats if c.is_user]
 
         emotion_count = Counter(emotions)
         bg_colors = self.get_bg_color(emotion_count)
@@ -47,7 +47,7 @@ class EmotionState(ChatState):
         box_params = []
 
         emotions_of_the_day = [
-            [id, [c[2] for c in chats if c[0] == "user"]]
+            [id, [c.emotion.value for c in chats if c.is_user]]
             for (id, chats) in past_chats[::-1]
         ]
 
