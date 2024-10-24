@@ -13,4 +13,4 @@ emotion_color_map = {
 
 
 def random_emotion():
-    return random.sample(list(emotion_color_map.keys()), 1)[0]
+    return random.sample(sorted(emotion_color_map), 1)[0]
