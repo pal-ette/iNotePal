@@ -8,10 +8,6 @@ from app.state.calendar_state import calendar_component
 from app.routes import DASHBOARD_ROUTE, ANALYSIS_ROUTE
 
 
-def date_to_print(date):
-    return date.split("-")
-
-
 def navbar() -> rx.Component:
     return rx.fragment(
         rx.flex(
