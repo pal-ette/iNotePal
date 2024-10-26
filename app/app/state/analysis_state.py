@@ -3,7 +3,7 @@ from datetime import date, timedelta
 from app.state.chat_state import ChatState
 from typing import List, Dict
 from collections import defaultdict
-from app.util.emotion import emotion_color_map
+from app.util.emotion import emotion_color_map as emotion_color_map_raw
 from konlpy.tag import Kkma
 from collections import Counter
 
@@ -107,7 +107,7 @@ class AnalysisState(ChatState):
 
     @rx.var
     def emotion_color_map(self) -> Dict[str, str]:
-        return emotion_color_map
+        return emotion_color_map_raw
 
     @rx.var
     def print_start_day_text(self):
@@ -151,15 +151,7 @@ class AnalysisState(ChatState):
         self.data_line_check = True
 
         self.emotions_list = []
-        self.emotion_counts = {
-            "혐오": 0,
-            "분노": 0,
-            "공포": 0,
-            "슬픔": 0,
-            "중립": 0,
-            "놀람": 0,
-            "기쁨": 0,
-        }
+        self.emotion_counts = {emotion: 0 for emotion in emotion_color_map_raw}
         self.data_emotion_frequency = []
         self.data_funnel = []
 
@@ -184,15 +176,7 @@ class AnalysisState(ChatState):
     emotion_counts_check: bool = True
 
     emotions_list: list[str] = []
-    emotion_counts = {
-        "혐오": 0,
-        "분노": 0,
-        "공포": 0,
-        "슬픔": 0,
-        "중립": 0,
-        "놀람": 0,
-        "기쁨": 0,
-    }
+    emotion_counts = {emotion: 0 for emotion in emotion_color_map_raw}
     data_emotion_frequency: List[Dict[str, int]] = []
     data_funnel: List[Dict[int, str]] = []
 
@@ -233,15 +217,7 @@ class AnalysisState(ChatState):
 
     @rx.var
     def data_emotion_count(self):
-        emotion_count = {
-            "혐오": 0,
-            "분노": 0,
-            "공포": 0,
-            "슬픔": 0,
-            "중립": 0,
-            "놀람": 0,
-            "기쁨": 0,
-        }
+        emotion_count = {emotion: 0 for emotion in emotion_color_map_raw}
         for emotion in self.data_emotion:
             if emotion in emotion_count:
                 emotion_count[emotion] += 1
@@ -251,15 +227,7 @@ class AnalysisState(ChatState):
 
     @rx.var
     def data_emotion_count_total(self):
-        emotion_count_total = {
-            "혐오": 0,
-            "분노": 0,
-            "공포": 0,
-            "슬픔": 0,
-            "중립": 0,
-            "놀람": 0,
-            "기쁨": 0,
-        }
+        emotion_count_total = {emotion: 0 for emotion in emotion_color_map_raw}
         for emotion in self.data_emotion_total:
             if emotion in emotion_count_total:
                 emotion_count_total[emotion] += 1
@@ -290,11 +258,11 @@ class AnalysisState(ChatState):
         for emotion, count in self.data_emotion_count.items():
             if count == 0:
                 continue
-            if emotion in emotion_color_map:
+            if emotion in emotion_color_map_raw:
                 new_dict = {
                     "emotion": emotion,
                     "count": count,
-                    "fill": emotion_color_map[emotion],
+                    "fill": emotion_color_map_raw[emotion],
                 }
                 data_funnel.append(new_dict)
 
@@ -458,11 +426,11 @@ class AnalysisState(ChatState):
             for emotion, count in self.emotion_counts.items():
                 if count == 0:
                     continue
-                if emotion in emotion_color_map:
+                if emotion in emotion_color_map_raw:
                     new_dict = {
                         "emotion": emotion,
                         "count": count,
-                        "fill": emotion_color_map[emotion],
+                        "fill": emotion_color_map_raw[emotion],
                     }
                     self.data_funnel.append(new_dict)
 
