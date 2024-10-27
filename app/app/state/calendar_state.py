@@ -3,9 +3,6 @@ import datetime
 import calendar
 from typing import List
 
-cal = calendar.Calendar()
-
-
 cal_days_style = {
     "width": "50px",
     "height": "50px",
@@ -33,9 +30,9 @@ class Calendar(rx.ComponentState):
     select_year: int = datetime.datetime.now().year
     select_month: int = datetime.datetime.now().month
 
-    @rx.var(cache=True)
+    @rx.var()
     def monthdayscalendar(self) -> List[List[int]]:
-        return cal.monthdayscalendar(self.year, self.month)
+        return calendar.Calendar().monthdayscalendar(self.year, self.month)
 
     def next_month(self):
         if self.month == 12:
@@ -56,6 +53,9 @@ class Calendar(rx.ComponentState):
         self.select_month = self.month
         self.day = day
 
+    def test(self, day):
+        return day
+
     @classmethod
     def get_component(cls, *children, **props) -> rx.Component:
         prop_year = props.pop("year", cls.year)
@@ -63,6 +63,7 @@ class Calendar(rx.ComponentState):
         prop_month = props.pop("month", cls.month)
         prop_select_month = props.pop("select_month", cls.select_month)
         prop_day = props.pop("day", cls.day)
+        prop_monthdayscalendar = props.pop("monthdayscalendar", cls.monthdayscalendar)
 
         on_next_month = props.pop("on_next_month", cls.next_month)
         on_prev_month = props.pop("on_prev_month", cls.prev_month)
@@ -117,7 +118,7 @@ class Calendar(rx.ComponentState):
             ),
             rx.vstack(
                 rx.foreach(
-                    cls.monthdayscalendar,
+                    prop_monthdayscalendar,
                     lambda week: rx.hstack(
                         rx.foreach(
                             week,

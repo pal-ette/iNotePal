@@ -18,6 +18,7 @@ from reflex import constants
 import random
 from collections import Counter
 import sqlalchemy
+import calendar
 
 
 inference_model = InferenceModel("dummy-0.0.0")
@@ -49,6 +50,10 @@ class ChatState(AppState):
     _db_chats: Dict[str, List[Chat]] = {}
 
     _db_messages: Dict[int, List[Message]] = {}
+
+    @rx.var()
+    def monthdayscalendar(self) -> List[List[int]]:
+        return calendar.Calendar().monthdayscalendar(self.year, self.month)
 
     @rx.var(cache=True)
     def db_select_date(self):
