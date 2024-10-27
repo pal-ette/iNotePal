@@ -148,6 +148,7 @@ def navbar() -> rx.Component:
                                         on_next_month=ChatState.on_next_month,
                                         on_prev_month=ChatState.on_prev_month,
                                         on_change_day=ChatState.on_change_day,
+                                        monthdayscalendar=ChatState.monthdayscalendar,
                                     ),
                                     rx.spacer(),
                                     rx.text(
