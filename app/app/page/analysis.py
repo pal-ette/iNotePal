@@ -28,7 +28,21 @@ def analysis_page() -> rx.Component:
     )
     start_calendar_form = rx.popover.root(
         rx.popover.trigger(
-            rx.button("시작일", rx.icon("calendar-check"), variant="ghost"),
+            rx.button(
+                rx.hstack(
+                    "시작일",
+                    rx.icon(
+                        "calendar-check",
+                        size=18,
+                    ),
+                    rx.heading(
+                        AnalysisState.print_start_day_text,
+                        high_contrast=True,
+                    ),
+                    align="center",
+                ),
+                variant="ghost",
+            ),
         ),
         rx.popover.content(
             calendar,
@@ -45,7 +59,21 @@ def analysis_page() -> rx.Component:
 
     end_calendar_form = rx.popover.root(
         rx.popover.trigger(
-            rx.button("종료일", rx.icon("calendar-check"), variant="ghost")
+            rx.button(
+                rx.hstack(
+                    "종료일",
+                    rx.icon(
+                        "calendar-check",
+                        size=18,
+                    ),
+                    rx.heading(
+                        AnalysisState.print_end_day_text,
+                        high_contrast=True,
+                    ),
+                    align="center",
+                ),
+                variant="ghost",
+            )
         ),
         rx.popover.content(
             calendar,
@@ -90,11 +118,9 @@ def analysis_page() -> rx.Component:
             rx.hstack(
                 rx.flex(
                     start_calendar_form,
-                    rx.heading(AnalysisState.print_start_day_text),
                 ),
                 rx.flex(
                     end_calendar_form,
-                    rx.heading(AnalysisState.print_end_day_text),
                 ),
             ),
             rx.heading("위 기간동안 당신의 감정상태는", size="4", color_scheme="gray"),
