@@ -53,9 +53,6 @@ class Calendar(rx.ComponentState):
         self.select_month = self.month
         self.day = day
 
-    def test(self, day):
-        return day
-
     @classmethod
     def get_component(cls, *children, **props) -> rx.Component:
         prop_year = props.pop("year", cls.year)
