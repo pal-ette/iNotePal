@@ -35,7 +35,7 @@ def analysis_page() -> rx.Component:
             rx.popover.close(
                 rx.button("Close"),
             ),
-            style={"width": 430},
+            style={"width": 450},
         ),
         strategy="fixed",
         return_focus_on_close=True,
@@ -52,7 +52,7 @@ def analysis_page() -> rx.Component:
             rx.popover.close(
                 rx.button("Close"),
             ),
-            style={"width": 430},
+            style={"width": 450},
         ),
         strategy="fixed",
         return_focus_on_close=True,
