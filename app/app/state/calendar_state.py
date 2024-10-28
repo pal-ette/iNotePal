@@ -68,28 +68,33 @@ class Calendar(rx.ComponentState):
 
         return rx.vstack(
             rx.hstack(
-                rx.icon(
-                    tag="chevron_left",
-                    cursor="pointer",
-                    on_click=on_prev_month,
+                rx.hstack(
+                    rx.icon(
+                        tag="chevron_left",
+                        cursor="pointer",
+                        on_click=on_prev_month,
+                    ),
+                    rx.spacer(),  # 빈 공간 생성
+                    rx.text(  # 현재 월과 연도를 표시하는 텍스트
+                        f"{prop_month}월 {prop_year}",
+                        width="150px",
+                        display="flex",
+                        justify_content="center",
+                    ),
+                    rx.spacer(),
+                    rx.icon(
+                        tag="chevron_right",
+                        cursor="pointer",
+                        on_click=on_next_month,
+                    ),
+                    align="center",
+                    justify="center",
+                    spacing="2",
                 ),
-                rx.spacer(),  # 빈 공간 생성
-                rx.text(  # 현재 월과 연도를 표시하는 텍스트
-                    f"{prop_month}월 {prop_year}",
-                    width="150px",
-                    display="flex",
-                    justify_content="center",
-                ),
-                rx.spacer(),
-                rx.icon(
-                    tag="chevron_right",
-                    cursor="pointer",
-                    on_click=on_next_month,
-                ),
-                display="flex",
-                align_items="center",
-                justify_content="center",
-                spacing="2",
+                children,
+                width="100%",
+                align="center",
+                justify="between",
             ),
             rx.hstack(
                 *[
