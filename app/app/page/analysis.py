@@ -15,22 +15,23 @@ from reflex_wordcloud import wordcloud
 @require_login
 def analysis_page() -> rx.Component:
 
+    calendar = calendar_component(
+        year=AnalysisState.year,
+        select_year=AnalysisState.select_year,
+        month=AnalysisState.month,
+        select_month=AnalysisState.select_month,
+        day=AnalysisState.day,
+        on_next_month=AnalysisState.on_next_month,
+        on_prev_month=AnalysisState.on_prev_month,
+        on_change_day=AnalysisState.on_change_day,
+        monthdayscalendar=AnalysisState.monthdayscalendar,
+    )
     start_calendar_form = rx.popover.root(
         rx.popover.trigger(
             rx.button("시작일", rx.icon("calendar-check"), variant="ghost"),
         ),
         rx.popover.content(
-            calendar_component(
-                year=AnalysisState.year,
-                select_year=AnalysisState.select_year,
-                month=AnalysisState.month,
-                select_month=AnalysisState.select_month,
-                day=AnalysisState.day,
-                on_next_month=AnalysisState.on_next_month,
-                on_prev_month=AnalysisState.on_prev_month,
-                on_change_day=AnalysisState.on_change_day,
-                monthdayscalendar=AnalysisState.monthdayscalendar,
-            ),
+            calendar,
             rx.popover.close(
                 rx.button("Close"),
             ),
@@ -47,17 +48,7 @@ def analysis_page() -> rx.Component:
             rx.button("종료일", rx.icon("calendar-check"), variant="ghost")
         ),
         rx.popover.content(
-            calendar_component(
-                year=AnalysisState.year,
-                select_year=AnalysisState.select_year,
-                month=AnalysisState.month,
-                select_month=AnalysisState.select_month,
-                day=AnalysisState.day,
-                on_next_month=AnalysisState.on_next_month,
-                on_prev_month=AnalysisState.on_prev_month,
-                on_change_day=AnalysisState.on_change_day,
-                monthdayscalendar=AnalysisState.monthdayscalendar,
-            ),
+            calendar,
             rx.popover.close(
                 rx.button("Close"),
             ),
