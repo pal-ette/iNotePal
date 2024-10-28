@@ -22,13 +22,15 @@ class AnalysisState(ChatState):
 
     def onOpenChangeStartDay(self, isOpen):
         if isOpen:
-            return
-        self.setStartDay()
+            self.reset_calendar_date(self.start_day)
+        else:
+            self.setStartDay()
 
     def onOpenChangeEndDay(self, isOpen):
         if isOpen:
-            return
-        self.setEndDay()
+            self.reset_calendar_date(self.end_day)
+        else:
+            self.setEndDay()
 
     def setStartDay(self):
         if self.selected_date == None:
