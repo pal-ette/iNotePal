@@ -16,6 +16,12 @@ from reflex_wordcloud import wordcloud
 def analysis_page() -> rx.Component:
 
     calendar = calendar_component(
+        rx.popover.close(
+            rx.button(
+                "Close",
+                size="1",
+            ),
+        ),
         year=AnalysisState.year,
         select_year=AnalysisState.select_year,
         month=AnalysisState.month,
@@ -46,9 +52,6 @@ def analysis_page() -> rx.Component:
         ),
         rx.popover.content(
             calendar,
-            rx.popover.close(
-                rx.button("Close"),
-            ),
             style={"width": 450},
         ),
         strategy="fixed",
@@ -77,9 +80,6 @@ def analysis_page() -> rx.Component:
         ),
         rx.popover.content(
             calendar,
-            rx.popover.close(
-                rx.button("Close"),
-            ),
             style={"width": 450},
         ),
         strategy="fixed",
