@@ -15,26 +15,44 @@ from reflex_wordcloud import wordcloud
 @require_login
 def analysis_page() -> rx.Component:
 
+    calendar = calendar_component(
+        rx.popover.close(
+            rx.button(
+                "Close",
+                size="1",
+            ),
+        ),
+        year=AnalysisState.year,
+        select_year=AnalysisState.select_year,
+        month=AnalysisState.month,
+        select_month=AnalysisState.select_month,
+        day=AnalysisState.day,
+        on_next_month=AnalysisState.on_next_month,
+        on_prev_month=AnalysisState.on_prev_month,
+        on_change_day=AnalysisState.on_change_day,
+        monthdayscalendar=AnalysisState.monthdayscalendar,
+    )
     start_calendar_form = rx.popover.root(
         rx.popover.trigger(
-            rx.button("시작일", rx.icon("calendar-check"), variant="ghost"),
+            rx.button(
+                rx.hstack(
+                    "시작일",
+                    rx.icon(
+                        "calendar-check",
+                        size=18,
+                    ),
+                    rx.heading(
+                        AnalysisState.print_start_day_text,
+                        high_contrast=True,
+                    ),
+                    align="center",
+                ),
+                variant="ghost",
+            ),
         ),
         rx.popover.content(
-            calendar_component(
-                year=AnalysisState.year,
-                select_year=AnalysisState.select_year,
-                month=AnalysisState.month,
-                select_month=AnalysisState.select_month,
-                day=AnalysisState.day,
-                on_next_month=AnalysisState.on_next_month,
-                on_prev_month=AnalysisState.on_prev_month,
-                on_change_day=AnalysisState.on_change_day,
-                monthdayscalendar=AnalysisState.monthdayscalendar,
-            ),
-            rx.popover.close(
-                rx.button("Close"),
-            ),
-            style={"width": 430},
+            calendar,
+            style={"width": 450},
         ),
         strategy="fixed",
         return_focus_on_close=True,
@@ -44,24 +62,25 @@ def analysis_page() -> rx.Component:
 
     end_calendar_form = rx.popover.root(
         rx.popover.trigger(
-            rx.button("종료일", rx.icon("calendar-check"), variant="ghost")
+            rx.button(
+                rx.hstack(
+                    "종료일",
+                    rx.icon(
+                        "calendar-check",
+                        size=18,
+                    ),
+                    rx.heading(
+                        AnalysisState.print_end_day_text,
+                        high_contrast=True,
+                    ),
+                    align="center",
+                ),
+                variant="ghost",
+            )
         ),
         rx.popover.content(
-            calendar_component(
-                year=AnalysisState.year,
-                select_year=AnalysisState.select_year,
-                month=AnalysisState.month,
-                select_month=AnalysisState.select_month,
-                day=AnalysisState.day,
-                on_next_month=AnalysisState.on_next_month,
-                on_prev_month=AnalysisState.on_prev_month,
-                on_change_day=AnalysisState.on_change_day,
-                monthdayscalendar=AnalysisState.monthdayscalendar,
-            ),
-            rx.popover.close(
-                rx.button("Close"),
-            ),
-            style={"width": 430},
+            calendar,
+            style={"width": 450},
         ),
         strategy="fixed",
         return_focus_on_close=True,
@@ -99,11 +118,9 @@ def analysis_page() -> rx.Component:
             rx.hstack(
                 rx.flex(
                     start_calendar_form,
-                    rx.heading(AnalysisState.print_start_day_text),
                 ),
                 rx.flex(
                     end_calendar_form,
-                    rx.heading(AnalysisState.print_end_day_text),
                 ),
             ),
             rx.heading("위 기간동안 당신의 감정상태는", size="4", color_scheme="gray"),
