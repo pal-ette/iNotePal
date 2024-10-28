@@ -10,10 +10,8 @@ from collections import Counter
 
 class AnalysisState(ChatState):
     selected_date: date | None = None
-    logs: list[str] = []
     start_day: date | None = date.today() - timedelta(days=30)
     end_day: date | None = date.today()
-    isStart: bool = True
     date_valid_check: bool = True
 
     def on_change_day(self, day):
@@ -22,59 +20,15 @@ class AnalysisState(ChatState):
         self.day = day
         self.selected_date = date(self.year, self.month, self.day)
 
-    def change_handler(self, var):
-        self.selected_date = var
-        self.add_log(f"Changed selected date: {var}")
-
-    def active_start_date_change_handler(self, var):
-        if "drill" in var["action"]:
-            return
-
-        action = var["action"]
-        start_date = var["activeStartDate"]
-        self.add_log(f"Changed active start date to {start_date} ({action})")
-
-    def click_day_handler(self, day):
-        self.add_log(f"Clicked day {day}")
-
-    def click_month_handler(self, month):
-        self.add_log(f"Clicked month {month}")
-
-    def click_decade_handler(self, var):
-        self.add_log(f"Clicked decade {var}")
-
-    def click_year_handler(self, year):
-        self.add_log(f"Clicked year {year}")
-
-    def click_week_number_handler(self, var):
-        self.add_log(f"Clicked week number {var['week_number']}")
-
-    def drill_down_handler(self, view):
-        self.add_log(f"Drilled down to: {view} view")
-
-    def drill_up_handler(self, view):
-        self.add_log(f"Drilled up to: {view} view")
-
-    def view_change_handler(self, event):
-        self.add_log(f"View changed to: {event['view']}")
-
-    def clear_logs(self):
-        self.logs = []
-
-    def add_log(self, log):
-        self.logs.append(log)
-        if len(self.logs) > 15:
-            self.logs.pop(0)
-
     def onOpenChangeStartDay(self, isOpen):
-        if not isOpen:
-            self.setStartDay()
-            self.getDataDay()
+        if isOpen:
+            return
+        self.setStartDay()
 
     def onOpenChangeEndDay(self, isOpen):
-        if not isOpen:
-            self.setEndDay()
-            self.getDataDay()
+        if isOpen:
+            return
+        self.setEndDay()
 
     def setStartDay(self):
         if self.selected_date == None:
@@ -83,9 +37,6 @@ class AnalysisState(ChatState):
         if not self.is_valid_date_range(self.selected_date, self.end_day):
             self.date_valid_check = False
             return
-
-        if self.start_day != None:
-            self.data_reset()
 
         self.start_day = self.selected_date
 
@@ -97,10 +48,7 @@ class AnalysisState(ChatState):
             self.date_valid_check = False
             return
 
-        if self.start_day != None:
-            self.data_reset()
-
-        self.start_day = self.selected_date
+        self.end_day = self.selected_date
 
     def reset_date_valid_check(self):
         self.date_valid_check = True
@@ -131,56 +79,7 @@ class AnalysisState(ChatState):
     def is_valid_date_range(self, start: date, end: date):
         return end >= start
 
-    # chart
-    radar_chart_check: bool = False
-    funnel_chart_check: bool = False
-    bar_chart_check: bool = False
-    line_chart_check: bool = False
-
-    def data_reset(self):
-        self.radar_chart_check = False
-        self.funnel_chart_check = False
-        self.bar_chart_check = False
-        self.line_chart_check = False
-
-        self.emotion_counts_check = True
-
-        self.data_radar_check = True
-        self.data_funnel_check = True
-        self.data_bar_check = True
-        self.data_line_check = True
-
-        self.emotions_list = []
-        self.emotion_counts = {emotion: 0 for emotion in emotion_color_map_raw}
-        self.data_emotion_frequency = []
-        self.data_funnel = []
-
-    def radar_chart_status(self):
-        self.radar_chart_check = not (self.radar_chart_check)
-
-    def funnel_chart_status(self):
-        self.funnel_chart_check = not (self.funnel_chart_check)
-
-    def bar_chart_status(self):
-        self.bar_chart_check = not (self.bar_chart_check)
-
-    def line_chart_status(self):
-        self.line_chart_check = not (self.line_chart_check)
-
-    # getData
-
-    data_radar_check: bool = True
-    data_funnel_check: bool = True
-    data_bar_check: bool = True
-    data_line_check: bool = True
-    emotion_counts_check: bool = True
-
-    emotions_list: list[str] = []
-    emotion_counts = {emotion: 0 for emotion in emotion_color_map_raw}
-    data_emotion_frequency: List[Dict[str, int]] = []
-    data_funnel: List[Dict[int, str]] = []
-
-    @rx.var
+    @rx.var(cache=True)
     def data_emotion(self):
         if self.start_day == None:
             return []
@@ -199,7 +98,7 @@ class AnalysisState(ChatState):
             if message.is_user and message.emotion
         ]
 
-    @rx.var
+    @rx.var(cache=True)
     def data_emotion_total(self):
         start_day = date(1970, 1, 1)
         end_day = date(2999, 12, 31)
@@ -215,7 +114,7 @@ class AnalysisState(ChatState):
             if message.is_user and message.emotion
         ]
 
-    @rx.var
+    @rx.var(cache=True)
     def data_emotion_count(self):
         emotion_count = {emotion: 0 for emotion in emotion_color_map_raw}
         for emotion in self.data_emotion:
@@ -225,7 +124,7 @@ class AnalysisState(ChatState):
                 emotion_count[emotion] = 1
         return emotion_count
 
-    @rx.var
+    @rx.var(cache=True)
     def data_emotion_count_total(self):
         emotion_count_total = {emotion: 0 for emotion in emotion_color_map_raw}
         for emotion in self.data_emotion_total:
@@ -324,16 +223,6 @@ class AnalysisState(ChatState):
         return data_bar
 
     @rx.var
-    def data_emotion_line(self) -> List[Dict[str, str | int]]:
-
-        data_line = []
-        for emotion, count in self.data_emotion_count.items():
-            if count == 0:
-                continue
-
-        return data_line
-
-    @rx.var
     def display_words(self) -> List[Dict[str, str | int]]:
         kkma = Kkma()
         including = ["NNG", "NNM", "NNP", "NP"]  # , "VA", "VV", "MA"]
@@ -366,117 +255,6 @@ class AnalysisState(ChatState):
         ]
 
         return words
-
-    def set_emotion_counts_state(self):
-        self.emotion_counts_check = False
-
-    def set_data_radar_state(self):
-        self.data_radar_check = False
-
-    def set_data_funnel_state(self):
-        self.data_funnel_check = False
-
-    def data_bar_state(self):
-        self.data_bar_check = False
-
-    def data_line_state(self):
-        self.data_line_check = False
-
-    def getDataDay(self):
-        if self.start_day != "" and self.end_day != "":
-            period_data = self.get_chats_in_period(
-                self.start_day,
-                self.end_day,
-            )
-
-            for item in period_data:
-                for message in item.messages:
-                    if message.is_user and message.emotion is not None:
-                        self.emotions_list.append(message.emotion.value)
-        yield
-
-    def emotion_count_day(self):
-
-        if self.emotion_counts_check:
-            for emotion in self.emotions_list:
-                if emotion in self.emotion_counts:
-                    self.emotion_counts[emotion] += 1
-                else:
-                    self.emotion_counts[emotion] = 1
-            self.data_emotion_frequency = [
-                {"emotion": emotion, "count": count}
-                for emotion, count in self.emotion_counts.items()
-            ]
-
-            self.set_emotion_counts_state()
-
-    def getDataRadar(self):
-        if self.emotion_counts_check:
-            self.emotion_count_day()
-
-        if self.data_radar_check:
-            self.set_data_radar_state()
-
-    def getDataFunnels(self):
-        if self.emotion_counts_check:
-            self.emotion_count_day()
-
-        if self.data_funnel_check:
-
-            for emotion, count in self.emotion_counts.items():
-                if count == 0:
-                    continue
-                if emotion in emotion_color_map_raw:
-                    new_dict = {
-                        "emotion": emotion,
-                        "count": count,
-                        "fill": emotion_color_map_raw[emotion],
-                    }
-                    self.data_funnel.append(new_dict)
-
-            self.data_funnel = sorted(
-                self.data_funnel, key=lambda x: x["count"], reverse=True
-            )
-            self.set_data_funnel_state()
-
-
-def month_to_number(month_name):
-    months = {
-        "Jan": 1,
-        "Feb": 2,
-        "Mar": 3,
-        "Apr": 4,
-        "May": 5,
-        "Jun": 6,
-        "Jul": 7,
-        "Aug": 8,
-        "Sep": 9,
-        "Oct": 10,
-        "Nov": 11,
-        "Dec": 12,
-    }
-    return months[month_name]
-
-
-def logs():
-    return rx.vstack(
-        rx.heading("Logs", size="6"),
-        rx.foreach(
-            AnalysisState.logs,
-            lambda log: rx.text(log, color="gray", size="3"),
-        ),
-        rx.spacer(),
-        rx.button(
-            "Clear Logs",
-            on_click=AnalysisState.clear_logs,
-            size="3",
-            color_scheme="ruby",
-        ),
-        align="center",
-        width="50%",
-        height="100%",
-        spacing="1",
-    )
 
 
 # # 데이터 정의

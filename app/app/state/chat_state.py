@@ -334,9 +334,6 @@ class ChatState(AppState):
             session.commit()
 
             session.refresh(new_chat)
-            # new_chat = session.exec(
-            #     Chat.select().where(Chat.date == self.db_select_date)
-            # ).one_or_none()
 
         if not new_chat:
             print("error start new chat")
