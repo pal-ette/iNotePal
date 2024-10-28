@@ -35,6 +35,7 @@ class AnalysisState(ChatState):
             return
 
         if not self.is_valid_date_range(self.selected_date, self.end_day):
+            self.reset_calendar_date(self.start_day)
             self.date_valid_check = False
             return
 
@@ -45,10 +46,19 @@ class AnalysisState(ChatState):
             return
 
         if not self.is_valid_date_range(self.start_day, self.selected_date):
+            self.reset_calendar_date(self.end_day)
             self.date_valid_check = False
             return
 
         self.end_day = self.selected_date
+
+    def reset_calendar_date(self, new_date):
+        self.select_year = new_date.year
+        self.year = new_date.year
+        self.select_month = new_date.month
+        self.month = new_date.month
+        self.day = new_date.day
+        self.selected_date = new_date
 
     def reset_date_valid_check(self):
         self.date_valid_check = True
