@@ -61,6 +61,9 @@ class AnalysisState(ChatState):
         self.month = new_date.month
         self.day = new_date.day
         self.selected_date = new_date
+    
+    def reset_calendar_today(self):
+        self.reset_calendar_date(date.today())
 
     def reset_date_valid_check(self):
         self.date_valid_check = True

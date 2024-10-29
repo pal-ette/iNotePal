@@ -16,10 +16,18 @@ from reflex_wordcloud import wordcloud
 def analysis_page() -> rx.Component:
 
     calendar = calendar_component(
-        rx.popover.close(
+        rx.hstack(
             rx.button(
-                "Close",
+                "오늘",
                 size="1",
+                on_click=AnalysisState.reset_calendar_today,
+            ),
+            rx.popover.close(
+                rx.button(
+                    "닫기",
+                    size="1",
+                    color_scheme="tomato",
+                ),
             ),
         ),
         year=AnalysisState.year,
