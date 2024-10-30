@@ -37,6 +37,7 @@ def analysis_page() -> rx.Component:
         day=AnalysisState.day,
         on_next_month=AnalysisState.on_next_month,
         on_prev_month=AnalysisState.on_prev_month,
+        on_change_month=AnalysisState.on_change_month,
         on_change_day=AnalysisState.on_change_day,
         monthdayscalendar=AnalysisState.monthdayscalendar,
     )
