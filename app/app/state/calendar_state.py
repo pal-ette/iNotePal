@@ -48,6 +48,9 @@ class Calendar(rx.ComponentState):
         else:
             self.month -= 1
 
+    def set_month(self, month: int):
+        self.month = month
+
     def set_day(self, day: int):
         self.select_year = self.year
         self.select_month = self.month
@@ -64,6 +67,7 @@ class Calendar(rx.ComponentState):
 
         on_next_month = props.pop("on_next_month", cls.next_month)
         on_prev_month = props.pop("on_prev_month", cls.prev_month)
+        on_change_month = props.pop("on_change_month", cls.set_month)
         on_change_day = props.pop("on_change_day", cls.set_day)
 
         return rx.vstack(
@@ -75,11 +79,48 @@ class Calendar(rx.ComponentState):
                         on_click=on_prev_month,
                     ),
                     rx.spacer(),  # 빈 공간 생성
-                    rx.text(  # 현재 월과 연도를 표시하는 텍스트
-                        f"{prop_month}월 {prop_year}",
-                        width="150px",
-                        display="flex",
-                        justify_content="center",
+                    rx.popover.root(
+                        rx.popover.trigger(
+                            rx.text(  # 현재 월과 연도를 표시하는 텍스트
+                                f"{prop_month}월 {prop_year}",
+                                width="150px",
+                                display="flex",
+                                justify_content="center",
+                            ),
+                        ),
+                        rx.popover.content(
+                            rx.vstack(
+                                rx.foreach(
+                                    [
+                                        [1, 2, 3, 4],
+                                        [5, 6, 7, 8],
+                                        [9, 10, 11, 12],
+                                    ],
+                                    lambda month_row: rx.hstack(
+                                        rx.foreach(
+                                            month_row,
+                                            lambda month: rx.container(
+                                                rx.text(
+                                                    month,
+                                                    font_size="14px",
+                                                    align="center",
+                                                ),
+                                                background_color=rx.cond(
+                                                    prop_month == month,
+                                                    "#e5988e",
+                                                    "rgba(255, 255, 255, 0.05)",
+                                                ),
+                                                style=cal_row_style,
+                                                cursor="pointer",
+                                                on_click=on_change_month(
+                                                    month,
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
                     ),
                     rx.spacer(),
                     rx.icon(
