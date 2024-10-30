@@ -2,9 +2,6 @@ import reflex as rx
 from reflex import constants
 import os
 from typing import List, Optional
-from dotenv import load_dotenv
-
-load_dotenv(override=True)
 
 
 class BaseConfg(rx.Config):
@@ -13,6 +10,8 @@ class BaseConfg(rx.Config):
     backend_port: int = 8080
 
     api_url: str = f"http://localhost:{backend_port}"
+
+    env_file: Optional[str] = ".env"
 
 
 class DevConfig(BaseConfg):
