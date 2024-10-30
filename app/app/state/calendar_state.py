@@ -81,11 +81,15 @@ class Calendar(rx.ComponentState):
                     rx.spacer(),  # 빈 공간 생성
                     rx.popover.root(
                         rx.popover.trigger(
-                            rx.text(  # 현재 월과 연도를 표시하는 텍스트
-                                f"{prop_month}월 {prop_year}",
-                                width="150px",
-                                display="flex",
-                                justify_content="center",
+                            rx.button(
+                                rx.text(  # 현재 월과 연도를 표시하는 텍스트
+                                    f"{prop_month}월 {prop_year}",
+                                    width="150px",
+                                    display="flex",
+                                    justify_content="center",
+                                    high_contrast=True,
+                                ),
+                                variant="ghost",
                             ),
                         ),
                         rx.popover.content(
