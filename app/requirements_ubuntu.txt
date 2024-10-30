@@ -107,7 +107,7 @@ PyYAML==6.0.2
 readme_renderer==44.0
 realtime==1.0.6
 redis==5.1.0
-reflex==0.6.1
+reflex==0.6.4
 reflex-chakra==0.6.1
 reflex-hosting-cli==0.1.13
 reflex-wordcloud==0.0.2
