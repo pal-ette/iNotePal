@@ -61,7 +61,6 @@ def analysis_page() -> rx.Component:
         ),
         rx.popover.content(
             calendar,
-            style={"width": 450},
         ),
         strategy="fixed",
         return_focus_on_close=True,
@@ -89,7 +88,6 @@ def analysis_page() -> rx.Component:
         ),
         rx.popover.content(
             calendar,
-            style={"width": 450},
         ),
         strategy="fixed",
         return_focus_on_close=True,
