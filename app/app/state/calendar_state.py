@@ -125,6 +125,7 @@ class Calendar(rx.ComponentState):
                                 ),
                             ),
                         ),
+                        modal=True,
                     ),
                     rx.spacer(),
                     rx.icon(
