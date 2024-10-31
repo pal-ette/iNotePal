@@ -146,6 +146,9 @@ class ChatState(AppState):
         else:
             self.month -= 1
 
+    def on_change_year(self, year):
+        self.year = int(year)
+
     def on_change_month(self, month):
         self.month = month
 
