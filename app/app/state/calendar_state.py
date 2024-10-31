@@ -48,6 +48,9 @@ class Calendar(rx.ComponentState):
         else:
             self.month -= 1
 
+    def set_year(self, year: str):
+        self.year = int(year)
+
     def set_month(self, month: int):
         self.month = month
 
@@ -67,6 +70,7 @@ class Calendar(rx.ComponentState):
 
         on_next_month = props.pop("on_next_month", cls.next_month)
         on_prev_month = props.pop("on_prev_month", cls.prev_month)
+        on_change_year = props.pop("on_change_year", cls.set_year)
         on_change_month = props.pop("on_change_month", cls.set_month)
         on_change_day = props.pop("on_change_day", cls.set_day)
 
@@ -94,6 +98,14 @@ class Calendar(rx.ComponentState):
                         ),
                         rx.popover.content(
                             rx.vstack(
+                                rx.input(
+                                    value=prop_year,
+                                    type="number",
+                                    # min=datetime.MINYEAR,
+                                    # max=datetime.MAXYEAR,
+                                    step="1",
+                                    on_change=on_change_year,
+                                ),
                                 rx.foreach(
                                     [
                                         [1, 2, 3, 4],
