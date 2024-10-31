@@ -54,6 +54,7 @@ def dashboard():
                             day=ChatState.day,
                             on_next_month=ChatState.on_next_month,
                             on_prev_month=ChatState.on_prev_month,
+                            on_change_year=ChatState.on_change_year,
                             on_change_month=ChatState.on_change_month,
                             on_change_day=ChatState.on_change_day,
                             monthdayscalendar=ChatState.monthdayscalendar,
