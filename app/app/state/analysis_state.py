@@ -9,16 +9,12 @@ from collections import Counter
 
 
 class AnalysisState(ChatState):
-    selected_date: date | None = None
     start_day: date | None = date.today() - timedelta(days=30)
     end_day: date | None = date.today()
     date_valid_check: bool = True
 
-    def on_change_day(self, day):
-        self.select_year = self.year
-        self.select_month = self.month
-        self.day = day
-        self.selected_date = date(self.year, self.month, self.day)
+    def on_change_date(self, year, month, day):
+        self.select_date = date(year, month, day)
 
     def onOpenChangeStartDay(self, isOpen):
         if isOpen:
@@ -33,35 +29,24 @@ class AnalysisState(ChatState):
             self.setEndDay()
 
     def setStartDay(self):
-        if self.selected_date == None:
-            return
-
-        if not self.is_valid_date_range(self.selected_date, self.end_day):
+        if not self.is_valid_date_range(self.select_date, self.end_day):
             self.reset_calendar_date(self.start_day)
             self.date_valid_check = False
             return
 
-        self.start_day = self.selected_date
+        self.start_day = self.select_date
 
     def setEndDay(self):
-        if self.selected_date == None:
-            return
-
-        if not self.is_valid_date_range(self.start_day, self.selected_date):
+        if not self.is_valid_date_range(self.start_day, self.select_date):
             self.reset_calendar_date(self.end_day)
             self.date_valid_check = False
             return
 
-        self.end_day = self.selected_date
+        self.end_day = self.select_date
 
     def reset_calendar_date(self, new_date):
-        self.select_year = new_date.year
-        self.year = new_date.year
-        self.select_month = new_date.month
-        self.month = new_date.month
-        self.day = new_date.day
-        self.selected_date = new_date
-    
+        self.select_date = new_date
+
     def reset_calendar_today(self):
         self.reset_calendar_date(date.today())
 

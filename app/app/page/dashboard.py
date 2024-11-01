@@ -47,17 +47,8 @@ def dashboard():
                 rx.grid(
                     rx.vstack(
                         calendar_component(
-                            year=ChatState.year,
-                            select_year=ChatState.select_year,
-                            month=ChatState.month,
-                            select_month=ChatState.select_month,
-                            day=ChatState.day,
-                            on_next_month=ChatState.on_next_month,
-                            on_prev_month=ChatState.on_prev_month,
-                            on_change_year=ChatState.on_change_year,
-                            on_change_month=ChatState.on_change_month,
-                            on_change_day=ChatState.on_change_day,
-                            monthdayscalendar=ChatState.monthdayscalendar,
+                            select_date=ChatState.select_date,
+                            on_change_date=ChatState.on_change_date,
                         ),
                         rx.text(
                             f"{ChatState.print_date_text}의 감정",
