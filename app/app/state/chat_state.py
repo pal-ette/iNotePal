@@ -147,7 +147,10 @@ class ChatState(AppState):
             self.month -= 1
 
     def on_change_year(self, year):
-        self.year = int(year)
+        try:
+            self.year = int(year)
+        except (ValueError, TypeError):
+            pass
 
     def on_change_month(self, month):
         self.month = month

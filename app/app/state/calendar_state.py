@@ -49,7 +49,10 @@ class Calendar(rx.ComponentState):
             self.month -= 1
 
     def set_year(self, year: str):
-        self.year = int(year)
+        try:
+            self.year = int(year)
+        except (ValueError, TypeError):
+            pass
 
     def set_month(self, month: int):
         self.month = month
@@ -100,10 +103,7 @@ class Calendar(rx.ComponentState):
                             rx.vstack(
                                 rx.input(
                                     value=prop_year,
-                                    type="number",
-                                    # min=datetime.MINYEAR,
-                                    # max=datetime.MAXYEAR,
-                                    step="1",
+                                    max_length=4,
                                     on_change=on_change_year,
                                 ),
                                 rx.foreach(
