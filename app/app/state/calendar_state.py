@@ -1,5 +1,5 @@
 import reflex as rx
-import datetime
+from datetime import date, MINYEAR, MAXYEAR
 import calendar
 from typing import List
 
@@ -23,30 +23,31 @@ cal_row_style = {
 
 
 class Calendar(rx.ComponentState):
-    year: int = datetime.datetime.now().year  # 연도 저장
-    month: int = datetime.datetime.now().month  # 표시할 월 저장
-    day: int = datetime.datetime.now().day
+    year: int = date.today().year  # 연도 저장
+    month: int = date.today().month  # 표시할 월 저장
 
-    select_year: int = datetime.datetime.now().year
-    select_month: int = datetime.datetime.now().month
+    select_date: date = date.today()
 
     @rx.var()
     def monthdayscalendar(self) -> List[List[int]]:
         return calendar.Calendar().monthdayscalendar(self.year, self.month)
 
     def next_month(self):
-        if self.month == 12:
+        if self.month == 12 and self.is_valid_year_range(self.year + 1):
             self.year += 1
             self.month = 1
         else:
             self.month += 1
 
     def prev_month(self):
-        if self.month == 1:
+        if self.month == 1 and self.is_valid_year_range(self.year - 1):
             self.year -= 1
             self.month = 12
         else:
             self.month -= 1
+
+    def is_valid_year_range(self, year):
+        return MINYEAR <= year and year <= MAXYEAR
 
     def set_year(self, year: str):
         try:
@@ -57,25 +58,13 @@ class Calendar(rx.ComponentState):
     def set_month(self, month: int):
         self.month = month
 
-    def set_day(self, day: int):
-        self.select_year = self.year
-        self.select_month = self.month
-        self.day = day
+    def on_change_date(self, year: int, month: int, day: int):
+        self.select_date = date(year, month, day)
 
     @classmethod
     def get_component(cls, *children, **props) -> rx.Component:
-        prop_year = props.pop("year", cls.year)
-        prop_select_year = props.pop("select_year", cls.select_year)
-        prop_month = props.pop("month", cls.month)
-        prop_select_month = props.pop("select_month", cls.select_month)
-        prop_day = props.pop("day", cls.day)
-        prop_monthdayscalendar = props.pop("monthdayscalendar", cls.monthdayscalendar)
-
-        on_next_month = props.pop("on_next_month", cls.next_month)
-        on_prev_month = props.pop("on_prev_month", cls.prev_month)
-        on_change_year = props.pop("on_change_year", cls.set_year)
-        on_change_month = props.pop("on_change_month", cls.set_month)
-        on_change_day = props.pop("on_change_day", cls.set_day)
+        prop_select_date = props.pop("select_date", cls.select_date)
+        on_change_date = props.pop("on_change_date", cls.on_change_date)
 
         return rx.vstack(
             rx.hstack(
@@ -83,14 +72,14 @@ class Calendar(rx.ComponentState):
                     rx.icon(
                         tag="chevron_left",
                         cursor="pointer",
-                        on_click=on_prev_month,
+                        on_click=cls.prev_month,
                     ),
                     rx.spacer(),  # 빈 공간 생성
                     rx.popover.root(
                         rx.popover.trigger(
                             rx.button(
                                 rx.text(  # 현재 월과 연도를 표시하는 텍스트
-                                    f"{prop_month}월 {prop_year}",
+                                    f"{cls.month}월 {cls.year}",
                                     width="150px",
                                     display="flex",
                                     justify_content="center",
@@ -122,13 +111,13 @@ class Calendar(rx.ComponentState):
                                                     align="center",
                                                 ),
                                                 background_color=rx.cond(
-                                                    prop_month == month,
+                                                    cls.month == month,
                                                     "#e5988e",
                                                     "rgba(255, 255, 255, 0.05)",
                                                 ),
                                                 style=cal_row_style,
                                                 cursor="pointer",
-                                                on_click=on_change_month(
+                                                on_click=cls.set_month(
                                                     month,
                                                 ),
                                             ),
@@ -143,7 +132,7 @@ class Calendar(rx.ComponentState):
                     rx.icon(
                         tag="chevron_right",
                         cursor="pointer",
-                        on_click=on_next_month,
+                        on_click=cls.next_month,
                     ),
                     align="center",
                     justify="center",
@@ -178,7 +167,7 @@ class Calendar(rx.ComponentState):
             ),
             rx.vstack(
                 rx.foreach(
-                    prop_monthdayscalendar,
+                    cls.monthdayscalendar,
                     lambda week: rx.hstack(
                         rx.foreach(
                             week,
@@ -199,15 +188,14 @@ class Calendar(rx.ComponentState):
                                         align="center",
                                     ),
                                     background_color=rx.cond(
-                                        (prop_year == prop_select_year)
-                                        & (prop_month == prop_select_month)
-                                        & (day == prop_day),
+                                        f"{cls.year}-{rx.cond(cls.month < 10, '0', '')}{cls.month}-{rx.cond(day < 10, '0', '')}{day}"
+                                        == prop_select_date,
                                         "#e5988e",
                                         "rgba(255, 255, 255, 0.05)",
                                     ),
                                     style=cal_row_style,
                                     cursor="pointer",  # Make clickable
-                                    on_click=on_change_day(day),
+                                    on_click=on_change_date(cls.year, cls.month, day),
                                 ),
                             ),
                         ),
