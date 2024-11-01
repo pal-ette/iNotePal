@@ -17,11 +17,6 @@ def analysis_page() -> rx.Component:
 
     calendar = calendar_component(
         rx.hstack(
-            rx.button(
-                "오늘",
-                size="1",
-                on_click=AnalysisState.reset_calendar_today,
-            ),
             rx.popover.close(
                 rx.button(
                     "닫기",
