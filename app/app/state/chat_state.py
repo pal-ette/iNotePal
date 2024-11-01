@@ -34,12 +34,7 @@ if env == constants.Env.PROD:
 class ChatState(AppState):
     is_waiting: bool = False
 
-    year: int = datetime.now().year
-    month: int = datetime.now().month
-    day: int = datetime.now().day
-
-    select_year: int = datetime.now().year
-    select_month: int = datetime.now().month
+    select_date: date = date.today()
 
     is_creating: bool
 
@@ -51,13 +46,9 @@ class ChatState(AppState):
 
     _db_messages: Dict[int, List[Message]] = {}
 
-    @rx.var()
-    def monthdayscalendar(self) -> List[List[int]]:
-        return calendar.Calendar().monthdayscalendar(self.year, self.month)
-
     @rx.var(cache=True)
     def db_select_date(self):
-        return str(date(self.select_year, self.select_month, self.day))
+        return str(self.select_date)
 
     @rx.var(cache=True)
     def chats(self) -> List:
@@ -132,30 +123,9 @@ class ChatState(AppState):
 
         return self.current_chat.emotion
 
-    def on_next_month(self):
-        if self.month == 12:
-            self.year += 1
-            self.month = 1
-        else:
-            self.month += 1
+    def on_change_date(self, year, month, day):
+        self.select_date = date(year, month, day)
 
-    def on_prev_month(self):
-        if self.month == 1:
-            self.year -= 1
-            self.month = 12
-        else:
-            self.month -= 1
-
-    def on_change_year(self, year):
-        self.year = int(year)
-
-    def on_change_month(self, month):
-        self.month = month
-
-    def on_change_day(self, day):
-        self.select_year = self.year
-        self.select_month = self.month
-        self.day = day
         self._current_chat_index = 0
 
         if len(self.chats) == 0:
@@ -182,7 +152,10 @@ class ChatState(AppState):
 
     @rx.var(cache=True)
     def print_date_text(self):
-        return f"{self.select_year}년 {self.select_month}월 {self.day}일"
+        year = self.select_date.year
+        month = self.select_date.month
+        day = self.select_date.day
+        return f"{year}년 {month}월 {day}일"
 
     def get_messages(self, chat_id):
         if chat_id in self._db_messages:
@@ -301,12 +274,14 @@ class ChatState(AppState):
             api_key=os.getenv("OPENAI_API_KEY"),
             base_url=os.getenv("OPENAI_BASE_URL"),
         )
+        month = self.select_date.month
+        day = self.select_date.day
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
                 {
                     "role": "system",
-                    "content": f"당신은 사람의 감정을 세심히 살필 수 있는 심리상담사입니다. 오늘은 {self.select_month}월 {self.day}일 입니다. 기분이라는 단어를 직접적으로 사용하지말고 오늘 날짜와 함께 기분이 드러날 수 있는 질문을 해주세요.",
+                    "content": f"당신은 사람의 감정을 세심히 살필 수 있는 심리상담사입니다. 오늘은 {month}월 {day}일 입니다. 기분이라는 단어를 직접적으로 사용하지말고 오늘 날짜와 함께 기분이 드러날 수 있는 질문을 해주세요.",
                 }
             ],
             temperature=7e-1,

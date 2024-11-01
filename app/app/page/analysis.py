@@ -17,11 +17,6 @@ def analysis_page() -> rx.Component:
 
     calendar = calendar_component(
         rx.hstack(
-            rx.button(
-                "오늘",
-                size="1",
-                on_click=AnalysisState.reset_calendar_today,
-            ),
             rx.popover.close(
                 rx.button(
                     "닫기",
@@ -30,17 +25,8 @@ def analysis_page() -> rx.Component:
                 ),
             ),
         ),
-        year=AnalysisState.year,
-        select_year=AnalysisState.select_year,
-        month=AnalysisState.month,
-        select_month=AnalysisState.select_month,
-        day=AnalysisState.day,
-        on_next_month=AnalysisState.on_next_month,
-        on_prev_month=AnalysisState.on_prev_month,
-        on_change_year=AnalysisState.on_change_year,
-        on_change_month=AnalysisState.on_change_month,
-        on_change_day=AnalysisState.on_change_day,
-        monthdayscalendar=AnalysisState.monthdayscalendar,
+        select_date=AnalysisState.select_date,
+        on_change_date=AnalysisState.on_change_date,
     )
     start_calendar_form = rx.popover.root(
         rx.popover.trigger(
