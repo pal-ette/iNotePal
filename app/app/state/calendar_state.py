@@ -49,6 +49,18 @@ class Calendar(rx.ComponentState):
     def is_valid_year_range(self, year):
         return MINYEAR <= year and year <= MAXYEAR
 
+    def next_year(self):
+        if not self.is_valid_year_range(self.year + 1):
+            return
+
+        self.year += 1
+
+    def prev_year(self):
+        if not self.is_valid_year_range(self.year - 1):
+            return
+
+        self.year -= 1
+
     def set_year(self, year: str):
         try:
             self.year = int(year)
@@ -90,10 +102,22 @@ class Calendar(rx.ComponentState):
                         ),
                         rx.popover.content(
                             rx.vstack(
-                                rx.input(
-                                    value=prop_year,
-                                    max_length=4,
-                                    on_change=on_change_year,
+                                rx.hstack(
+                                    rx.icon(
+                                        tag="chevron_left",
+                                        cursor="pointer",
+                                        on_click=cls.prev_year,
+                                    ),
+                                    rx.input(
+                                        value=cls.year,
+                                        max_length=4,
+                                        on_change=cls.set_year,
+                                    ),
+                                    rx.icon(
+                                        tag="chevron_right",
+                                        cursor="pointer",
+                                        on_click=cls.next_year,
+                                    ),
                                 ),
                                 rx.foreach(
                                     [
