@@ -28,9 +28,21 @@ class Calendar(rx.ComponentState):
 
     select_date: date = date.today()
 
-    @rx.var()
+    start_weekday = calendar.SUNDAY
+
+    @rx.var(cache=True)
+    def weekdays(self) -> List[str]:
+        return [
+            "월화수목금토일"[weekday % 7]
+            for weekday in range(self.start_weekday, self.start_weekday + 7)
+        ]
+
+    @rx.var(cache=True)
     def monthdayscalendar(self) -> List[List[int]]:
-        return calendar.Calendar().monthdayscalendar(self.year, self.month)
+        return calendar.Calendar(self.start_weekday).monthdayscalendar(
+            self.year,
+            self.month,
+        )
 
     def next_month(self):
         if self.month == 12 and self.is_valid_year_range(self.year + 1):
@@ -168,26 +180,18 @@ class Calendar(rx.ComponentState):
                 justify="between",
             ),
             rx.hstack(
-                *[
-                    rx.container(
+                rx.foreach(
+                    cls.weekdays,
+                    lambda weekday: rx.container(
                         rx.text(
-                            data,
+                            weekday,
                             font_size="16px",
                             font_weight="bold",
                             align="center",
                         ),
                         style=cal_days_style,
-                    )
-                    for data in [
-                        "월",
-                        "화",
-                        "수",
-                        "목",
-                        "금",
-                        "토",
-                        "일",
-                    ]
-                ]
+                    ),
+                ),
             ),
             rx.vstack(
                 rx.foreach(
