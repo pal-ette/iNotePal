@@ -72,7 +72,14 @@ def login_page() -> rx.Component:
             rx.vstack(
                 rx.flex(
                     rx.heading(
-                        "iNotePal", as_="h1", size="4xl", weight="bold", align="left"
+                        "iNotePal",
+                        as_="h1",
+                        size="4xl",
+                        weight="bold",
+                        align="left",
+                        background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
+                        background_clip="text",
+                        color="transparent",
                     ),
                     padding_bottom="10vh",
                 ),
