@@ -85,6 +85,10 @@ class Calendar(rx.ComponentState):
     def on_change_date(self, year: int, month: int, day: int):
         self.select_date = date(year, month, day)
 
+    def reset_to_today(self):
+        self.year = date.today().year
+        self.month = date.today().month
+
     @classmethod
     def get_component(cls, *children, **props) -> rx.Component:
         prop_select_date = props.pop("select_date", cls.select_date)
