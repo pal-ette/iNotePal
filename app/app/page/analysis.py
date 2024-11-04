@@ -48,6 +48,11 @@ def analysis_page() -> rx.Component:
         ),
         rx.popover.content(
             calendar,
+            rx.button(
+                "오늘",
+                size="1",
+                on_click=AnalysisState.reset_calendar_today,
+            ),
         ),
         strategy="fixed",
         return_focus_on_close=True,
