@@ -178,7 +178,21 @@ class Calendar(rx.ComponentState):
                     justify="center",
                     spacing="2",
                 ),
-                children,
+                rx.hstack(
+                    rx.button(
+                        "오늘",
+                        size="1",
+                        on_click=[
+                            cls.reset_to_today,
+                            on_change_date(
+                                date.today().year,
+                                date.today().month,
+                                date.today().day,
+                            ),
+                        ],
+                    ),
+                    children,
+                ),
                 width="100%",
                 align="center",
                 justify="between",
