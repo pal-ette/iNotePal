@@ -158,7 +158,6 @@ def navbar() -> rx.Component:
                                 top="auto",
                                 right="auto",
                                 height="100%",
-                                width="27em",
                                 padding="1em",
                                 background_color=rx.color_mode_cond(
                                     light="white",
