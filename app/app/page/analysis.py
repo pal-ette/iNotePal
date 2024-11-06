@@ -28,59 +28,6 @@ def analysis_page() -> rx.Component:
         select_date=AnalysisState.select_date,
         on_change_date=AnalysisState.on_change_date,
     )
-    start_calendar_form = rx.popover.root(
-        rx.popover.trigger(
-            rx.button(
-                rx.hstack(
-                    "시작일",
-                    rx.icon(
-                        "calendar-check",
-                        size=18,
-                    ),
-                    rx.heading(
-                        AnalysisState.print_start_day_text,
-                        high_contrast=True,
-                    ),
-                    align="center",
-                ),
-                variant="ghost",
-            ),
-        ),
-        rx.popover.content(
-            calendar,
-        ),
-        strategy="fixed",
-        return_focus_on_close=True,
-        match_width=True,
-        on_open_change=AnalysisState.onOpenChangeStartDay,
-    )
-
-    end_calendar_form = rx.popover.root(
-        rx.popover.trigger(
-            rx.button(
-                rx.hstack(
-                    "종료일",
-                    rx.icon(
-                        "calendar-check",
-                        size=18,
-                    ),
-                    rx.heading(
-                        AnalysisState.print_end_day_text,
-                        high_contrast=True,
-                    ),
-                    align="center",
-                ),
-                variant="ghost",
-            )
-        ),
-        rx.popover.content(
-            calendar,
-        ),
-        strategy="fixed",
-        return_focus_on_close=True,
-        match_width=True,
-        on_open_change=AnalysisState.onOpenChangeEndDay,
-    )
 
     return rx.fragment(
         navbar(),
@@ -111,10 +58,88 @@ def analysis_page() -> rx.Component:
         rx.container(
             rx.hstack(
                 rx.flex(
-                    start_calendar_form,
+                    rx.popover.root(
+                        rx.popover.trigger(
+                            rx.button(
+                                rx.hstack(
+                                    "시작일",
+                                    rx.icon(
+                                        "calendar-check",
+                                        size=18,
+                                    ),
+                                    rx.heading(
+                                        AnalysisState.print_start_day_text,
+                                        high_contrast=True,
+                                    ),
+                                    align="center",
+                                ),
+                                variant="ghost",
+                            ),
+                        ),
+                        rx.popover.content(
+                            calendar,
+                        ),
+                        strategy="fixed",
+                        return_focus_on_close=True,
+                        match_width=True,
+                        on_open_change=[
+                            AnalysisState.onOpenChangeStartDay,
+                            lambda is_open: calendar.State.set_display_month(
+                                rx.cond(
+                                    is_open,
+                                    AnalysisState.start_year,
+                                    calendar.State.year,
+                                ),
+                                rx.cond(
+                                    is_open,
+                                    AnalysisState.start_month,
+                                    calendar.State.month,
+                                ),
+                            ),
+                        ],
+                    ),
                 ),
                 rx.flex(
-                    end_calendar_form,
+                    rx.popover.root(
+                        rx.popover.trigger(
+                            rx.button(
+                                rx.hstack(
+                                    "종료일",
+                                    rx.icon(
+                                        "calendar-check",
+                                        size=18,
+                                    ),
+                                    rx.heading(
+                                        AnalysisState.print_end_day_text,
+                                        high_contrast=True,
+                                    ),
+                                    align="center",
+                                ),
+                                variant="ghost",
+                            )
+                        ),
+                        rx.popover.content(
+                            calendar,
+                        ),
+                        strategy="fixed",
+                        return_focus_on_close=True,
+                        match_width=True,
+                        on_open_change=[
+                            AnalysisState.onOpenChangeEndDay,
+                            lambda is_open: calendar.State.set_display_month(
+                                rx.cond(
+                                    is_open,
+                                    AnalysisState.end_year,
+                                    calendar.State.year,
+                                ),
+                                rx.cond(
+                                    is_open,
+                                    AnalysisState.end_month,
+                                    calendar.State.month,
+                                ),
+                            ),
+                        ],
+                    ),
                 ),
             ),
             rx.heading("위 기간동안 당신의 감정상태는", size="4", color_scheme="gray"),

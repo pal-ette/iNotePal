@@ -54,6 +54,22 @@ class AnalysisState(ChatState):
         self.date_valid_check = True
 
     @rx.var
+    def start_year(self):
+        return self.start_day.year
+
+    @rx.var
+    def start_month(self):
+        return self.start_day.month
+
+    @rx.var
+    def end_year(self):
+        return self.end_day.year
+
+    @rx.var
+    def end_month(self):
+        return self.end_day.month
+
+    @rx.var
     def emotion_color_map(self) -> Dict[str, str]:
         return emotion_color_map_raw
 
