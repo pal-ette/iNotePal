@@ -134,55 +134,41 @@ class AnalysisState(ChatState):
     def data_emotion_count(self):
         emotion_count = {emotion: 0 for emotion in emotion_color_map_raw}
         for emotion in self.data_emotion:
-            if emotion in emotion_count:
-                emotion_count[emotion] += 1
-            else:
-                emotion_count[emotion] = 1
+            emotion_count[emotion] += 1
         return emotion_count
 
     @rx.var(cache=True)
     def data_emotion_count_total(self):
         emotion_count_total = {emotion: 0 for emotion in emotion_color_map_raw}
         for emotion in self.data_emotion_total:
-            if emotion in emotion_count_total:
-                emotion_count_total[emotion] += 1
-            else:
-                emotion_count_total[emotion] = 1
+            emotion_count_total[emotion] += 1
         return emotion_count_total
 
     @rx.var
     def data_emotion_radar(self) -> List[Dict[str, str | int]]:
-        data_radar = []
-        period = [
-            {"emotion": emotion, "count": count}
-            for emotion, count in self.data_emotion_count.items()
+        period_emotion_count = self.data_emotion_count
+        total_emotion_count = self.data_emotion_count_total
+        return [
+            {
+                "emotion": emotion,
+                "period": period_emotion_count[emotion],
+                "total": total_emotion_count[emotion],
+            }
+            for emotion in emotion_color_map_raw
         ]
-        total = [
-            {"emotion": emotion, "count": count}
-            for emotion, count in self.data_emotion_count_total.items()
-        ]
-        data_radar = [
-            {"emotion": p["emotion"], "period": p["count"], "total": t["count"]}
-            for p, t in zip(period, total)
-        ]
-        return data_radar
 
     @rx.var
     def data_emotion_funnel(self) -> List[Dict[str, str | int]]:
-        data_funnel = []
-        for emotion, count in self.data_emotion_count.items():
-            if count == 0:
-                continue
-            if emotion in emotion_color_map_raw:
-                new_dict = {
-                    "emotion": emotion,
-                    "count": count,
-                    "fill": emotion_color_map_raw[emotion],
-                }
-                data_funnel.append(new_dict)
-
-        data_funnel = sorted(data_funnel, key=lambda x: x["count"], reverse=True)
-        return data_funnel
+        data_funnel = [
+            {
+                "emotion": emotion,
+                "count": count,
+                "fill": emotion_color_map_raw[emotion],
+            }
+            for emotion, count in self.data_emotion_count.items()
+            if count > 0 and emotion in emotion_color_map_raw
+        ]
+        return sorted(data_funnel, key=lambda x: x["count"], reverse=True)
 
     @rx.var
     def count_emotions_by_date(self):
