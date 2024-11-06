@@ -82,6 +82,10 @@ class Calendar(rx.ComponentState):
     def set_month(self, month: int):
         self.month = month
 
+    def set_display_month(self, year: int, month: int):
+        self.year = year
+        self.month = month
+
     def on_change_date(self, year: int, month: int, day: int):
         self.select_date = date(year, month, day)
 

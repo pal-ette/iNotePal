@@ -82,7 +82,21 @@ def analysis_page() -> rx.Component:
                         strategy="fixed",
                         return_focus_on_close=True,
                         match_width=True,
-                        on_open_change=AnalysisState.onOpenChangeStartDay,
+                        on_open_change=[
+                            AnalysisState.onOpenChangeStartDay,
+                            lambda is_open: calendar.State.set_display_month(
+                                rx.cond(
+                                    is_open,
+                                    AnalysisState.start_year,
+                                    calendar.State.year,
+                                ),
+                                rx.cond(
+                                    is_open,
+                                    AnalysisState.start_month,
+                                    calendar.State.month,
+                                ),
+                            ),
+                        ],
                     ),
                 ),
                 rx.flex(
@@ -110,7 +124,21 @@ def analysis_page() -> rx.Component:
                         strategy="fixed",
                         return_focus_on_close=True,
                         match_width=True,
-                        on_open_change=AnalysisState.onOpenChangeEndDay,
+                        on_open_change=[
+                            AnalysisState.onOpenChangeEndDay,
+                            lambda is_open: calendar.State.set_display_month(
+                                rx.cond(
+                                    is_open,
+                                    AnalysisState.end_year,
+                                    calendar.State.year,
+                                ),
+                                rx.cond(
+                                    is_open,
+                                    AnalysisState.end_month,
+                                    calendar.State.month,
+                                ),
+                            ),
+                        ],
                     ),
                 ),
             ),
