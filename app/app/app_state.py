@@ -34,6 +34,13 @@ class AppState(rx.State):
         return self.decodeJWT["email"]
 
     @rx.var(cache=True)
+    def user_id(self) -> str:
+        if not self.token_is_valid:
+            return ""
+
+        return self.decodeJWT["sub"]
+
+    @rx.var(cache=True)
     def decodeJWT(self) -> dict:
         """
         Decode the JWT token.
