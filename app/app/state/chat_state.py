@@ -63,7 +63,7 @@ class ChatState(AppState):
         with rx.session() as session:
             chats = session.exec(
                 Chat.select()
-                .where(Chat.user_id == self.decodeJWT["sub"])
+                .where(Chat.user_id == self.user_id)
                 .where(Chat.date == self.db_select_date)
                 .order_by(Chat.id)
             ).all()
@@ -142,7 +142,7 @@ class ChatState(AppState):
                 .options(
                     sqlalchemy.orm.selectinload(Chat.messages),
                 )
-                .where(Chat.user_id == self.decodeJWT["sub"])
+                .where(Chat.user_id == self.user_id)
                 .where(Chat.date >= start_day)
                 .where(Chat.date <= end_day)
                 .order_by(Chat.id)
@@ -224,7 +224,7 @@ class ChatState(AppState):
         with rx.session() as session:
             session.add(
                 Chat(
-                    user_id=self.decodeJWT["sub"],
+                    user_id=self.user_id,
                     date=self.db_select_date,
                     emotion=emotion,
                     is_closed=True,
@@ -306,7 +306,7 @@ class ChatState(AppState):
         yield
 
         new_chat = Chat(
-            user_id=self.decodeJWT["sub"],
+            user_id=self.user_id,
             date=self.db_select_date,
         )
 
