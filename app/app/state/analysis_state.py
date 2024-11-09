@@ -9,8 +9,8 @@ from collections import Counter
 
 
 class AnalysisState(ChatState):
-    start_day: date | None = date.today() - timedelta(days=30)
-    end_day: date | None = date.today()
+    start_day: date = date.today() - timedelta(days=30)
+    end_day: date = date.today()
     date_valid_check: bool = True
 
     def on_change_date(self, year, month, day):
@@ -75,9 +75,6 @@ class AnalysisState(ChatState):
 
     @rx.var
     def print_start_day_text(self):
-        if self.start_day == None:
-            return " "
-
         text_date = (
             f"{self.start_day.year}년 {self.start_day.month}월 {self.start_day.day}일"
         )
@@ -85,10 +82,6 @@ class AnalysisState(ChatState):
 
     @rx.var
     def print_end_day_text(self):
-
-        if self.end_day == None:
-            return " "
-
         text_date = f"{self.end_day.year}년 {self.end_day.month}월 {self.end_day.day}일"
         return text_date
 
@@ -97,12 +90,6 @@ class AnalysisState(ChatState):
 
     @rx.var(cache=True)
     def data_emotion(self):
-        if self.start_day == None:
-            return []
-
-        if self.end_day == None:
-            return []
-
         period_data = self.get_chats_in_period(
             self.start_day,
             self.end_day,
@@ -172,11 +159,6 @@ class AnalysisState(ChatState):
 
     @rx.var
     def count_emotions_by_date(self):
-        if self.start_day == None:
-            return []
-        if self.end_day == None:
-            return []
-
         period_data = self.get_chats_in_period(
             self.start_day,
             self.end_day,
