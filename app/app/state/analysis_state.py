@@ -239,25 +239,3 @@ class AnalysisState(ChatState):
         ]
 
         return words
-
-
-# # 데이터 정의
-# data = [
-#     {'date': '2024-05-02',
-#       'user_id': '10a8355a-ce4f-42a7-9752-e4ac94d3059e',
-#       'id': 318,
-#       'is_closed': True,
-#       'created_at': '2024-05-02T00:23:46.977442+00:00',
-#       'emotion': '놀람',
-#        'message': [{ 'id': 936,
-#                     'chat_id': 318,
-#                     'emotion': '공포',
-#                     'is_user': True,
-#                       'message': '몽아',
-#                       'created_at': '2024-05-02T01:09:24.025188+00:00'},
-#                         {'id': 937, 'chat_id': 318,
-#                          'emotion': None,
-#                          'is_user': False,
-#                          'message': '기다리던 아이가 생기다니 기쁘시겠어요. 건강하게 출산이 어려울까 걱정되시는군요.',
-#                 'created_at': '2024-05-02T01:09:28.582299+00:00'},
-# {'id': 938, 'chat_id': 318, 'emotion': '혐오', 'is_user': True, 'message': '나나', 'created_at': '2024-05-02T01:09:30.999665+00:00'}, {'id': 939, 'chat_id': 318, 'emotion': None, 'is_user': False, 'message': '그런 말을 들으시다니 당황스러우셨겠어요. 건강이 걱정되고 혼란스러우시겠어요. 이런 상황에서 어떻게 하는 것이 좋은 방법일까요?', 'created_at': '2024-05-02T01:09:32.868334+00:00'}, {'id': 940, 'chat_id': 318, 'emotion': '슬픔', 'is_user': True, 'message': '카카', 'created_at': '2024-05-02T01:09:34.458762+00:00'}, {'id': 941, 'chat_id': 318, 'emotion': None, 'is_user': False, 'message': '그랬군요. 사장님한테 말씀 드렸어요? 그랬겠네요. 그래도 고의로 그런 거 아니니 이해하실 거예요.', 'created_at': '2024-05-02T01:09:35.66976+00:00'}, {'id': 942, 'chat_id': 318, 'emotion': '중립', 'is_user': True, 'message': '카카카', 'created_at': '2024-05-02T01:09:36.661925+00:00'}, {'id': 943, 'chat_id': 318, 'emotion': None, 'is_user': False, 'message': '혹시 업무에 어려움은 없으신가요? 나갈 때 차주들이 얘기를 안 하고 가나요?', 'created_at': '2024-05-02T01:09:37.214318+00:00'}, {'id': 944, 'chat_id': 318, 'emotion': '슬픔', 'is_user': True, 'message': 'ㅋㅋ', 'created_at': '2024-05-02T01:09:39.263435+00:00'}, {'id': 945, 'chat_id': 318, 'emotion': None, 'is_user': False, 'message': '무슨 일 있으세요? 무엇 때문에 그렇게 화가 나셨어요? 정말 속상하시겠어요! ',
