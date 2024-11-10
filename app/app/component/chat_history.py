@@ -24,7 +24,7 @@ answer_style = message_style | dict(
 )
 
 
-def user_chat_bubble(message, emotion):
+def user_chat_bubble(message):
     return rx.vstack(
         rx.hstack(
             rx.text(
@@ -43,7 +43,7 @@ def user_chat_bubble(message, emotion):
     )
 
 
-def ai_chat_bubble(message, emotion):
+def ai_chat_bubble(message):
     return rx.hstack(
         rx.icon("bot"),
         rx.text(
@@ -59,8 +59,8 @@ def ai_chat_bubble(message, emotion):
 def build_chat_bubble(message: Message):
     return rx.cond(
         message.is_user,
-        user_chat_bubble(message.message, message.emotion),
-        ai_chat_bubble(message.message, message.emotion),
+        user_chat_bubble(message.message),
+        ai_chat_bubble(message.message),
     )
 
 

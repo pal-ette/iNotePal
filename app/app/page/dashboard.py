@@ -1,7 +1,7 @@
 import reflex as rx
 
 from app.component.chat_input import chat_input
-from app.component.chat_history import chat_history, ai_chat_bubble
+from app.component.chat_history import chat_history
 from app.component.navbar import navbar
 from app.state.chat_state import ChatState
 from app.component.emotion_card import create_box, emotion_card, show_emotion_colors
