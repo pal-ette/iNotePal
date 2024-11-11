@@ -93,7 +93,7 @@ def dashboard():
                             id="chat_area",
                         ),
                         rx.vstack(
-                            chat_input(ChatState.is_exist_chat),
+                            chat_input(),
                             rx.cond(
                                 ~ChatState.is_creating,
                                 rx.cond(
