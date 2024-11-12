@@ -1,6 +1,6 @@
 import reflex as rx
 from collections import Counter
-from typing import List, Tuple, Dict
+from typing import List
 
 from app.state.chat_state import ChatState
 from app.util.emotion import emotion_color_map
@@ -28,50 +28,34 @@ class EmotionState(ChatState):
         return bg_color[:-2] + ")"
 
     @rx.var
-    def get_box_params_for_one(self) -> str:
-
+    def get_bg_for_one(self) -> str:
         current_chats = self.current_messages
-        box_params = []
 
         emotions = [c.emotion.value for c in current_chats if c.is_user]
 
         emotion_count = Counter(emotions)
-        bg_colors = self.get_bg_color(emotion_count)
-
-        return bg_colors
+        return self.get_bg_color(emotion_count)
 
     @rx.var
-    def get_box_params(self) -> List[Tuple[str, str, str]]:
-
+    def get_bg(self) -> List[str]:
         past_chats = self.past_messages
-        box_params = []
+        bg_colors = []
 
         emotions_of_the_day = [
             [id, [c.emotion.value for c in chats if c.is_user]]
             for (id, chats) in past_chats[::-1]
         ]
 
-        num_chat = len(emotions_of_the_day)
-
-        height = str(int(100 / ((num_chat // 3) + 1))) + "%"
-        width = (
-            str(100 if num_chat == 1 else 32 if num_chat == 3 or num_chat > 4 else 49)
-            + "%"
-        )
-
         if len(emotions_of_the_day) > 0:
-            for id, emotions in emotions_of_the_day:
+            for _, emotions in emotions_of_the_day:
                 emotion_count = Counter(emotions)
-                bg_colors = self.get_bg_color(emotion_count)
-
-                box_params.append((id, bg_colors, width, height))
-        return box_params
+                bg_colors.append(self.get_bg_color(emotion_count))
+        return bg_colors
 
 
 def create_box():
-
     return rx.box(
-        bg=EmotionState.get_box_params_for_one,
+        bg=EmotionState.get_bg_for_one,
         border_radius="10px",
         width="100%",
         height="10vh",
@@ -79,12 +63,10 @@ def create_box():
 
 
 def create_boxes(params):
-
     return rx.box(
-        bg=params[1],
+        bg=params,
         border_radius="10px",
-        width="8em",  # params[2],
-        # height=params[3],
+        width="8em",
     )
 
 
@@ -92,7 +74,10 @@ def emotion_card() -> rx.Component:
 
     return (
         rx.flex(
-            rx.foreach(EmotionState.get_box_params, create_boxes),
+            rx.foreach(
+                EmotionState.get_bg,
+                create_boxes,
+            ),
             spacing="2",
             width="100%",
             height="30vh",
