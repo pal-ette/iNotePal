@@ -20,7 +20,10 @@ question_style = message_style | dict(
 )
 answer_style = message_style | dict(
     margin_right=chat_margin,
-    background_color="#ebb9b0",
+    background_color=rx.color_mode_cond(
+        light="#ebb9b0",
+        dark="#af625c",
+    ),
 )
 
 
