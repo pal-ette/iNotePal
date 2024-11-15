@@ -221,31 +221,22 @@ class ChatState(AppState):
     def evaluate_chat(self):
         emotion = self.select_current_chat_emotion()
 
-        with rx.session() as session:
-            session.add(
-                Chat(
-                    user_id=self.user_id,
-                    date=self.db_select_date,
+        date_key = str(self.current_chat.date)
+        for i, chat in enumerate(self._db_chats[date_key]):
+            if chat.id != self.current_chat.id:
+                continue
+
+            with rx.session() as session:
+                chat.set(
                     emotion=emotion,
                     is_closed=True,
-                ),
-            )
-            session.commit()
+                )
+                session.add(chat)
+                session.commit()
+                session.refresh(chat)
 
-        def update_chat(chat):
-            if chat.id != self.current_chat.id:
-                return chat
-            chat.emotion = emotion
-            chat.is_closed = True
-            return chat
+            self._db_chats[date_key][i] = chat
 
-        date_key = str(self.current_chat.date)
-        self._db_chats[date_key] = list(
-            map(
-                update_chat,
-                self._db_chats[date_key],
-            ),
-        )
         self.open_result_modal()
 
     def open_result_modal(self):
