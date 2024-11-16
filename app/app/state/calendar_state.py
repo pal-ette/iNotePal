@@ -138,6 +138,7 @@ class Calendar(rx.ComponentState):
                                         cursor="pointer",
                                         on_click=cls.next_year,
                                     ),
+                                    align="center",
                                 ),
                                 rx.foreach(
                                     [
