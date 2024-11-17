@@ -79,7 +79,7 @@ class ChatState(AppState):
             (len(self.chats) - i, chat) if chat.is_closed else ("현재 대화", chat)
             for i, chat in enumerate(self.chats)
             # if i != self._current_chat_index
-        ][::-1]
+        ]
 
     @rx.var(cache=True)
     def past_messages(self) -> List[Tuple[str, str, str]]:
