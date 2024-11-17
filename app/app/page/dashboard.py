@@ -62,21 +62,44 @@ def dashboard():
                         display=["none", "none", "none", "none", "flex", "flex"],
                     ),
                     rx.vstack(
-                        rx.cond(
-                            ChatState.has_past_chats,
-                            rx.hstack(
-                                rx.foreach(
-                                    ChatState.past_chats,
-                                    build_past_card,
+                        rx.hstack(
+                            rx.popover.root(
+                                rx.popover.trigger(
+                                    rx.button(
+                                        rx.heading(
+                                            ChatState.print_date_text,
+                                            size="xl",
+                                            weight="bold",
+                                            align="center",
+                                            high_contrast=True,
+                                        ),
+                                        variant="ghost",
+                                    ),
+                                ),
+                                rx.popover.content(
+                                    calendar_component(
+                                        rx.hstack(
+                                            rx.popover.close(
+                                                rx.button(
+                                                    "닫기",
+                                                    size="1",
+                                                    color_scheme="tomato",
+                                                ),
+                                            ),
+                                        ),
+                                        select_date=ChatState.select_date,
+                                        on_change_date=ChatState.on_change_date,
+                                    ),
                                 ),
                             ),
-                        ),
-                        rx.heading(
-                            ChatState.print_date_text,
-                            size="xl",
-                            weight="bold",
-                            align="center",
-                            padding_bottom="2vh",
+                            rx.scroll_area(
+                                rx.hstack(
+                                    rx.foreach(
+                                        ChatState.past_chats,
+                                        build_past_card,
+                                    ),
+                                ),
+                            ),
                         ),
                         rx.scroll_area(
                             rx.cond(
