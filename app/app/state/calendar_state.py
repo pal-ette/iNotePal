@@ -75,7 +75,9 @@ class Calendar(rx.ComponentState):
 
     def set_year(self, year: str):
         try:
-            self.year = int(year)
+            parsed_year = int(year)
+            if self.is_valid_year_range(parsed_year):
+                self.year = parsed_year
         except (ValueError, TypeError):
             pass
 
