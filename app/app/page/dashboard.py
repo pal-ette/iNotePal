@@ -71,12 +71,34 @@ def dashboard():
                                 ),
                             ),
                         ),
-                        rx.heading(
-                            ChatState.print_date_text,
-                            size="xl",
-                            weight="bold",
-                            align="center",
-                            padding_bottom="2vh",
+                        rx.popover.root(
+                            rx.popover.trigger(
+                                rx.button(
+                                    rx.heading(
+                                        ChatState.print_date_text,
+                                        size="xl",
+                                        weight="bold",
+                                        align="center",
+                                        high_contrast=True,
+                                    ),
+                                    variant="ghost",
+                                ),
+                            ),
+                            rx.popover.content(
+                                calendar_component(
+                                    rx.hstack(
+                                        rx.popover.close(
+                                            rx.button(
+                                                "닫기",
+                                                size="1",
+                                                color_scheme="tomato",
+                                            ),
+                                        ),
+                                    ),
+                                    select_date=ChatState.select_date,
+                                    on_change_date=ChatState.on_change_date,
+                                ),
+                            ),
                         ),
                         rx.scroll_area(
                             rx.cond(
