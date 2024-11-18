@@ -19,6 +19,7 @@ cal_row_style = {
     "align_items": "center",
     "justify_content": "center",
     "border_radius": "6px",
+    "position": "relative",
 }
 
 
@@ -27,6 +28,7 @@ class Calendar(rx.ComponentState):
     month: int = date.today().month  # 표시할 월 저장
 
     select_date: date = date.today()
+    accent_dates: List[date] = [date(2024, 11, i) for i in range(1, 20)]
 
     start_weekday = calendar.SUNDAY
 
@@ -98,6 +100,7 @@ class Calendar(rx.ComponentState):
     @classmethod
     def get_component(cls, *children, **props) -> rx.Component:
         prop_select_date = props.pop("select_date", cls.select_date)
+        prop_accent_dates = props.pop("accent_dates", cls.accent_dates)
         on_change_date = props.pop("on_change_date", cls.on_change_date)
 
         return rx.vstack(
@@ -239,6 +242,21 @@ class Calendar(rx.ComponentState):
                                         day,
                                         font_size="14px",
                                         align="center",
+                                    ),
+                                    rx.cond(
+                                        prop_accent_dates.contains(
+                                            f"{cls.year}-{rx.cond(cls.month < 10, '0', '')}{cls.month}-{rx.cond(day < 10, '0', '')}{day}"
+                                        ),
+                                        rx.text(
+                                            "•",
+                                            font_size="14px",
+                                            align="center",
+                                            style={
+                                                "position": "absolute",
+                                                "top": "29px",
+                                                "left": "23px",
+                                            },
+                                        ),
                                     ),
                                     background_color=rx.cond(
                                         f"{cls.year}-{rx.cond(cls.month < 10, '0', '')}{cls.month}-{rx.cond(day < 10, '0', '')}{day}"
