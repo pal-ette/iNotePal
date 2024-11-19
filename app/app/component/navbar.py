@@ -141,6 +141,7 @@ def navbar() -> rx.Component:
                                     ),
                                     calendar_component(
                                         select_date=ChatState.select_date,
+                                        accent_dates=ChatState.dates_has_closed_chat,
                                         on_change_date=ChatState.on_change_date,
                                     ),
                                     rx.spacer(),

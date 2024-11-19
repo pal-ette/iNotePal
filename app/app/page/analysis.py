@@ -26,6 +26,7 @@ def analysis_page() -> rx.Component:
             ),
         ),
         select_date=AnalysisState.select_date,
+        accent_dates=AnalysisState.dates_has_closed_chat,
         on_change_date=AnalysisState.on_change_date,
     )
 
