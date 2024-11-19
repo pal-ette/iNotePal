@@ -73,6 +73,20 @@ class ChatState(AppState):
         self._db_chats[self.db_select_date] = chats
         return self._db_chats[self.db_select_date]
 
+    @rx.var()
+    def dates_has_closed_chat(self) -> List[date]:
+        dates = []
+        with rx.session() as session:
+            dates = [
+                chat.date
+                for chat in session.exec(
+                    Chat.select()
+                    .where(Chat.user_id == self.user_id)
+                    .where(Chat.is_closed)
+                ).all()
+            ]
+        return dates
+
     @rx.var(cache=True)
     def past_chats(self) -> List[Tuple[int, Dict[str, str]]]:
         return [
