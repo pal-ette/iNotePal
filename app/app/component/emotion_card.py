@@ -73,7 +73,7 @@ def create_boxes(params):
 def emotion_card() -> rx.Component:
 
     return (
-        rx.flex(
+        rx.grid(
             rx.foreach(
                 EmotionState.get_bg,
                 create_boxes,
@@ -82,6 +82,9 @@ def emotion_card() -> rx.Component:
             width="100%",
             height="30vh",
             flex_wrap="wrap",
+            grid_template_columns=[
+                "repeat(3, 1fr)",
+            ],
         ),
     )
 
