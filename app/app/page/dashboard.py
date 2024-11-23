@@ -101,6 +101,7 @@ def dashboard():
                                         build_past_card,
                                     ),
                                 ),
+                                width="300px",
                             ),
                         ),
                         rx.scroll_area(
