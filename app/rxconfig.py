@@ -3,11 +3,16 @@ from reflex import constants
 import os
 from typing import List, Optional
 
+backend_port = 8080
+frontend_port = 3030
+
 
 class BaseConfg(rx.Config):
     app_name: str = "app"
 
-    backend_port: int = 8080
+    backend_port: int = backend_port
+
+    frontend_port: int = frontend_port
 
     api_url: str = f"http://localhost:{backend_port}"
 
@@ -16,7 +21,7 @@ class BaseConfg(rx.Config):
 
 class DevConfig(BaseConfg):
     cors_allowed_origins: List[str] = [
-        "http://localhost:3000",
+        f"http://localhost:{frontend_port}",
     ]
 
 
