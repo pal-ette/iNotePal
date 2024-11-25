@@ -4,7 +4,7 @@ import os
 from typing import List, Optional
 
 backend_port = 8080
-frontend_port = 3030
+frontend_port = 3000
 
 
 class BaseConfg(rx.Config):
