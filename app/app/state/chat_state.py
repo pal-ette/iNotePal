@@ -2,7 +2,7 @@
 
 import os
 import reflex as rx
-from datetime import datetime, date
+from datetime import date
 from collections.abc import AsyncGenerator
 from openai import OpenAI
 from app.app_state import AppState
@@ -18,7 +18,6 @@ from reflex import constants
 import random
 from collections import Counter
 import sqlalchemy
-import calendar
 
 
 inference_model = InferenceModel("dummy-0.0.0")
@@ -51,7 +50,7 @@ class ChatState(AppState):
         return str(self.select_date)
 
     @rx.var(cache=True)
-    def chats(self) -> List:
+    def chats(self) -> List[Chat]:
         if self.db_select_date in self._db_chats:
             return self._db_chats[self.db_select_date]
 
@@ -88,7 +87,7 @@ class ChatState(AppState):
         return dates
 
     @rx.var(cache=True)
-    def past_chats(self) -> List[Tuple[int, Dict[str, str]]]:
+    def past_chats(self) -> List[Tuple[int, Chat]]:
         return [
             (len(self.chats) - i, chat) if chat.is_closed else ("현재 대화", chat)
             for i, chat in enumerate(self.chats)

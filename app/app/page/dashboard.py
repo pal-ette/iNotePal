@@ -8,6 +8,8 @@ from app.component.emotion_card import create_box, emotion_card, show_emotion_co
 from app.page.login import require_login
 from app.state.calendar_state import calendar_component
 from app.routes import DASHBOARD_ROUTE
+from typing import Tuple
+from app.schema.chat import Chat
 
 # 그래프 그리기 위한 임시 데이터.
 data = [
@@ -21,7 +23,7 @@ data = [
 ]
 
 
-def build_past_card(chat):
+def build_past_card(chat: Tuple[int, Chat]):
     return rx.button(
         chat[0],
         on_click=lambda: ChatState.select_past_card(chat[1]["id"]),
