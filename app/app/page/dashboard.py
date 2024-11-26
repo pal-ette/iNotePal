@@ -114,7 +114,17 @@ def dashboard():
                                     rx.text("친구가 말 거는 중.."),
                                     align="center",
                                 ),
-                                chat_history(),
+                                rx.vstack(
+                                    chat_history(),
+                                    width=[
+                                        "688px",
+                                        "688px",
+                                        "688px",
+                                        "688px",
+                                        "422px",
+                                        "422px",
+                                    ],
+                                ),
                             ),
                             width="100%",
                             min_height="500px",
