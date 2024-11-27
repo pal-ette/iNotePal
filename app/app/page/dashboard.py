@@ -45,156 +45,124 @@ def dashboard():
             margin_top="30px",
         ),
         rx.hstack(
-            rx.container(
-                rx.grid(
-                    rx.vstack(
-                        calendar_component(
-                            select_date=ChatState.select_date,
-                            accent_dates=ChatState.dates_has_closed_chat,
-                            on_change_date=ChatState.on_change_date,
-                        ),
-                        rx.text(
-                            f"{ChatState.print_date_text}의 감정",
-                            # on_change=State.select_date,
-                            as_="i",
-                            font_size="1.5em",
-                            weight="bold",
-                        ),
-                        show_emotion_colors(),
-                        emotion_card(),
-                        display=["none", "none", "none", "none", "flex", "flex"],
-                    ),
-                    rx.vstack(
-                        rx.hstack(
-                            rx.popover.root(
-                                rx.popover.trigger(
-                                    rx.button(
-                                        rx.heading(
-                                            ChatState.print_date_text,
-                                            size="xl",
-                                            weight="bold",
-                                            align="center",
-                                            high_contrast=True,
-                                        ),
-                                        variant="ghost",
-                                    ),
-                                ),
-                                rx.popover.content(
-                                    calendar_component(
-                                        rx.hstack(
-                                            rx.popover.close(
-                                                rx.button(
-                                                    "닫기",
-                                                    size="1",
-                                                    color_scheme="tomato",
-                                                ),
-                                            ),
-                                        ),
-                                        select_date=ChatState.select_date,
-                                        accent_dates=ChatState.dates_has_closed_chat,
-                                        on_change_date=ChatState.on_change_date,
-                                    ),
-                                ),
-                            ),
-                            rx.scroll_area(
-                                rx.hstack(
-                                    rx.foreach(
-                                        ChatState.past_chats,
-                                        build_past_card,
-                                    ),
-                                ),
-                                width="300px",
-                            ),
-                        ),
-                        rx.scroll_area(
-                            rx.cond(
-                                ChatState.is_creating,
-                                rx.hstack(
-                                    rx.spinner(loading=ChatState.is_creating),
-                                    rx.text("친구가 말 거는 중.."),
+            rx.vstack(
+                rx.hstack(
+                    rx.popover.root(
+                        rx.popover.trigger(
+                            rx.button(
+                                rx.heading(
+                                    ChatState.print_date_text,
+                                    size="xl",
+                                    weight="bold",
                                     align="center",
+                                    high_contrast=True,
                                 ),
-                                rx.vstack(
-                                    chat_history(),
-                                    width=[
-                                        "688px",
-                                        "688px",
-                                        "688px",
-                                        "688px",
-                                        "422px",
-                                        "422px",
-                                    ],
-                                ),
+                                variant="ghost",
                             ),
-                            width="100%",
-                            min_height="500px",
-                            id="chat_area",
+                        ),
+                        rx.popover.content(
+                            calendar_component(
+                                rx.hstack(
+                                    rx.popover.close(
+                                        rx.button(
+                                            "닫기",
+                                            size="1",
+                                            color_scheme="tomato",
+                                        ),
+                                    ),
+                                ),
+                                select_date=ChatState.select_date,
+                                accent_dates=ChatState.dates_has_closed_chat,
+                                on_change_date=ChatState.on_change_date,
+                            ),
+                        ),
+                    ),
+                    rx.scroll_area(
+                        rx.hstack(
+                            rx.foreach(
+                                ChatState.past_chats,
+                                build_past_card,
+                            ),
+                        ),
+                        width="300px",
+                    ),
+                ),
+                rx.scroll_area(
+                    rx.cond(
+                        ChatState.is_creating,
+                        rx.hstack(
+                            rx.spinner(loading=ChatState.is_creating),
+                            rx.text("친구가 말 거는 중.."),
+                            align="center",
                         ),
                         rx.vstack(
-                            rx.cond(
-                                ~ChatState.is_closed,
-                                chat_input(),
-                            ),
-                            rx.cond(
-                                ~ChatState.is_creating,
-                                rx.cond(
-                                    ~ChatState.is_exist_chat | ChatState.is_closed,
-                                    rx.hstack(
-                                        rx.button(
-                                            "대화 새로 시작하기",
-                                            on_click=ChatState.start_new_chat,
-                                            size="sm",
-                                            bg="#ebb9b0",
-                                            color="#49312d",
-                                            border_radius="md",
-                                        ),
-                                    ),
-                                    rx.cond(
-                                        ChatState.current_messages.length() > 2,
-                                        rx.button(
-                                            "대화 마치기",
-                                            on_click=ChatState.evaluate_chat,
-                                            # width="100%",
-                                            # variant="solid",
-                                            size="sm",
-                                            bg="#ebb9b0",
-                                            color="#49312d",
-                                            border_radius="md",
-                                        ),
-                                    ),
-                                ),
-                            ),
-                            rx.dialog.root(
-                                rx.dialog.content(
-                                    rx.heading("오늘의 감정"),
-                                    rx.flex(create_box()),
-                                    rx.button(
-                                        "닫기",
-                                        on_click=ChatState.close_result_modal,
-                                    ),
-                                ),
-                                # close_on_overlay_click=True,
-                                is_centered=True,
-                                open=ChatState.show_result_modal,
-                            ),
-                            align="center",
-                            width="100%",
+                            chat_history(),
+                            width=[
+                                "688px",
+                                "688px",
+                                "688px",
+                                "688px",
+                                "422px",
+                                "422px",
+                            ],
                         ),
-                        height="80vh",
-                        width="100%",
                     ),
                     width="100%",
-                    grid_template_columns=[
-                        "repeat(1, 1fr)",
-                        "repeat(1, 1fr)",
-                        "repeat(1, 1fr)",
-                        "repeat(1, 1fr)",
-                        "repeat(2, 1fr)",
-                        "repeat(2, 1fr)",
-                    ],
+                    min_height="500px",
+                    id="chat_area",
                 ),
-                width=["688px", "688px", "688px", "688px", "1136px", "1136px"],
-                max_width=["none", "none", "none", "none", "none", "none"],
+                rx.vstack(
+                    rx.cond(
+                        ~ChatState.is_closed,
+                        chat_input(),
+                    ),
+                    rx.cond(
+                        ~ChatState.is_creating,
+                        rx.cond(
+                            ~ChatState.is_exist_chat | ChatState.is_closed,
+                            rx.hstack(
+                                rx.button(
+                                    "대화 새로 시작하기",
+                                    on_click=ChatState.start_new_chat,
+                                    size="sm",
+                                    bg="#ebb9b0",
+                                    color="#49312d",
+                                    border_radius="md",
+                                ),
+                            ),
+                            rx.cond(
+                                ChatState.current_messages.length() > 2,
+                                rx.button(
+                                    "대화 마치기",
+                                    on_click=ChatState.evaluate_chat,
+                                    # width="100%",
+                                    # variant="solid",
+                                    size="sm",
+                                    bg="#ebb9b0",
+                                    color="#49312d",
+                                    border_radius="md",
+                                ),
+                            ),
+                        ),
+                    ),
+                    rx.dialog.root(
+                        rx.dialog.content(
+                            rx.heading("오늘의 감정"),
+                            rx.flex(create_box()),
+                            rx.button(
+                                "닫기",
+                                on_click=ChatState.close_result_modal,
+                            ),
+                        ),
+                        # close_on_overlay_click=True,
+                        is_centered=True,
+                        open=ChatState.show_result_modal,
+                    ),
+                    align="center",
+                    width="100%",
+                ),
+                height="80vh",
+                width="100%",
             ),
             height="100%",
             margin="10px",
