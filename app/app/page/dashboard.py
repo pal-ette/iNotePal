@@ -41,9 +41,7 @@ def build_past_card(chat: Tuple[int, Chat]):
 def dashboard():
     return rx.flex(
         navbar(),
-        rx.container(
-            margin_top="30px",
-        ),
+        rx.container(),
         rx.hstack(
             rx.vstack(
                 rx.hstack(
@@ -97,19 +95,11 @@ def dashboard():
                         ),
                         rx.vstack(
                             chat_history(),
-                            width=[
-                                "688px",
-                                "688px",
-                                "688px",
-                                "688px",
-                                "422px",
-                                "422px",
-                            ],
                         ),
                     ),
                     width="100%",
-                    min_height="500px",
                     id="chat_area",
+                    margin_bottom="300px",
                 ),
                 rx.vstack(
                     rx.cond(
@@ -160,20 +150,23 @@ def dashboard():
                     ),
                     align="center",
                     width="100%",
+                    style={
+                        "position": "absolute",
+                        "bottom": "0px",
+                    },
                 ),
-                height="80vh",
-                width="100%",
+                height="90vh",
+                style={
+                    "position": "relative",
+                },
             ),
             height="100%",
-            margin="10px",
+            align_items="center",
         ),
-        rx.box(flex_grow=1),
-        # footer(),
-        # align_items="center",
+        align_items="center",
         justify_content="start",
         width="100%",
         height="100%",
         min_height="100vh",
         direction="column",
-        # **props,
     )
