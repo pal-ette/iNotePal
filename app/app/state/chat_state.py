@@ -335,6 +335,8 @@ class ChatState(AppState):
         else:
             self._db_chats[self.db_select_date].insert(0, new_chat)
 
+        self._current_chat_index = 0
+
         greeting = self.get_greeting()
         self.insert_history(
             new_chat.id,
