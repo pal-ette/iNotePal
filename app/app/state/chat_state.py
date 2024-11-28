@@ -126,6 +126,12 @@ class ChatState(AppState):
         return self.current_chat.is_closed
 
     @rx.var(cache=True)
+    def is_latest_chat_opened(self) -> bool:
+        if not self.is_exist_chat:
+            return False
+        return not self.chats[0].is_closed
+
+    @rx.var(cache=True)
     def is_exist_chat(self) -> bool:
         return bool(self.current_chat)
 
@@ -328,6 +334,8 @@ class ChatState(AppState):
             self._db_chats[self.db_select_date] = [new_chat]
         else:
             self._db_chats[self.db_select_date].insert(0, new_chat)
+
+        self._current_chat_index = 0
 
         greeting = self.get_greeting()
         self.insert_history(

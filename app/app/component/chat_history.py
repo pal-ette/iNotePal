@@ -28,21 +28,17 @@ answer_style = message_style | dict(
 
 
 def user_chat_bubble(message):
-    return rx.vstack(
-        rx.hstack(
-            rx.text(
-                message,
-                width="100%",
-                text_align="right",
-                style=question_style,
-            ),
-            rx.icon("user"),
+    return rx.hstack(
+        rx.text(
+            message,
             width="100%",
-            align="end",
-            justify="end",
+            text_align="right",
+            style=question_style,
         ),
+        rx.icon("user"),
         width="100%",
         align="end",
+        justify="end",
     )
 
 

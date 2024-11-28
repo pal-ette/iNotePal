@@ -41,9 +41,7 @@ def build_past_card(chat: Tuple[int, Chat]):
 def dashboard():
     return rx.flex(
         navbar(),
-        rx.container(
-            margin_top="30px",
-        ),
+        rx.container(),
         rx.hstack(
             rx.vstack(
                 rx.hstack(
@@ -97,52 +95,35 @@ def dashboard():
                         ),
                         rx.vstack(
                             chat_history(),
-                            width=[
-                                "688px",
-                                "688px",
-                                "688px",
-                                "688px",
-                                "422px",
-                                "422px",
-                            ],
                         ),
                     ),
                     width="100%",
-                    min_height="500px",
                     id="chat_area",
+                    margin_bottom="300px",
                 ),
                 rx.vstack(
                     rx.cond(
                         ~ChatState.is_closed,
                         chat_input(),
                     ),
-                    rx.cond(
-                        ~ChatState.is_creating,
-                        rx.cond(
-                            ~ChatState.is_exist_chat | ChatState.is_closed,
-                            rx.hstack(
-                                rx.button(
-                                    "대화 새로 시작하기",
-                                    on_click=ChatState.start_new_chat,
-                                    size="sm",
-                                    bg="#ebb9b0",
-                                    color="#49312d",
-                                    border_radius="md",
-                                ),
-                            ),
-                            rx.cond(
-                                ChatState.current_messages.length() > 2,
-                                rx.button(
-                                    "대화 마치기",
-                                    on_click=ChatState.evaluate_chat,
-                                    # width="100%",
-                                    # variant="solid",
-                                    size="sm",
-                                    bg="#ebb9b0",
-                                    color="#49312d",
-                                    border_radius="md",
-                                ),
-                            ),
+                    rx.hstack(
+                        rx.button(
+                            "대화 새로 시작하기",
+                            on_click=ChatState.start_new_chat,
+                            size="sm",
+                            border_radius="md",
+                            disabled=ChatState.is_creating
+                            | ChatState.is_latest_chat_opened,
+                        ),
+                        rx.button(
+                            "대화 마치기",
+                            on_click=ChatState.evaluate_chat,
+                            size="sm",
+                            border_radius="md",
+                            disabled=ChatState.is_creating
+                            | ChatState.is_closed
+                            | ChatState.current_messages.length()
+                            < 3,
                         ),
                     ),
                     rx.dialog.root(
@@ -160,20 +141,23 @@ def dashboard():
                     ),
                     align="center",
                     width="100%",
+                    style={
+                        "position": "absolute",
+                        "bottom": "0px",
+                    },
                 ),
-                height="80vh",
-                width="100%",
+                height="90vh",
+                style={
+                    "position": "relative",
+                },
             ),
             height="100%",
-            margin="10px",
+            align_items="center",
         ),
-        rx.box(flex_grow=1),
-        # footer(),
-        # align_items="center",
+        align_items="center",
         justify_content="start",
         width="100%",
         height="100%",
         min_height="100vh",
         direction="column",
-        # **props,
     )
