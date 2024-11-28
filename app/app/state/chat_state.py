@@ -126,6 +126,12 @@ class ChatState(AppState):
         return self.current_chat.is_closed
 
     @rx.var(cache=True)
+    def is_latest_chat_opened(self) -> bool:
+        if not self.is_exist_chat:
+            return False
+        return not self.chats[0].is_closed
+
+    @rx.var(cache=True)
     def is_exist_chat(self) -> bool:
         return bool(self.current_chat)
 

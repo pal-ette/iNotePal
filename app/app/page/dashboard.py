@@ -106,33 +106,24 @@ def dashboard():
                         ~ChatState.is_closed,
                         chat_input(),
                     ),
-                    rx.cond(
-                        ~ChatState.is_creating,
-                        rx.cond(
-                            ~ChatState.is_exist_chat | ChatState.is_closed,
-                            rx.hstack(
-                                rx.button(
-                                    "대화 새로 시작하기",
-                                    on_click=ChatState.start_new_chat,
-                                    size="sm",
-                                    bg="#ebb9b0",
-                                    color="#49312d",
-                                    border_radius="md",
-                                ),
-                            ),
-                            rx.cond(
-                                ChatState.current_messages.length() > 2,
-                                rx.button(
-                                    "대화 마치기",
-                                    on_click=ChatState.evaluate_chat,
-                                    # width="100%",
-                                    # variant="solid",
-                                    size="sm",
-                                    bg="#ebb9b0",
-                                    color="#49312d",
-                                    border_radius="md",
-                                ),
-                            ),
+                    rx.hstack(
+                        rx.button(
+                            "대화 새로 시작하기",
+                            on_click=ChatState.start_new_chat,
+                            size="sm",
+                            border_radius="md",
+                            disabled=ChatState.is_creating
+                            | ChatState.is_latest_chat_opened,
+                        ),
+                        rx.button(
+                            "대화 마치기",
+                            on_click=ChatState.evaluate_chat,
+                            size="sm",
+                            border_radius="md",
+                            disabled=ChatState.is_creating
+                            | ChatState.is_closed
+                            | ChatState.current_messages.length()
+                            < 3,
                         ),
                     ),
                     rx.dialog.root(
