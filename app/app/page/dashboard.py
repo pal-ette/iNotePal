@@ -41,9 +41,11 @@ def build_past_card(chat: Tuple[int, Chat]):
 def dashboard():
     return rx.flex(
         navbar(),
-        rx.container(),
         rx.hstack(
             rx.vstack(
+                rx.container(
+                    height="50px",
+                ),
                 rx.hstack(
                     rx.popover.root(
                         rx.popover.trigger(
@@ -99,7 +101,7 @@ def dashboard():
                     ),
                     width="100%",
                     id="chat_area",
-                    margin_bottom="300px",
+                    margin_bottom="120px",
                 ),
                 rx.vstack(
                     rx.cond(
@@ -143,15 +145,14 @@ def dashboard():
                     width="100%",
                     style={
                         "position": "absolute",
-                        "bottom": "0px",
+                        "bottom": "30px",
                     },
                 ),
-                height="90vh",
+                height="100vh",
                 style={
                     "position": "relative",
                 },
             ),
-            height="100%",
             align_items="center",
         ),
         align_items="center",
