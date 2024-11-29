@@ -150,6 +150,8 @@ class ChatState(AppState):
         if len(self.chats) == 0:
             return self.start_new_chat()
 
+        yield self.scroll_to_bottom()
+
     def get_chats_in_period(self, start_day, end_day) -> List[Chat]:
         chats = []
         if not self.token_is_valid:
@@ -200,6 +202,8 @@ class ChatState(AppState):
                 continue
             self._current_chat_index = i
             break
+
+        yield self.scroll_to_bottom()
 
     def insert_history(self, chat_id, message, is_user, emotion=None):
         new_message = Message(
