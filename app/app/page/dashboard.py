@@ -114,18 +114,21 @@ def dashboard():
                             on_click=ChatState.start_new_chat,
                             size="sm",
                             border_radius="md",
-                            disabled=ChatState.is_creating
-                            | ChatState.is_latest_chat_opened,
+                            disabled=(
+                                ChatState.is_creating | ChatState.is_latest_chat_opened
+                            ),
                         ),
                         rx.button(
                             "대화 마치기",
                             on_click=ChatState.evaluate_chat,
                             size="sm",
                             border_radius="md",
-                            disabled=ChatState.is_creating
-                            | ChatState.is_closed
-                            | ChatState.current_messages.length()
-                            < 3,
+                            disabled=(
+                                ChatState.is_creating
+                                | ChatState.is_closed
+                                | ChatState.current_messages.length()
+                                < 3
+                            ),
                         ),
                     ),
                     rx.dialog.root(
