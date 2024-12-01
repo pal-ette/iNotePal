@@ -84,7 +84,7 @@ def analysis_page() -> rx.Component:
                         return_focus_on_close=True,
                         match_width=True,
                         on_open_change=[
-                            AnalysisState.onOpenChangeStartDay,
+                            AnalysisState.on_open_change_start_day,
                             lambda is_open: calendar.State.set_display_month(
                                 rx.cond(
                                     is_open,
@@ -126,7 +126,7 @@ def analysis_page() -> rx.Component:
                         return_focus_on_close=True,
                         match_width=True,
                         on_open_change=[
-                            AnalysisState.onOpenChangeEndDay,
+                            AnalysisState.on_open_change_end_day,
                             lambda is_open: calendar.State.set_display_month(
                                 rx.cond(
                                     is_open,

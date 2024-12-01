@@ -16,19 +16,19 @@ class AnalysisState(ChatState):
     def on_change_date(self, year, month, day):
         self.select_date = date(year, month, day)
 
-    def onOpenChangeStartDay(self, isOpen):
+    def on_open_change_start_day(self, isOpen):
         if isOpen:
             self.reset_calendar_date(self.start_day)
         else:
-            self.setStartDay()
+            self.set_start_day()
 
-    def onOpenChangeEndDay(self, isOpen):
+    def on_open_change_end_day(self, isOpen):
         if isOpen:
             self.reset_calendar_date(self.end_day)
         else:
-            self.setEndDay()
+            self.set_end_day()
 
-    def setStartDay(self):
+    def set_start_day(self):
         if not self.is_valid_date_range(self.select_date, self.end_day):
             self.reset_calendar_date(self.start_day)
             self.date_valid_check = False
@@ -36,7 +36,7 @@ class AnalysisState(ChatState):
 
         self.start_day = self.select_date
 
-    def setEndDay(self):
+    def set_end_day(self):
         if not self.is_valid_date_range(self.start_day, self.select_date):
             self.reset_calendar_date(self.end_day)
             self.date_valid_check = False
