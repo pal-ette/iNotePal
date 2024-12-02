@@ -148,9 +148,9 @@ class ChatState(AppState):
         self._current_chat_index = 0
 
         if len(self.chats) == 0:
-            return self.start_new_chat()
+            yield ChatState.start_new_chat
 
-        yield self.scroll_to_bottom()
+        return ChatState.scroll_to_bottom
 
     def get_chats_in_period(self, start_day, end_day) -> List[Chat]:
         chats = []
@@ -203,7 +203,7 @@ class ChatState(AppState):
             self._current_chat_index = i
             break
 
-        yield self.scroll_to_bottom()
+        yield ChatState.scroll_to_bottom
 
     def insert_history(self, chat_id, message, is_user, emotion=None):
         new_message = Message(
@@ -386,15 +386,15 @@ class ChatState(AppState):
 
         return response
 
-    def on_mount(self):
+    def on_load_dashboard(self):
         if not self.is_hydrated:
-            return
+            return ChatState.on_load_dashboard
 
         if self.is_exist_chat:
             return
 
         if len(self.chats) == 0:
-            return self.start_new_chat()
+            return ChatState.start_new_chat
 
     async def on_submit(self, form_data) -> AsyncGenerator[rx.event.EventSpec]:
         self.is_waiting = True
