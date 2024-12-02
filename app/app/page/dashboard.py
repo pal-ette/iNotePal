@@ -36,7 +36,13 @@ def build_past_card(chat: Tuple[int, Chat]):
     )
 
 
-@rx.page(route=DASHBOARD_ROUTE, on_load=ChatState.check_login)
+@rx.page(
+    route=DASHBOARD_ROUTE,
+    on_load=[
+        ChatState.check_login,
+        ChatState.on_load_dashboard,
+    ],
+)
 @require_login
 def dashboard():
     return rx.flex(
