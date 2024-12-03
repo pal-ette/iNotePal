@@ -47,13 +47,13 @@ class Calendar(rx.ComponentState):
         )
 
     def next_month(self):
-        if self.month == 12 and self._set_year(self.year + 1):
+        if self.month == 12 and self.try_set_year(self.year + 1):
             self.month = 1
         else:
             self.month += 1
 
     def prev_month(self):
-        if self.month == 1 and self._set_year(self.year - 1):
+        if self.month == 1 and self.try_set_year(self.year - 1):
             self.month = 12
         else:
             self.month -= 1
@@ -62,19 +62,19 @@ class Calendar(rx.ComponentState):
         return MINYEAR <= year and year <= MAXYEAR
 
     def next_year(self):
-        self._set_year(self.year + 1)
+        self.try_set_year(self.year + 1)
 
     def prev_year(self):
-        self._set_year(self.year - 1)
+        self.try_set_year(self.year - 1)
 
     def on_change_year(self, year: str):
         try:
             parsed_year = int(year)
-            self._set_year(parsed_year)
+            self.try_set_year(parsed_year)
         except (ValueError, TypeError):
             pass
 
-    def _set_year(self, year: int) -> bool:
+    def try_set_year(self, year: int) -> bool:
         if not self.is_valid_year_range(year):
             return False
 
