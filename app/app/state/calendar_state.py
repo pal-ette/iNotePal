@@ -47,15 +47,13 @@ class Calendar(rx.ComponentState):
         )
 
     def next_month(self):
-        if self.month == 12 and self.is_valid_year_range(self.year + 1):
-            self.year += 1
+        if self.month == 12 and self._set_year(self.year + 1):
             self.month = 1
         else:
             self.month += 1
 
     def prev_month(self):
-        if self.month == 1 and self.is_valid_year_range(self.year - 1):
-            self.year -= 1
+        if self.month == 1 and self._set_year(self.year - 1):
             self.month = 12
         else:
             self.month -= 1
@@ -64,24 +62,24 @@ class Calendar(rx.ComponentState):
         return MINYEAR <= year and year <= MAXYEAR
 
     def next_year(self):
-        if not self.is_valid_year_range(self.year + 1):
-            return
-
-        self.year += 1
+        self._set_year(self.year + 1)
 
     def prev_year(self):
-        if not self.is_valid_year_range(self.year - 1):
-            return
+        self._set_year(self.year - 1)
 
-        self.year -= 1
-
-    def set_year(self, year: str):
+    def on_change_year(self, year: str):
         try:
             parsed_year = int(year)
-            if self.is_valid_year_range(parsed_year):
-                self.year = parsed_year
+            self._set_year(parsed_year)
         except (ValueError, TypeError):
             pass
+
+    def _set_year(self, year: int) -> bool:
+        if not self.is_valid_year_range(year):
+            return False
+
+        self.year = year
+        return True
 
     def set_month(self, month: int):
         self.month = month
@@ -136,7 +134,7 @@ class Calendar(rx.ComponentState):
                                     rx.input(
                                         value=cls.year,
                                         max_length=4,
-                                        on_change=cls.set_year,
+                                        on_change=cls.on_change_year,
                                     ),
                                     rx.icon(
                                         tag="chevron_right",
