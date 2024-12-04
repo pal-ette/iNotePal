@@ -334,10 +334,10 @@ class ChatState(AppState):
             print("error start new chat")
             return
 
-        if self.db_select_date not in self._db_chats:
-            self._db_chats[self.db_select_date] = [new_chat]
-        else:
+        if self.db_select_date in self._db_chats:
             self._db_chats[self.db_select_date].insert(0, new_chat)
+        else:
+            self._db_chats[self.db_select_date] = [new_chat]
 
         self._current_chat_index = 0
 
