@@ -332,6 +332,7 @@ class ChatState(AppState):
 
         if not new_chat:
             print("error start new chat")
+            self.is_creating = False
             return
 
         if self.db_select_date in self._db_chats:
