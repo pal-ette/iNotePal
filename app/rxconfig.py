@@ -1,7 +1,9 @@
 import reflex as rx
 from reflex import constants
+from reflex.config import environment
 import os
 from typing import List, Optional
+import dotenv
 
 backend_port = 8080
 frontend_port = 3000
@@ -40,7 +42,7 @@ class ProdConfig(BaseConfg):
 
 
 config = BaseConfg()
-env = os.environ.get(constants.ENV_MODE_ENV_VAR)
+env = environment.REFLEX_ENV_MODE.get()
 if env == constants.Env.DEV:
     config = DevConfig()
 elif env == constants.Env.PROD:

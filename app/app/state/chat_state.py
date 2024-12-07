@@ -18,11 +18,12 @@ from reflex import constants
 import random
 from collections import Counter
 import sqlalchemy
+from reflex.config import environment
 
 
 inference_model = InferenceModel("dummy-0.0.0")
 embedding_model = None
-env = os.environ.get(constants.ENV_MODE_ENV_VAR)
+env = environment.REFLEX_ENV_MODE.get()
 if env == constants.Env.PROD:
     inference_model = Roberta("model-0.0.2")
     embedding_model = EmbeddingModel("")
