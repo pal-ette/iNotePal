@@ -22,7 +22,7 @@ def registration_page() -> rx.Component:
                 rx.heading(
                     "iNotePal",
                     as_="h1",
-                    size="4xl",
+                    size="9",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
                     weight="bold",
                     align="left",
                     background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
@@ -32,15 +32,35 @@ def registration_page() -> rx.Component:
                 padding_bottom="10vh",
             ),
             rx.flex(
-                rx.heading("Sign up", as_="h1", size="lg", align="left"),
+                rx.heading(
+                    "Sign up",
+                    as_="h1",
+                    size="9",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
+                    align="left",
+                ),
                 padding_bottom="2vh",
             ),
             rx.flex(
-                rx.text("Email Address", size="md", weight="medium", align="left"),
+                rx.text(
+                    "Email Address",
+                    size="5",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
+                    weight="medium",
+                    align="left",
+                ),
                 rx.input(placeholder="email", id="email", type_="email"),
-                rx.text("Password", size="md", weight="bold", align="left"),
+                rx.text(
+                    "Password",
+                    size="5",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
+                    weight="bold",
+                    align="left",
+                ),
                 rx.input(placeholder="password", id="password", type="password"),
-                rx.text("Confirm Password", size="md", weight="bold", align="left"),
+                rx.text(
+                    "Confirm Password",
+                    size="5",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
+                    weight="bold",
+                    align="left",
+                ),
                 rx.input(
                     placeholder="confirm password",
                     id="confirm_password",
@@ -54,7 +74,7 @@ def registration_page() -> rx.Component:
                     "Register",
                     type_="submit",
                     loading=RegistrationState.is_loading,
-                    size="lg",
+                    size="4",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
                     variant="outline",
                 )
             ),
