@@ -58,7 +58,7 @@ def dashboard():
                             rx.button(
                                 rx.heading(
                                     ChatState.print_date_text,
-                                    size="xl",
+                                    size="2",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
                                     weight="bold",
                                     align="center",
                                     high_contrast=True,
@@ -118,7 +118,7 @@ def dashboard():
                         rx.button(
                             "대화 새로 시작하기",
                             on_click=ChatState.start_new_chat,
-                            size="sm",
+                            size="4",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
                             border_radius="md",
                             disabled=(
                                 ChatState.is_creating | ChatState.is_latest_chat_opened
@@ -127,7 +127,7 @@ def dashboard():
                         rx.button(
                             "대화 마치기",
                             on_click=ChatState.evaluate_chat,
-                            size="sm",
+                            size="4",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
                             border_radius="md",
                             disabled=(
                                 ChatState.is_creating

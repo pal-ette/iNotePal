@@ -18,11 +18,12 @@ from reflex import constants
 import random
 from collections import Counter
 import sqlalchemy
+from reflex.config import environment
 
 
 inference_model = InferenceModel("dummy-0.0.0")
 embedding_model = None
-env = os.environ.get(constants.ENV_MODE_ENV_VAR)
+env = environment.REFLEX_ENV_MODE.get()
 if env == constants.Env.PROD:
     inference_model = Roberta("model-0.0.2")
     embedding_model = EmbeddingModel("")
@@ -46,7 +47,7 @@ class ChatState(AppState):
     _db_messages: Dict[int, List[Message]] = {}
 
     @rx.var(cache=True)
-    def db_select_date(self):
+    def db_select_date(self) -> str:
         return str(self.select_date)
 
     @rx.var(cache=True)
@@ -107,10 +108,10 @@ class ChatState(AppState):
         return len(self.past_chats) > 1
 
     @rx.var(cache=True)
-    def current_chat(self) -> Chat:
+    def current_chat(self) -> Chat | None:
         chats = self.chats
         if len(chats) < 1:
-            return {}
+            return None
         return chats[self._current_chat_index]
 
     @rx.var(cache=True)
@@ -136,9 +137,9 @@ class ChatState(AppState):
         return bool(self.current_chat)
 
     @rx.var(cache=True)
-    def chat_emotion(self) -> str:
+    def chat_emotion(self) -> str | None:
         if not self.is_exist_chat:
-            return False
+            return None
 
         return self.current_chat.emotion
 
@@ -172,7 +173,7 @@ class ChatState(AppState):
         return chats
 
     @rx.var(cache=True)
-    def print_date_text(self):
+    def print_date_text(self) -> str:
         year = self.select_date.year
         month = self.select_date.month
         day = self.select_date.day

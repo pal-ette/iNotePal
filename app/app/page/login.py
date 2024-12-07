@@ -18,13 +18,18 @@ def login_page() -> rx.Component:
     login_form = rx.form(
         rx.fragment(
             rx.flex(
-                rx.heading("Log In", as_="h1", size="lg", align="left"),
+                rx.heading(
+                    "Log In",
+                    as_="h1",
+                    size="9",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
+                    align="left",
+                ),
                 padding_bottom="2vh",
             ),
             rx.flex(
                 rx.text(
                     "Email Address",
-                    size="md",
+                    size="5",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
                     weight="medium",
                     align="left",
                 ),
@@ -35,7 +40,7 @@ def login_page() -> rx.Component:
                 ),
                 rx.text(
                     "Password",
-                    size="md",
+                    size="5",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
                     weight="bold",
                     align="left",
                 ),
@@ -48,7 +53,7 @@ def login_page() -> rx.Component:
                     "Login",
                     type_="submit",
                     loading=LoginState.is_loading,
-                    size="lg",
+                    size="4",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
                     variant="outline",
                 ),
                 rx.button(
@@ -74,7 +79,7 @@ def login_page() -> rx.Component:
                     rx.heading(
                         "iNotePal",
                         as_="h1",
-                        size="4xl",
+                        size="9",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
                         weight="bold",
                         align="left",
                         background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
@@ -111,7 +116,7 @@ def login_page() -> rx.Component:
                                 rx.button(
                                     "Request",
                                     type_="submit",
-                                    size="lg",
+                                    size="4",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
                                     variant="outline",
                                 ),
                                 rx.button(
