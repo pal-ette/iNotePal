@@ -107,9 +107,9 @@ PyYAML==6.0.2
 readme_renderer==44.0
 realtime==1.0.6
 redis==5.1.0
-reflex==0.6.4
+reflex==0.6.6.post2
 reflex-chakra==0.6.1
-reflex-hosting-cli==0.1.13
+reflex-hosting-cli==0.1.29
 reflex-wordcloud==0.0.2
 regex==2024.9.11
 requests==2.32.3
@@ -154,7 +154,7 @@ tqdm==4.66.5
 transformers==4.40.1
 triton==2.2.0
 twine==5.1.1
-typer==0.12.5
+typer==0.15.1
 typing_extensions==4.12.2
 urllib3==2.2.3
 uvicorn==0.31.0
