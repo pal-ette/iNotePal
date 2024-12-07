@@ -101,7 +101,7 @@ pyproject_hooks==1.2.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 python-engineio==4.9.1
-python-multipart==0.0.12
+python-multipart==0.0.18
 python-socketio==5.11.4
 PyYAML==6.0.2
 readme_renderer==44.0
