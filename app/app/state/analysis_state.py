@@ -54,19 +54,19 @@ class AnalysisState(ChatState):
         self.date_valid_check = True
 
     @rx.var
-    def start_year(self):
+    def start_year(self) -> int:
         return self.start_day.year
 
     @rx.var
-    def start_month(self):
+    def start_month(self) -> int:
         return self.start_day.month
 
     @rx.var
-    def end_year(self):
+    def end_year(self) -> int:
         return self.end_day.year
 
     @rx.var
-    def end_month(self):
+    def end_month(self) -> int:
         return self.end_day.month
 
     @rx.var
@@ -74,14 +74,14 @@ class AnalysisState(ChatState):
         return emotion_color_map_raw
 
     @rx.var
-    def print_start_day_text(self):
+    def print_start_day_text(self) -> str:
         text_date = (
             f"{self.start_day.year}년 {self.start_day.month}월 {self.start_day.day}일"
         )
         return text_date
 
     @rx.var
-    def print_end_day_text(self):
+    def print_end_day_text(self) -> str:
         text_date = f"{self.end_day.year}년 {self.end_day.month}월 {self.end_day.day}일"
         return text_date
 
@@ -89,7 +89,7 @@ class AnalysisState(ChatState):
         return end >= start
 
     @rx.var(cache=True)
-    def data_emotion(self):
+    def data_emotion(self) -> List[str]:
         period_data = self.get_chats_in_period(
             self.start_day,
             self.end_day,
@@ -102,7 +102,7 @@ class AnalysisState(ChatState):
         ]
 
     @rx.var(cache=True)
-    def data_emotion_total(self):
+    def data_emotion_total(self) -> List[str]:
         start_day = date(1970, 1, 1)
         end_day = date(2999, 12, 31)
 
@@ -118,14 +118,14 @@ class AnalysisState(ChatState):
         ]
 
     @rx.var(cache=True)
-    def data_emotion_count(self):
+    def data_emotion_count(self) -> Dict[str, int]:
         emotion_count = {emotion: 0 for emotion in emotion_color_map_raw}
         for emotion in self.data_emotion:
             emotion_count[emotion] += 1
         return emotion_count
 
     @rx.var(cache=True)
-    def data_emotion_count_total(self):
+    def data_emotion_count_total(self) -> Dict[str, int]:
         emotion_count_total = {emotion: 0 for emotion in emotion_color_map_raw}
         for emotion in self.data_emotion_total:
             emotion_count_total[emotion] += 1
@@ -158,7 +158,7 @@ class AnalysisState(ChatState):
         return sorted(data_funnel, key=lambda x: x["count"], reverse=True)
 
     @rx.var
-    def count_emotions_by_date(self):
+    def count_emotions_by_date(self) -> List:
         period_data = self.get_chats_in_period(
             self.start_day,
             self.end_day,
