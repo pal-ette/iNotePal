@@ -15,7 +15,7 @@ def navbar() -> rx.Component:
                 rx.link(
                     rx.heading(
                         "iNP",
-                        size="2", # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
+                        size="6",
                         weight="bold",
                         background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
                         background_clip="text",
@@ -31,7 +31,7 @@ def navbar() -> rx.Component:
                     ),
                     rx.heading(
                         "iNotePal",
-                        size="2", # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
+                        size="6",
                         weight="bold",
                         background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
                         background_clip="text",
@@ -109,7 +109,7 @@ def navbar() -> rx.Component:
                                     rx.heading(
                                         "iNotePal",
                                         as_="h1",
-                                        size="9", # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
+                                        size="6",
                                         weight="bold",
                                         background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
                                         background_clip="text",
