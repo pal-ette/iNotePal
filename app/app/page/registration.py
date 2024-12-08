@@ -22,7 +22,7 @@ def registration_page() -> rx.Component:
                 rx.heading(
                     "iNotePal",
                     as_="h1",
-                    size="9",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
+                    size="6",
                     weight="bold",
                     align="left",
                     background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
@@ -35,7 +35,7 @@ def registration_page() -> rx.Component:
                 rx.heading(
                     "Sign up",
                     as_="h1",
-                    size="9",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
+                    size="6",
                     align="left",
                 ),
                 padding_bottom="2vh",
@@ -43,21 +43,21 @@ def registration_page() -> rx.Component:
             rx.flex(
                 rx.text(
                     "Email Address",
-                    size="5",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
+                    size="3",
                     weight="medium",
                     align="left",
                 ),
                 rx.input(placeholder="email", id="email", type_="email"),
                 rx.text(
                     "Password",
-                    size="5",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
+                    size="3",
                     weight="bold",
                     align="left",
                 ),
                 rx.input(placeholder="password", id="password", type="password"),
                 rx.text(
                     "Confirm Password",
-                    size="5",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
+                    size="3",
                     weight="bold",
                     align="left",
                 ),
@@ -74,7 +74,6 @@ def registration_page() -> rx.Component:
                     "Register",
                     type_="submit",
                     loading=RegistrationState.is_loading,
-                    size="4",  # TODO(ryugibo): 컴파일만 되게 size 임의 조정 다시 레이아웃 확인해야함.
                     variant="outline",
                 )
             ),
