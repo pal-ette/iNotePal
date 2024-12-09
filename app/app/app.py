@@ -18,9 +18,7 @@ os.environ["PATH"] = f"{os.environ.get('PATH')}:{jdk_dir}/bin"
 
 app = rx.App(
     theme=rx.theme(
-        appearance="light",
-        has_background=True,
         radius="large",
         accent_color="bronze",
-    )
+    ),
 )
