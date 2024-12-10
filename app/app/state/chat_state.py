@@ -136,13 +136,6 @@ class ChatState(AppState):
     def is_exist_chat(self) -> bool:
         return bool(self.current_chat)
 
-    @rx.var(cache=True)
-    def chat_emotion(self) -> str | None:
-        if not self.is_exist_chat:
-            return None
-
-        return self.current_chat.emotion
-
     def on_change_date(self, year, month, day):
         self.select_date = date(year, month, day)
 
