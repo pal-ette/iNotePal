@@ -136,13 +136,6 @@ class ChatState(AppState):
     def is_exist_chat(self) -> bool:
         return bool(self.current_chat)
 
-    @rx.var(cache=True)
-    def chat_emotion(self) -> str | None:
-        if not self.is_exist_chat:
-            return None
-
-        return self.current_chat.emotion
-
     def on_change_date(self, year, month, day):
         self.select_date = date(year, month, day)
 
@@ -313,9 +306,9 @@ class ChatState(AppState):
 
         return out_greeting
 
-    async def start_new_chat(self):
+    def start_new_chat(self):
         if not self.is_hydrated:
-            return
+            return ChatState.start_new_chat()
 
         self.is_creating = True
         yield
@@ -390,15 +383,17 @@ class ChatState(AppState):
 
     def on_load_dashboard(self):
         if not self.is_hydrated:
-            return ChatState.on_load_dashboard
+            return ChatState.on_load_dashboard()
 
         if self.is_exist_chat:
             return
 
-        if len(self.chats) == 0:
-            return ChatState.start_new_chat
+        if len(self.chats) > 0:
+            return
 
-    async def on_submit(self, form_data) -> AsyncGenerator[rx.event.EventSpec]:
+        return ChatState.start_new_chat()
+
+    def on_submit(self, form_data):
         self.is_waiting = True
         yield
         question = form_data["message"]
