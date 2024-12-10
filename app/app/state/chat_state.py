@@ -306,7 +306,7 @@ class ChatState(AppState):
 
         return out_greeting
 
-    async def start_new_chat(self):
+    def start_new_chat(self):
         if not self.is_hydrated:
             return
 
@@ -391,7 +391,7 @@ class ChatState(AppState):
         if len(self.chats) == 0:
             return ChatState.start_new_chat
 
-    async def on_submit(self, form_data) -> AsyncGenerator[rx.event.EventSpec]:
+    def on_submit(self, form_data):
         self.is_waiting = True
         yield
         question = form_data["message"]
