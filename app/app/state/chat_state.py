@@ -308,7 +308,7 @@ class ChatState(AppState):
 
     def start_new_chat(self):
         if not self.is_hydrated:
-            return
+            return ChatState.start_new_chat()
 
         self.is_creating = True
         yield
