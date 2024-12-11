@@ -10,6 +10,7 @@ from app.model.embedding_model import EmbeddingModel
 from app.model.roberta import Roberta
 from app.schema.greeting import Greeting
 from app.schema.chat import Chat, Message
+from app.schema.color import Color
 from app.schema.emotion import Emotion
 from app.util.emotion import emotion_color_map_default
 from app.supabase_client import supabase_client
@@ -174,7 +175,18 @@ class ChatState(AppState):
 
     @rx.var
     def emotion_color_map(self) -> Dict[str, str]:
-        return emotion_color_map_default
+        color_map = emotion_color_map_default
+
+        with rx.session() as session:
+            user_color_str = session.exec(
+                Color.select().where(Color.user_id == self.user_id)
+            ).one_or_none()
+            if user_color_str:
+                user_color_list = user_color_str.split(",")
+                for i, emotion in enumerate(color_map):
+                    color_map[emotion] = user_color_list[i]
+
+        return color_map
 
     def get_messages(self, chat_id):
         if chat_id in self._db_messages:
