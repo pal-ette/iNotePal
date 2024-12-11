@@ -152,7 +152,7 @@ def navbar() -> rx.Component:
                                         font_size="1.5em",
                                         weight="bold",
                                     ),
-                                    show_emotion_colors(),
+                                    show_emotion_colors(ChatState.emotion_color_map),
                                     emotion_card(),
                                     # align_items="center",
                                 ),  # drawer content end

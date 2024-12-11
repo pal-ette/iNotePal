@@ -1,7 +1,7 @@
 import random
 
 
-emotion_color_map = {
+emotion_color_map_default = {
     "혐오": "#49312d",
     "분노": "#91615a",
     "공포": "#af625c",
@@ -13,4 +13,4 @@ emotion_color_map = {
 
 
 def random_emotion():
-    return random.sample(sorted(emotion_color_map), 1)[0]
+    return random.sample(sorted(emotion_color_map_default), 1)[0]
