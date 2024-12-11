@@ -3,7 +3,6 @@ from collections import Counter
 from typing import List
 
 from app.state.chat_state import ChatState
-from app.util.emotion import emotion_color_map
 
 # ['공포' '기쁨' '놀람' '분노' '슬픔' '중립' '혐오']
 
@@ -21,7 +20,7 @@ class EmotionState(ChatState):
         for i, (k, v) in enumerate(emotion_count.items()):
             bg_color = (
                 bg_color
-                + f"{emotion_color_map[k]} {ratio}% {ratio+round((emotion_count[k]/base)*100)}%, "
+                + f"{self.emotion_color_map[k]} {ratio}% {ratio+round((emotion_count[k]/base)*100)}%, "
             )
             ratio += round((emotion_count[k] / base) * 100)
 
@@ -97,6 +96,6 @@ def create_color_legend(color):
     )
 
 
-def show_emotion_colors() -> rx.Component:
+def show_emotion_colors(emotion_color_map) -> rx.Component:
 
     return rx.hstack(rx.foreach(emotion_color_map, create_color_legend))

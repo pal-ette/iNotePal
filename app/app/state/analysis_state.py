@@ -3,7 +3,6 @@ from datetime import date, timedelta
 from app.state.chat_state import ChatState
 from typing import List, Dict
 from collections import defaultdict
-from app.util.emotion import emotion_color_map as emotion_color_map_raw
 from konlpy.tag import Kkma
 from collections import Counter
 
@@ -70,10 +69,6 @@ class AnalysisState(ChatState):
         return self.end_day.month
 
     @rx.var
-    def emotion_color_map(self) -> Dict[str, str]:
-        return emotion_color_map_raw
-
-    @rx.var
     def print_start_day_text(self) -> str:
         text_date = (
             f"{self.start_day.year}년 {self.start_day.month}월 {self.start_day.day}일"
@@ -119,14 +114,14 @@ class AnalysisState(ChatState):
 
     @rx.var(cache=True)
     def data_emotion_count(self) -> Dict[str, int]:
-        emotion_count = {emotion: 0 for emotion in emotion_color_map_raw}
+        emotion_count = {emotion: 0 for emotion in self.emotion_color_map}
         for emotion in self.data_emotion:
             emotion_count[emotion] += 1
         return emotion_count
 
     @rx.var(cache=True)
     def data_emotion_count_total(self) -> Dict[str, int]:
-        emotion_count_total = {emotion: 0 for emotion in emotion_color_map_raw}
+        emotion_count_total = {emotion: 0 for emotion in self.emotion_color_map}
         for emotion in self.data_emotion_total:
             emotion_count_total[emotion] += 1
         return emotion_count_total
@@ -141,7 +136,7 @@ class AnalysisState(ChatState):
                 "period": period_emotion_count[emotion],
                 "total": total_emotion_count[emotion],
             }
-            for emotion in emotion_color_map_raw
+            for emotion in self.emotion_color_map
         ]
 
     @rx.var
@@ -150,10 +145,10 @@ class AnalysisState(ChatState):
             {
                 "emotion": emotion,
                 "count": count,
-                "fill": emotion_color_map_raw[emotion],
+                "fill": self.emotion_color_map[emotion],
             }
             for emotion, count in self.data_emotion_count.items()
-            if count > 0 and emotion in emotion_color_map_raw
+            if count > 0 and emotion in self.emotion_color_map
         ]
         return sorted(data_funnel, key=lambda x: x["count"], reverse=True)
 

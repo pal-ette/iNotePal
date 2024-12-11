@@ -11,6 +11,7 @@ from app.model.roberta import Roberta
 from app.schema.greeting import Greeting
 from app.schema.chat import Chat, Message
 from app.schema.emotion import Emotion
+from app.util.emotion import emotion_color_map as emotion_color_map_raw
 from app.supabase_client import supabase_client
 from typing import List, Tuple, Dict
 from reflex import constants
@@ -170,6 +171,10 @@ class ChatState(AppState):
         month = self.select_date.month
         day = self.select_date.day
         return f"{year}년 {month}월 {day}일"
+
+    @rx.var
+    def emotion_color_map(self) -> Dict[str, str]:
+        return emotion_color_map_raw
 
     def get_messages(self, chat_id):
         if chat_id in self._db_messages:
