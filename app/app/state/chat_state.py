@@ -3,7 +3,6 @@
 import os
 import reflex as rx
 from datetime import date
-from collections.abc import AsyncGenerator
 from openai import OpenAI
 from app.app_state import AppState
 from app.model.inference_model import InferenceModel
