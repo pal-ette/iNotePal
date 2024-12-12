@@ -100,6 +100,43 @@ def navbar() -> rx.Component:
                             ),
                         ),
                     ),
+                    rx.dialog.root(
+                        rx.dialog.trigger(rx.button(rx.icon("settings"))),
+                        rx.dialog.content(
+                            rx.dialog.title(
+                                rx.hstack(
+                                    rx.heading("설정"),
+                                    rx.dialog.close(
+                                        rx.button(
+                                            rx.icon("circle-x"),
+                                            variant="ghost",
+                                        ),
+                                    ),
+                                    justify="between",
+                                ),
+                            ),
+                            rx.heading(
+                                "색상 설정",
+                                size="3",
+                            ),
+                            rx.hstack(
+                                rx.foreach(
+                                    ChatState.emotion_color_map,
+                                    lambda color: rx.vstack(
+                                        rx.text(color[0]),
+                                        rx.box(
+                                            bg=color[1],
+                                            border_radius="10px",
+                                            width="4em",
+                                            height="4em",
+                                        ),
+                                        align="center",
+                                    ),
+                                ),
+                            ),
+                        ),
+                        is_centered=True,
+                    ),
                     rx.drawer.root(
                         rx.drawer.trigger(rx.button(rx.icon("align-justify"))),
                         rx.drawer.overlay(z_index="5"),
