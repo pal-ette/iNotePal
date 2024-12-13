@@ -6,6 +6,7 @@ from app.state.chat_state import ChatState
 from app.component.emotion_card import emotion_card, show_emotion_colors
 from app.state.calendar_state import calendar_component
 from app.routes import DASHBOARD_ROUTE, ANALYSIS_ROUTE
+from app.component.color_picker import color_picker
 
 
 def navbar() -> rx.Component:
@@ -124,11 +125,21 @@ def navbar() -> rx.Component:
                                     ChatState.emotion_color_map,
                                     lambda color: rx.vstack(
                                         rx.text(color[0]),
-                                        rx.box(
-                                            bg=color[1],
-                                            border_radius="10px",
-                                            width="4em",
-                                            height="4em",
+                                        rx.popover.root(
+                                            rx.popover.trigger(
+                                                rx.box(
+                                                    bg=color[1],
+                                                    border_radius="10px",
+                                                    width="4em",
+                                                    height="4em",
+                                                ),
+                                            ),
+                                            rx.popover.content(
+                                                color_picker(
+                                                    color=color[1],
+                                                ),
+                                            ),
+                                            modal=True,
                                         ),
                                         align="center",
                                     ),
