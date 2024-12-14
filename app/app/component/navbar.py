@@ -145,8 +145,10 @@ def navbar() -> rx.Component:
                                     ),
                                 ),
                             ),
+                            on_pointer_down_outside=rx.prevent_default,
                         ),
                         is_centered=True,
+                        modal=True,
                     ),
                     rx.drawer.root(
                         rx.drawer.trigger(rx.button(rx.icon("align-justify"))),
