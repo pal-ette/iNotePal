@@ -47,6 +47,8 @@ class ChatState(AppState):
 
     _db_messages: Dict[int, List[Message]] = {}
 
+    _emotion_color_map: Dict[str, str] = emotion_color_map_default
+
     @rx.var(cache=True)
     def db_select_date(self) -> str:
         return str(self.select_date)
@@ -441,3 +443,7 @@ class ChatState(AppState):
         )
         self.is_waiting = False
         yield self.scroll_to_bottom()
+
+    def on_change_color(self, emotion: str, color: str):
+        self.emotion_color_map[emotion] = color
+        print(self.emotion_color_map)

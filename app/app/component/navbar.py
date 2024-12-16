@@ -123,12 +123,12 @@ def navbar() -> rx.Component:
                             rx.hstack(
                                 rx.foreach(
                                     ChatState.emotion_color_map,
-                                    lambda color: rx.vstack(
-                                        rx.text(color[0]),
+                                    lambda emotion_color: rx.vstack(
+                                        rx.text(emotion_color[0]),
                                         rx.popover.root(
                                             rx.popover.trigger(
                                                 rx.box(
-                                                    bg=color[1],
+                                                    bg=emotion_color[1],
                                                     border_radius="10px",
                                                     width="4em",
                                                     height="4em",
@@ -136,7 +136,13 @@ def navbar() -> rx.Component:
                                             ),
                                             rx.popover.content(
                                                 color_picker(
-                                                    color=color[1],
+                                                    color=emotion_color[1],
+                                                    on_change=lambda color: ChatState.on_change_color(
+                                                        emotion_color[0],
+                                                        color,
+                                                    ).debounce(
+                                                        200
+                                                    ),
                                                 ),
                                             ),
                                             modal=True,
