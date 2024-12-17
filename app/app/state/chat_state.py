@@ -453,7 +453,6 @@ class ChatState(AppState):
 
     def on_change_color(self, emotion: str, color: str):
         self.emotion_color_map[emotion] = color
-        print(self.emotion_color_map)
 
     def on_open_change_settings(self):
         self.update_emotion_colors()
