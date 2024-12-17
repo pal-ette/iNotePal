@@ -47,7 +47,7 @@ class ChatState(AppState):
 
     _db_messages: Dict[int, List[Message]] = {}
 
-    _emotion_color_map: Dict[str, str] = emotion_color_map_default
+    _emotion_color_map: Dict[str, str] = {}
 
     @rx.var(cache=True)
     def db_select_date(self) -> str:
@@ -177,18 +177,25 @@ class ChatState(AppState):
 
     @rx.var
     def emotion_color_map(self) -> Dict[str, str]:
+        if not self.user_id:
+            return emotion_color_map_default
+
+        if self._emotion_color_map:
+            return self._emotion_color_map
+
         color_map = emotion_color_map_default
 
         with rx.session() as session:
-            user_color_str = session.exec(
+            color = session.exec(
                 Color.select().where(Color.user_id == self.user_id)
             ).one_or_none()
-            if user_color_str:
-                user_color_list = user_color_str.split(",")
+            if color:
+                user_color_list = color.emotion_colors.split(",")
                 for i, emotion in enumerate(color_map):
                     color_map[emotion] = user_color_list[i]
 
-        return color_map
+        self._emotion_color_map = color_map
+        return self._emotion_color_map
 
     def get_messages(self, chat_id):
         if chat_id in self._db_messages:
@@ -446,4 +453,22 @@ class ChatState(AppState):
 
     def on_change_color(self, emotion: str, color: str):
         self.emotion_color_map[emotion] = color
-        print(self.emotion_color_map)
+
+    def on_open_change_settings(self):
+        self.update_emotion_colors()
+
+    def update_emotion_colors(self):
+        if not self.emotion_color_map:
+            return
+
+        emotion_colors = ",".join(
+            [self.emotion_color_map[emotion] for emotion in emotion_color_map_default]
+        )
+
+        with rx.session() as session:
+            color = session.exec(
+                Color.select().where((Color.user_id == self.user_id))
+            ).first()
+            color.emotion_colors = emotion_colors
+            session.add(color)
+            session.commit()
