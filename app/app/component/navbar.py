@@ -155,6 +155,7 @@ def navbar() -> rx.Component:
                         ),
                         is_centered=True,
                         modal=True,
+                        on_open_change=ChatState.on_open_change_settings,
                     ),
                     rx.drawer.root(
                         rx.drawer.trigger(rx.button(rx.icon("align-justify"))),
