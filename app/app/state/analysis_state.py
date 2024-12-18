@@ -143,7 +143,7 @@ class AnalysisState(ChatState):
     def data_emotion_funnel(self) -> List[Dict[str, str | int]]:
         data_funnel = [
             {
-                "emotion": emotion,
+                "name": emotion,
                 "count": count,
                 "fill": self.emotion_color_map[emotion],
             }
