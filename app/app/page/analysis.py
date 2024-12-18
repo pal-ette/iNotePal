@@ -199,7 +199,7 @@ def analysis_page() -> rx.Component:
                             rx.recharts.funnel(
                                 rx.recharts.label_list(
                                     position="right",
-                                    data_key="emotion",
+                                    data_key="name",
                                     fill="#000",
                                     stroke="none",
                                 ),
