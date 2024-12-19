@@ -468,7 +468,17 @@ class ChatState(AppState):
         with rx.session() as session:
             color = session.exec(
                 Color.select().where((Color.user_id == self.user_id))
-            ).first()
-            color.emotion_colors = emotion_colors
-            session.add(color)
+            ).one_or_none()
+
+            if color:
+                color.emotion_colors = emotion_colors
+                session.add(color)
+            else:
+                session.add(
+                    Color(
+                        user_id=self.user_id,
+                        emotion_colors=emotion_colors,
+                    )
+                )
+
             session.commit()
