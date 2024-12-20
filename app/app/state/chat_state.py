@@ -176,6 +176,10 @@ class ChatState(AppState):
         return f"{year}년 {month}월 {day}일"
 
     @rx.var
+    def emotion_color_map_default(self) -> Dict[str, str]:
+        return emotion_color_map_default
+
+    @rx.var
     def emotion_color_map(self) -> Dict[str, str]:
         if not self.user_id:
             return emotion_color_map_default
