@@ -124,7 +124,31 @@ def navbar() -> rx.Component:
                                 rx.foreach(
                                     ChatState.emotion_color_map,
                                     lambda emotion_color: rx.vstack(
-                                        rx.text(emotion_color[0]),
+                                        rx.hstack(
+                                            rx.text(emotion_color[0]),
+                                            rx.cond(
+                                                emotion_color[1]
+                                                == ChatState.emotion_color_map_default[
+                                                    emotion_color[0]
+                                                ],
+                                                rx.fragment(),
+                                                rx.button(
+                                                    rx.icon(
+                                                        "undo-2",
+                                                        size=14,
+                                                    ),
+                                                    variant="ghost",
+                                                    size="1",
+                                                    on_click=ChatState.on_change_color(
+                                                        emotion_color[0],
+                                                        ChatState.emotion_color_map_default[
+                                                            emotion_color[0]
+                                                        ],
+                                                    ),
+                                                ),
+                                            ),
+                                            align="center",
+                                        ),
                                         rx.popover.root(
                                             rx.popover.trigger(
                                                 rx.box(
