@@ -89,7 +89,7 @@ def navbar() -> rx.Component:
                                     "Logout",
                                     width="100%",
                                     on_click=[
-                                        AppState.do_logout,
+                                        ChatState.do_logout,
                                         AppState.check_login,
                                     ],
                                     variant="outline",

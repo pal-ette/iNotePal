@@ -37,7 +37,7 @@ class ChatState(AppState):
 
     select_date: date = date.today()
 
-    is_creating: bool
+    is_creating: bool = False
 
     show_result_modal: bool = False
 
@@ -486,3 +486,7 @@ class ChatState(AppState):
                 )
 
             session.commit()
+
+    async def do_logout(self):
+        self.reset()
+        (await self.get_state(AppState)).reset()
