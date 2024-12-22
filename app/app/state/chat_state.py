@@ -12,7 +12,9 @@ from app.schema.greeting import Greeting
 from app.schema.chat import Chat, Message
 from app.schema.color import Color
 from app.schema.emotion import Emotion
-from app.util.emotion import emotion_color_map_default
+from app.util.emotion import (
+    emotion_color_map_default as static_emotion_color_map_default,
+)
 from app.supabase_client import supabase_client
 from typing import List, Tuple, Dict
 from reflex import constants
@@ -40,6 +42,8 @@ class ChatState(AppState):
     is_creating: bool = False
 
     show_result_modal: bool = False
+
+    emotion_color_map_default = static_emotion_color_map_default
 
     _current_chat_index: int = 0
 
@@ -176,18 +180,14 @@ class ChatState(AppState):
         return f"{year}년 {month}월 {day}일"
 
     @rx.var
-    def emotion_color_map_default(self) -> Dict[str, str]:
-        return emotion_color_map_default
-
-    @rx.var
     def emotion_color_map(self) -> Dict[str, str]:
         if not self.user_id:
-            return emotion_color_map_default
+            return self.emotion_color_map_default
 
         if self._emotion_color_map:
             return self._emotion_color_map
 
-        color_map = emotion_color_map_default
+        color_map = self.emotion_color_map_default.copy()
 
         with rx.session() as session:
             color = session.exec(
@@ -466,7 +466,10 @@ class ChatState(AppState):
             return
 
         emotion_colors = ",".join(
-            [self.emotion_color_map[emotion] for emotion in emotion_color_map_default]
+            [
+                self.emotion_color_map[emotion]
+                for emotion in self.emotion_color_map_default
+            ]
         )
 
         with rx.session() as session:
