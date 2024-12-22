@@ -132,8 +132,7 @@ def dashboard():
                             disabled=(
                                 ChatState.is_creating
                                 | ChatState.is_closed
-                                | ChatState.current_messages.length()
-                                < 3
+                                | (ChatState.current_messages.length() < 3)
                             ),
                         ),
                     ),
