@@ -116,10 +116,13 @@ class ChatState(AppState):
 
     @rx.var(cache=True)
     def current_chat(self) -> Chat | None:
-        chats = self.chats
-        if len(chats) < 1:
+        if not self.is_exist_chat:
             return None
-        return chats[self._current_chat_index]
+
+        if len(self.chats) <= self._current_chat_index:
+            return None
+
+        return self.chats[self._current_chat_index]
 
     @rx.var(cache=True)
     def current_messages(self) -> List[Message]:
@@ -141,7 +144,7 @@ class ChatState(AppState):
 
     @rx.var(cache=True)
     def is_exist_chat(self) -> bool:
-        return bool(self.current_chat)
+        return len(self.chats) > 0
 
     def on_change_date(self, year, month, day):
         self.select_date = date(year, month, day)
