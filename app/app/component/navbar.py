@@ -159,13 +159,25 @@ def navbar() -> rx.Component:
                                                 ),
                                             ),
                                             rx.popover.content(
-                                                color_picker(
-                                                    color=emotion_color[1],
-                                                    on_change=lambda color: ChatState.on_change_color(
-                                                        emotion_color[0],
-                                                        color,
-                                                    ).debounce(
-                                                        200
+                                                rx.vstack(
+                                                    rx.text_field(
+                                                        value=emotion_color[1],
+                                                        color_scheme=emotion_color[1],
+                                                        on_change=lambda value: ChatState.on_change_color(
+                                                            emotion_color[0],
+                                                            value,
+                                                        ).debounce(
+                                                            200
+                                                        ),
+                                                    ),
+                                                    color_picker(
+                                                        color=emotion_color[1],
+                                                        on_change=lambda color: ChatState.on_change_color(
+                                                            emotion_color[0],
+                                                            color,
+                                                        ).debounce(
+                                                            200
+                                                        ),
                                                     ),
                                                 ),
                                             ),
