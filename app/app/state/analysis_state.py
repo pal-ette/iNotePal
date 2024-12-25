@@ -10,10 +10,11 @@ from collections import Counter
 class AnalysisState(ChatState):
     start_day: date = date.today() - timedelta(days=30)
     end_day: date = date.today()
+    range_select_date: date = date.today()
     date_valid_check: bool = True
 
     def on_change_date(self, year, month, day):
-        self.select_date = date(year, month, day)
+        self.range_select_date = date(year, month, day)
 
     def on_open_change_start_day(self, isOpen):
         if isOpen:
@@ -28,23 +29,23 @@ class AnalysisState(ChatState):
             self.set_end_day()
 
     def set_start_day(self):
-        if not self.is_valid_date_range(self.select_date, self.end_day):
+        if not self.is_valid_date_range(self.range_select_date, self.end_day):
             self.reset_calendar_date(self.start_day)
             self.date_valid_check = False
             return
 
-        self.start_day = self.select_date
+        self.start_day = self.range_select_date
 
     def set_end_day(self):
-        if not self.is_valid_date_range(self.start_day, self.select_date):
+        if not self.is_valid_date_range(self.start_day, self.range_select_date):
             self.reset_calendar_date(self.end_day)
             self.date_valid_check = False
             return
 
-        self.end_day = self.select_date
+        self.end_day = self.range_select_date
 
     def reset_calendar_date(self, new_date):
-        self.select_date = new_date
+        self.range_select_date = new_date
 
     def reset_calendar_today(self):
         self.reset_calendar_date(date.today())
