@@ -161,14 +161,23 @@ def navbar() -> rx.Component:
                                             rx.popover.content(
                                                 rx.vstack(
                                                     rx.text_field(
-                                                        value=emotion_color[1],
+                                                        rx.text(
+                                                            "#",
+                                                            size="5",
+                                                            padding="0px 0px 0px 10px",
+                                                        ),
+                                                        value=emotion_color[1][1:],
                                                         color_scheme=emotion_color[1],
                                                         on_change=lambda value: ChatState.on_change_color(
                                                             emotion_color[0],
-                                                            value,
+                                                            f"#{value}",
                                                         ).debounce(
                                                             200
                                                         ),
+                                                        style={
+                                                            "flex-direction": "row-reverse",
+                                                            "align-items": "center",
+                                                        },
                                                     ),
                                                     color_picker(
                                                         color=emotion_color[1],
