@@ -69,7 +69,7 @@ def analysis_page() -> rx.Component:
                                         size=18,
                                     ),
                                     rx.heading(
-                                        AnalysisState.print_start_day_text,
+                                        f"{AnalysisState.start_year}년 {AnalysisState.start_month}월 {AnalysisState.start_day}일",
                                         high_contrast=True,
                                     ),
                                     align="center",
@@ -84,7 +84,7 @@ def analysis_page() -> rx.Component:
                         return_focus_on_close=True,
                         match_width=True,
                         on_open_change=[
-                            AnalysisState.on_open_change_start_day,
+                            AnalysisState.on_open_change_start_date,
                             lambda is_open: calendar.State.set_display_month(
                                 rx.cond(
                                     is_open,
@@ -111,7 +111,7 @@ def analysis_page() -> rx.Component:
                                         size=18,
                                     ),
                                     rx.heading(
-                                        AnalysisState.print_end_day_text,
+                                        f"{AnalysisState.end_year}년 {AnalysisState.end_month}월 {AnalysisState.end_day}일",
                                         high_contrast=True,
                                     ),
                                     align="center",
@@ -126,7 +126,7 @@ def analysis_page() -> rx.Component:
                         return_focus_on_close=True,
                         match_width=True,
                         on_open_change=[
-                            AnalysisState.on_open_change_end_day,
+                            AnalysisState.on_open_change_end_date,
                             lambda is_open: calendar.State.set_display_month(
                                 rx.cond(
                                     is_open,

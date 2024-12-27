@@ -156,7 +156,7 @@ class ChatState(AppState):
 
         return ChatState.scroll_to_bottom
 
-    def get_chats_in_period(self, start_day, end_day) -> List[Chat]:
+    def get_chats_in_period(self, start_date, end_date) -> List[Chat]:
         chats = []
         if not self.token_is_valid:
             return chats
@@ -168,8 +168,8 @@ class ChatState(AppState):
                     sqlalchemy.orm.selectinload(Chat.messages),
                 )
                 .where(Chat.user_id == self.user_id)
-                .where(Chat.date >= start_day)
-                .where(Chat.date <= end_day)
+                .where(Chat.date >= start_date)
+                .where(Chat.date <= end_date)
                 .order_by(Chat.id)
             ).all()
 
