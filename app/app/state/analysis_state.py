@@ -8,41 +8,41 @@ from collections import Counter
 
 
 class AnalysisState(ChatState):
-    start_day: date = date.today() - timedelta(days=30)
-    end_day: date = date.today()
+    start_date: date = date.today() - timedelta(days=30)
+    end_date: date = date.today()
     range_select_date: date = date.today()
     date_valid_check: bool = True
 
     def on_change_date(self, year, month, day):
         self.range_select_date = date(year, month, day)
 
-    def on_open_change_start_day(self, isOpen):
+    def on_open_change_start_date(self, isOpen):
         if isOpen:
-            self.reset_calendar_date(self.start_day)
+            self.reset_calendar_date(self.start_date)
         else:
-            self.set_start_day()
+            self.set_start_date()
 
-    def on_open_change_end_day(self, isOpen):
+    def on_open_change_end_date(self, isOpen):
         if isOpen:
-            self.reset_calendar_date(self.end_day)
+            self.reset_calendar_date(self.end_date)
         else:
-            self.set_end_day()
+            self.set_end_date()
 
-    def set_start_day(self):
-        if not self.is_valid_date_range(self.range_select_date, self.end_day):
-            self.reset_calendar_date(self.start_day)
+    def set_start_date(self):
+        if not self.is_valid_date_range(self.range_select_date, self.end_date):
+            self.reset_calendar_date(self.start_date)
             self.date_valid_check = False
             return
 
-        self.start_day = self.range_select_date
+        self.start_date = self.range_select_date
 
-    def set_end_day(self):
-        if not self.is_valid_date_range(self.start_day, self.range_select_date):
-            self.reset_calendar_date(self.end_day)
+    def set_end_date(self):
+        if not self.is_valid_date_range(self.start_date, self.range_select_date):
+            self.reset_calendar_date(self.end_date)
             self.date_valid_check = False
             return
 
-        self.end_day = self.range_select_date
+        self.end_date = self.range_select_date
 
     def reset_calendar_date(self, new_date):
         self.range_select_date = new_date
@@ -55,31 +55,27 @@ class AnalysisState(ChatState):
 
     @rx.var
     def start_year(self) -> int:
-        return self.start_day.year
+        return self.start_date.year
 
     @rx.var
     def start_month(self) -> int:
-        return self.start_day.month
+        return self.start_date.month
+
+    @rx.var
+    def start_day(self) -> int:
+        return self.start_date.day
 
     @rx.var
     def end_year(self) -> int:
-        return self.end_day.year
+        return self.end_date.year
 
     @rx.var
     def end_month(self) -> int:
-        return self.end_day.month
+        return self.end_date.month
 
     @rx.var
-    def print_start_day_text(self) -> str:
-        text_date = (
-            f"{self.start_day.year}년 {self.start_day.month}월 {self.start_day.day}일"
-        )
-        return text_date
-
-    @rx.var
-    def print_end_day_text(self) -> str:
-        text_date = f"{self.end_day.year}년 {self.end_day.month}월 {self.end_day.day}일"
-        return text_date
+    def end_day(self) -> int:
+        return self.end_date.day
 
     def is_valid_date_range(self, start: date, end: date):
         return end >= start
@@ -87,8 +83,8 @@ class AnalysisState(ChatState):
     @rx.var(cache=True)
     def data_emotion(self) -> List[str]:
         period_data = self.get_chats_in_period(
-            self.start_day,
-            self.end_day,
+            self.start_date,
+            self.end_date,
         )
         return [
             message.emotion.value
@@ -99,12 +95,12 @@ class AnalysisState(ChatState):
 
     @rx.var(cache=True)
     def data_emotion_total(self) -> List[str]:
-        start_day = date(1970, 1, 1)
-        end_day = date(2999, 12, 31)
+        start_date = date(1970, 1, 1)
+        end_date = date(2999, 12, 31)
 
         total_data = self.get_chats_in_period(
-            start_day,
-            end_day,
+            start_date,
+            end_date,
         )
         return [
             message.emotion.value
@@ -156,8 +152,8 @@ class AnalysisState(ChatState):
     @rx.var
     def count_emotions_by_date(self) -> List:
         period_data = self.get_chats_in_period(
-            self.start_day,
-            self.end_day,
+            self.start_date,
+            self.end_date,
         )
         emotions_by_date = defaultdict(lambda: defaultdict(int))
 
@@ -208,8 +204,8 @@ class AnalysisState(ChatState):
         including = ["NNG", "NNM", "NNP", "NP"]  # , "VA", "VV", "MA"]
 
         period_data = self.get_chats_in_period(
-            self.start_day,
-            self.end_day,
+            self.start_date,
+            self.end_date,
         )
         messages = [
             message.message
