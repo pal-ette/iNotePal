@@ -13,5 +13,5 @@ transformers==4.40.1
 sentence-transformers==2.7.0
 konlpy==0.6.0
 install-jdk==1.1.0
-reflex-wordcloud==0.0.2
+reflex-wordcloud==0.0.4
 psycopg2-binary==2.9.9
