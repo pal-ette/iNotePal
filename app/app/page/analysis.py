@@ -173,13 +173,13 @@ def analysis_page() -> rx.Component:
                     rx.flex(
                         rx.recharts.radar_chart(
                             rx.recharts.radar(
-                                data_key="total",
+                                data_key="전체",
                                 stroke="#DCDCDC",
                                 fill="#DCDCDC",
                                 fill_opacity=0.8,
                             ),
                             rx.recharts.radar(
-                                data_key="period",
+                                data_key="기간",
                                 stroke="#de776c",
                                 fill="#e5988e",
                             ),
