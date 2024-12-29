@@ -130,8 +130,8 @@ class AnalysisState(ChatState):
         return [
             {
                 "emotion": emotion,
-                "period": period_emotion_count[emotion],
-                "total": total_emotion_count[emotion],
+                "기간": period_emotion_count[emotion],
+                "전체": total_emotion_count[emotion],
             }
             for emotion in self.emotion_color_map
         ]
