@@ -30,6 +30,8 @@ class Calendar(rx.ComponentState):
     select_date: date = date.today()
     accent_dates: List[date] = [date(2024, 11, i) for i in range(1, 20)]
 
+    allow_future: bool = True
+
     start_weekday = calendar.SUNDAY
 
     @rx.var(cache=True)
@@ -97,8 +99,12 @@ class Calendar(rx.ComponentState):
         self.year = date.today().year
         self.month = date.today().month
 
+    def on_select_disabled_future(self, year: int, month: int, day: int):
+        pass
+
     @classmethod
     def get_component(cls, *children, **props) -> rx.Component:
+        prop_allow_future = props.pop("allow_future", cls.allow_future)
         prop_select_date = props.pop("select_date", cls.select_date)
         prop_accent_dates = props.pop("accent_dates", cls.accent_dates)
         on_change_date = props.pop("on_change_date", cls.on_change_date)
@@ -266,7 +272,20 @@ class Calendar(rx.ComponentState):
                                     ),
                                     style=cal_row_style,
                                     cursor="pointer",  # Make clickable
-                                    on_click=on_change_date(cls.year, cls.month, day),
+                                    on_click=rx.cond(
+                                        prop_allow_future
+                                        | (
+                                            (cls.year <= date.today().year)
+                                            & (cls.month <= date.today().month)
+                                            & (day <= date.today().day)
+                                        ),
+                                        on_change_date(cls.year, cls.month, day),
+                                        cls.on_select_disabled_future(
+                                            cls.year,
+                                            cls.month,
+                                            day,
+                                        ),
+                                    ),
                                 ),
                             ),
                         ),
