@@ -245,6 +245,7 @@ def navbar() -> rx.Component:
                                         select_date=ChatState.select_date,
                                         accent_dates=ChatState.dates_has_closed_chat,
                                         on_change_date=ChatState.on_change_date,
+                                        allow_future=False,
                                     ),
                                     rx.spacer(),
                                     rx.text(
