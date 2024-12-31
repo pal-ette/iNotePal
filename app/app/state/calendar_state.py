@@ -271,7 +271,16 @@ class Calendar(rx.ComponentState):
                                         "rgba(255, 255, 255, 0.05)",
                                     ),
                                     style=cal_row_style,
-                                    cursor="pointer",  # Make clickable
+                                    cursor=rx.cond(
+                                        prop_allow_future
+                                        | (
+                                            (cls.year <= date.today().year)
+                                            & (cls.month <= date.today().month)
+                                            & (day <= date.today().day)
+                                        ),
+                                        "pointer",
+                                        "auto",
+                                    ),
                                     on_click=rx.cond(
                                         prop_allow_future
                                         | (
