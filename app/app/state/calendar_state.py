@@ -274,9 +274,12 @@ class Calendar(rx.ComponentState):
                                     cursor=rx.cond(
                                         prop_allow_future
                                         | (
-                                            (cls.year <= date.today().year)
-                                            & (cls.month <= date.today().month)
-                                            & (day <= date.today().day)
+                                            (cls.year * 10000 + cls.month * 100 + day)
+                                            <= (
+                                                date.today().year * 10000
+                                                + date.today().month * 100
+                                                + date.today().day
+                                            )
                                         ),
                                         "pointer",
                                         "auto",
@@ -284,9 +287,12 @@ class Calendar(rx.ComponentState):
                                     on_click=rx.cond(
                                         prop_allow_future
                                         | (
-                                            (cls.year <= date.today().year)
-                                            & (cls.month <= date.today().month)
-                                            & (day <= date.today().day)
+                                            (cls.year * 10000 + cls.month * 100 + day)
+                                            <= (
+                                                date.today().year * 10000
+                                                + date.today().month * 100
+                                                + date.today().day
+                                            )
                                         ),
                                         on_change_date(cls.year, cls.month, day),
                                         cls.on_select_disabled_future(
