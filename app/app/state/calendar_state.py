@@ -233,45 +233,37 @@ class Calendar(rx.ComponentState):
                     lambda week: rx.hstack(
                         rx.foreach(
                             week,
-                            lambda day: rx.cond(
-                                day == 0,
-                                rx.container(
-                                    rx.text(
-                                        " ",
-                                        font_size="14px",
-                                        align="center",
-                                    ),
-                                    style=cal_row_style,
+                            lambda day: rx.container(
+                                rx.text(
+                                    rx.cond(day == 0, " ", day),
+                                    font_size="14px",
+                                    align="center",
                                 ),
-                                rx.container(
+                                rx.cond(
+                                    prop_accent_dates.contains(
+                                        f"{cls.year}-{rx.cond(cls.month < 10, '0', '')}{cls.month}-{rx.cond(day < 10, '0', '')}{day}"
+                                    ),
                                     rx.text(
-                                        day,
+                                        "•",
                                         font_size="14px",
                                         align="center",
+                                        style={
+                                            "position": "absolute",
+                                            "top": "29px",
+                                            "left": "23px",
+                                        },
                                     ),
-                                    rx.cond(
-                                        prop_accent_dates.contains(
-                                            f"{cls.year}-{rx.cond(cls.month < 10, '0', '')}{cls.month}-{rx.cond(day < 10, '0', '')}{day}"
-                                        ),
-                                        rx.text(
-                                            "•",
-                                            font_size="14px",
-                                            align="center",
-                                            style={
-                                                "position": "absolute",
-                                                "top": "29px",
-                                                "left": "23px",
-                                            },
-                                        ),
-                                    ),
-                                    background_color=rx.cond(
-                                        f"{cls.year}-{rx.cond(cls.month < 10, '0', '')}{cls.month}-{rx.cond(day < 10, '0', '')}{day}"
-                                        == prop_select_date,
-                                        "#e5988e",
-                                        "rgba(255, 255, 255, 0.05)",
-                                    ),
-                                    style=cal_row_style,
-                                    cursor=rx.cond(
+                                ),
+                                background_color=rx.cond(
+                                    f"{cls.year}-{rx.cond(cls.month < 10, '0', '')}{cls.month}-{rx.cond(day < 10, '0', '')}{day}"
+                                    == prop_select_date,
+                                    "#e5988e",
+                                    "rgba(255, 255, 255, 0.0)",
+                                ),
+                                style=cal_row_style,
+                                cursor=rx.cond(
+                                    (day > 0)
+                                    & (
                                         prop_allow_future
                                         | (
                                             (cls.year * 10000 + cls.month * 100 + day)
@@ -280,11 +272,14 @@ class Calendar(rx.ComponentState):
                                                 + date.today().month * 100
                                                 + date.today().day
                                             )
-                                        ),
-                                        "pointer",
-                                        "auto",
+                                        )
                                     ),
-                                    on_click=rx.cond(
+                                    "pointer",
+                                    "default",
+                                ),
+                                on_click=rx.cond(
+                                    (day > 0)
+                                    & (
                                         prop_allow_future
                                         | (
                                             (cls.year * 10000 + cls.month * 100 + day)
@@ -293,13 +288,13 @@ class Calendar(rx.ComponentState):
                                                 + date.today().month * 100
                                                 + date.today().day
                                             )
-                                        ),
-                                        on_change_date(cls.year, cls.month, day),
-                                        cls.on_select_disabled_future(
-                                            cls.year,
-                                            cls.month,
-                                            day,
-                                        ),
+                                        )
+                                    ),
+                                    on_change_date(cls.year, cls.month, day),
+                                    cls.on_select_disabled_future(
+                                        cls.year,
+                                        cls.month,
+                                        day,
                                     ),
                                 ),
                             ),
