@@ -237,6 +237,32 @@ class Calendar(rx.ComponentState):
                                 rx.text(
                                     rx.cond(day == 0, " ", day),
                                     font_size="14px",
+                                    color=rx.cond(
+                                        (day > 0)
+                                        & (
+                                            prop_allow_future
+                                            | (
+                                                (
+                                                    cls.year * 10000
+                                                    + cls.month * 100
+                                                    + day
+                                                )
+                                                <= (
+                                                    date.today().year * 10000
+                                                    + date.today().month * 100
+                                                    + date.today().day
+                                                )
+                                            )
+                                        ),
+                                        rx.color_mode_cond(
+                                            light="black",
+                                            dark="white",
+                                        ),
+                                        rx.color_mode_cond(
+                                            light="#BBBBBB",
+                                            dark="#666666",
+                                        ),
+                                    ),
                                     align="center",
                                 ),
                                 rx.cond(
