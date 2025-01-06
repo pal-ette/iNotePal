@@ -112,10 +112,13 @@ class Calendar(rx.ComponentState):
         return rx.vstack(
             rx.hstack(
                 rx.hstack(
-                    rx.icon(
-                        tag="chevron_left",
-                        cursor="pointer",
+                    rx.button(
+                        rx.icon(
+                            tag="chevron_left",
+                        ),
+                        variant="ghost",
                         on_click=cls.prev_month,
+                        disabled=True,
                     ),
                     rx.spacer(),  # 빈 공간 생성
                     rx.popover.root(
@@ -134,9 +137,11 @@ class Calendar(rx.ComponentState):
                         rx.popover.content(
                             rx.vstack(
                                 rx.hstack(
-                                    rx.icon(
-                                        tag="chevron_left",
-                                        cursor="pointer",
+                                    rx.button(
+                                        rx.icon(
+                                            tag="chevron_left",
+                                        ),
+                                        variant="ghost",
                                         on_click=cls.prev_year,
                                     ),
                                     rx.input(
@@ -144,9 +149,11 @@ class Calendar(rx.ComponentState):
                                         max_length=4,
                                         on_change=cls.on_change_year,
                                     ),
-                                    rx.icon(
-                                        tag="chevron_right",
-                                        cursor="pointer",
+                                    rx.button(
+                                        rx.icon(
+                                            tag="chevron_right",
+                                        ),
+                                        variant="ghost",
                                         on_click=cls.next_year,
                                     ),
                                     align="center",
@@ -185,9 +192,11 @@ class Calendar(rx.ComponentState):
                         modal=True,
                     ),
                     rx.spacer(),
-                    rx.icon(
-                        tag="chevron_right",
-                        cursor="pointer",
+                    rx.button(
+                        rx.icon(
+                            tag="chevron_right",
+                        ),
+                        variant="ghost",
                         on_click=cls.next_month,
                     ),
                     align="center",
