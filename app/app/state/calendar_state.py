@@ -254,10 +254,7 @@ class Calendar(rx.ComponentState):
                                                 )
                                             )
                                         ),
-                                        rx.color_mode_cond(
-                                            light="black",
-                                            dark="white",
-                                        ),
+                                        "currentColor",
                                         rx.color_mode_cond(
                                             light="#BBBBBB",
                                             dark="#666666",
