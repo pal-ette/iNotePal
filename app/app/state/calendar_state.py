@@ -104,10 +104,14 @@ class Calendar(rx.ComponentState):
 
     @classmethod
     def get_component(cls, *children, **props) -> rx.Component:
-        prop_allow_future = props.pop("allow_future", cls.allow_future)
         prop_select_date = props.pop("select_date", cls.select_date)
         prop_accent_dates = props.pop("accent_dates", cls.accent_dates)
         on_change_date = props.pop("on_change_date", cls.on_change_date)
+
+        # Initialize using props with default fallback
+        prop_allow_future = props.pop("allow_future", None)
+        if prop_allow_future is not None:
+            cls.__fields__["allow_future"].default = prop_allow_future
 
         return rx.vstack(
             rx.hstack(
@@ -249,7 +253,7 @@ class Calendar(rx.ComponentState):
                                     color=rx.cond(
                                         (day > 0)
                                         & (
-                                            prop_allow_future
+                                            cls.allow_future
                                             | (
                                                 (
                                                     cls.year * 10000
@@ -296,7 +300,7 @@ class Calendar(rx.ComponentState):
                                 cursor=rx.cond(
                                     (day > 0)
                                     & (
-                                        prop_allow_future
+                                        cls.allow_future
                                         | (
                                             (cls.year * 10000 + cls.month * 100 + day)
                                             <= (
@@ -312,7 +316,7 @@ class Calendar(rx.ComponentState):
                                 on_click=rx.cond(
                                     (day > 0)
                                     & (
-                                        prop_allow_future
+                                        cls.allow_future
                                         | (
                                             (cls.year * 10000 + cls.month * 100 + day)
                                             <= (
