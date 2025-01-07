@@ -122,7 +122,6 @@ class Calendar(rx.ComponentState):
                         ),
                         variant="ghost",
                         on_click=cls.prev_month,
-                        disabled=True,
                     ),
                     rx.spacer(),  # 빈 공간 생성
                     rx.popover.root(
