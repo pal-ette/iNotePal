@@ -68,7 +68,7 @@ class AppState(rx.State):
                 decoded_token
                 if decoded_token["exp"] >= time.time()
                 and decoded_token["iat"] <= time.time()
-                else None
+                else {}
             )
         except Exception as e:
             return {}
