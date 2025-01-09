@@ -62,8 +62,25 @@ class Calendar(rx.ComponentState):
         else:
             self.month -= 1
 
+    @rx.var(cache=True)
+    def is_valid_next_month(self) -> bool:
+        next_month = self.month + 1
+        if next_month > 12:
+            return self.is_valid_next_year
+        elif not self.allow_future and self.year == date.today().year:
+            return next_month <= date.today().month
+        else:
+            return True
+
+    @rx.var(cache=True)
+    def is_valid_prev_month(self) -> bool:
+        prev_month = self.month - 1
+        return self.is_valid_prev_year if prev_month < 1 else True
+
     def is_valid_year_range(self, year):
-        return MINYEAR <= year and year <= MAXYEAR
+        return MINYEAR <= year and year <= (
+            MAXYEAR if self.allow_future else date.today().year
+        )
 
     def next_year(self):
         self.try_set_year(self.year + 1)
@@ -73,13 +90,11 @@ class Calendar(rx.ComponentState):
 
     @rx.var(cache=True)
     def is_valid_prev_year(self) -> bool:
-        next_year = self.year - 1
-        return next_year >= MINYEAR
+        return self.is_valid_year_range(self.year - 1)
 
     @rx.var(cache=True)
     def is_valid_next_year(self) -> bool:
-        next_year = self.year + 1
-        return next_year <= (MAXYEAR if self.allow_future else date.today().year)
+        return self.is_valid_year_range(self.year + 1)
 
     def on_change_year(self, year: str):
         try:
@@ -93,6 +108,9 @@ class Calendar(rx.ComponentState):
             return False
 
         self.year = year
+        if not self.allow_future and self.year == date.today().year:
+            self.month = min(self.month, date.today().month)
+
         return True
 
     def set_month(self, month: int):
@@ -132,7 +150,7 @@ class Calendar(rx.ComponentState):
                         ),
                         variant="ghost",
                         on_click=cls.prev_month,
-                        disabled=~cls.is_valid_prev_year,
+                        disabled=~cls.is_valid_prev_month,
                     ),
                     rx.spacer(),  # 빈 공간 생성
                     rx.popover.root(
@@ -157,6 +175,7 @@ class Calendar(rx.ComponentState):
                                         ),
                                         variant="ghost",
                                         on_click=cls.prev_year,
+                                        disabled=~cls.is_valid_prev_year,
                                     ),
                                     rx.input(
                                         value=cls.year,
@@ -182,7 +201,7 @@ class Calendar(rx.ComponentState):
                                     lambda month_row: rx.hstack(
                                         rx.foreach(
                                             month_row,
-                                            lambda month: rx.container(
+                                            lambda month: rx.button(
                                                 rx.text(
                                                     month,
                                                     font_size="14px",
@@ -194,9 +213,19 @@ class Calendar(rx.ComponentState):
                                                     "rgba(255, 255, 255, 0.05)",
                                                 ),
                                                 style=cal_row_style,
-                                                cursor="pointer",
                                                 on_click=cls.set_month(
                                                     month,
+                                                ),
+                                                variant="ghost",
+                                                disabled=rx.cond(
+                                                    cls.allow_future
+                                                    | (cls.year < date.today().year)
+                                                    | (
+                                                        (cls.year == date.today().year)
+                                                        & (month <= date.today().month)
+                                                    ),
+                                                    False,
+                                                    True,
                                                 ),
                                             ),
                                         ),
@@ -213,6 +242,7 @@ class Calendar(rx.ComponentState):
                         ),
                         variant="ghost",
                         on_click=cls.next_month,
+                        disabled=~cls.is_valid_next_month,
                     ),
                     align="center",
                     justify="center",
