@@ -71,6 +71,16 @@ class Calendar(rx.ComponentState):
     def prev_year(self):
         self.try_set_year(self.year - 1)
 
+    @rx.var(cache=True)
+    def is_valid_prev_year(self) -> bool:
+        next_year = self.year - 1
+        return next_year >= MINYEAR
+
+    @rx.var(cache=True)
+    def is_valid_next_year(self) -> bool:
+        next_year = self.year + 1
+        return next_year <= (MAXYEAR if self.allow_future else date.today().year)
+
     def on_change_year(self, year: str):
         try:
             parsed_year = int(year)
@@ -122,6 +132,7 @@ class Calendar(rx.ComponentState):
                         ),
                         variant="ghost",
                         on_click=cls.prev_month,
+                        disabled=~cls.is_valid_prev_year,
                     ),
                     rx.spacer(),  # 빈 공간 생성
                     rx.popover.root(
@@ -158,6 +169,7 @@ class Calendar(rx.ComponentState):
                                         ),
                                         variant="ghost",
                                         on_click=cls.next_year,
+                                        disabled=~cls.is_valid_next_year,
                                     ),
                                     align="center",
                                 ),
