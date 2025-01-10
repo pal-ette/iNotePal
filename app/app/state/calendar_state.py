@@ -210,13 +210,14 @@ class Calendar(rx.ComponentState):
                                                 background_color=rx.cond(
                                                     cls.month == month,
                                                     "#e5988e",
-                                                    "rgba(255, 255, 255, 0.05)",
+                                                    "rgba(255, 255, 255, 0.0)",
                                                 ),
                                                 style=cal_row_style,
                                                 on_click=cls.set_month(
                                                     month,
                                                 ),
                                                 variant="ghost",
+                                                color="currentColor",
                                                 disabled=rx.cond(
                                                     cls.allow_future
                                                     | (cls.year < date.today().year)
