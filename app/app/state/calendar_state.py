@@ -217,7 +217,19 @@ class Calendar(rx.ComponentState):
                                                     month,
                                                 ),
                                                 variant="ghost",
-                                                color="currentColor",
+                                                color=rx.cond(
+                                                    cls.allow_future
+                                                    | (cls.year < date.today().year)
+                                                    | (
+                                                        (cls.year == date.today().year)
+                                                        & (month <= date.today().month)
+                                                    ),
+                                                    "currentColor",
+                                                    rx.color_mode_cond(
+                                                        light="#BBBBBB",
+                                                        dark="#666666",
+                                                    ),
+                                                ),
                                                 disabled=rx.cond(
                                                     cls.allow_future
                                                     | (cls.year < date.today().year)
