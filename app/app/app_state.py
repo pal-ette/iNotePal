@@ -73,7 +73,7 @@ class AppState(rx.State):
         except Exception as e:
             return {}
 
-    @rx.var
+    @rx.var(cache=True)
     def token_is_valid(self) -> bool:
         """
         Check if the JWT token is valid.

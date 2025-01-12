@@ -26,7 +26,7 @@ class EmotionState(ChatState):
 
         return bg_color[:-2] + ")"
 
-    @rx.var
+    @rx.var(cache=True)
     def get_bg_for_one(self) -> str:
         current_chats = self.current_messages
 
@@ -35,7 +35,7 @@ class EmotionState(ChatState):
         emotion_count = Counter(emotions)
         return self.get_bg_color(emotion_count)
 
-    @rx.var
+    @rx.var(cache=True)
     def get_bg(self) -> List[str]:
         past_chats = self.past_messages
         bg_colors = []
