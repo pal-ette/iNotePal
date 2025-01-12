@@ -80,7 +80,7 @@ class ChatState(AppState):
         self._db_chats[self.db_select_date] = chats
         return self._db_chats[self.db_select_date]
 
-    @rx.var()
+    @rx.var(cache=True)
     def dates_has_closed_chat(self) -> List[date]:
         dates = []
         with rx.session() as session:
@@ -182,7 +182,7 @@ class ChatState(AppState):
         day = self.select_date.day
         return f"{year}년 {month}월 {day}일"
 
-    @rx.var
+    @rx.var(cache=True)
     def emotion_color_map(self) -> Dict[str, str]:
         if not self.user_id:
             return self.emotion_color_map_default

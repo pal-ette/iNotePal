@@ -53,27 +53,27 @@ class AnalysisState(ChatState):
     def reset_date_valid_check(self):
         self.date_valid_check = True
 
-    @rx.var
+    @rx.var(cache=True)
     def start_year(self) -> int:
         return self.start_date.year
 
-    @rx.var
+    @rx.var(cache=True)
     def start_month(self) -> int:
         return self.start_date.month
 
-    @rx.var
+    @rx.var(cache=True)
     def start_day(self) -> int:
         return self.start_date.day
 
-    @rx.var
+    @rx.var(cache=True)
     def end_year(self) -> int:
         return self.end_date.year
 
-    @rx.var
+    @rx.var(cache=True)
     def end_month(self) -> int:
         return self.end_date.month
 
-    @rx.var
+    @rx.var(cache=True)
     def end_day(self) -> int:
         return self.end_date.day
 
@@ -123,7 +123,7 @@ class AnalysisState(ChatState):
             emotion_count_total[emotion] += 1
         return emotion_count_total
 
-    @rx.var
+    @rx.var(cache=True)
     def data_emotion_radar(self) -> List[Dict[str, str | int]]:
         period_emotion_count = self.data_emotion_count
         total_emotion_count = self.data_emotion_count_total
@@ -136,7 +136,7 @@ class AnalysisState(ChatState):
             for emotion in self.emotion_color_map
         ]
 
-    @rx.var
+    @rx.var(cache=True)
     def data_emotion_funnel(self) -> List[Dict[str, str | int]]:
         data_funnel = [
             {
@@ -149,7 +149,7 @@ class AnalysisState(ChatState):
         ]
         return sorted(data_funnel, key=lambda x: x["count"], reverse=True)
 
-    @rx.var
+    @rx.var(cache=True)
     def count_emotions_by_date(self) -> List:
         period_data = self.get_chats_in_period(
             self.start_date,
@@ -170,7 +170,7 @@ class AnalysisState(ChatState):
 
         return emotions_list
 
-    @rx.var
+    @rx.var(cache=True)
     def data_emotion_bar(self) -> List[Dict[str, str | int]]:
         emotion_totals = defaultdict(
             lambda: {
@@ -198,7 +198,7 @@ class AnalysisState(ChatState):
         data_bar = sorted(transformed_data, key=lambda x: x["date"], reverse=False)
         return data_bar
 
-    @rx.var
+    @rx.var(cache=True)
     def display_words(self) -> List[Dict[str, str | int]]:
         kkma = Kkma()
         including = ["NNG", "NNM", "NNP", "NP"]  # , "VA", "VV", "MA"]
