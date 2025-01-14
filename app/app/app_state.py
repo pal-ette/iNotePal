@@ -26,21 +26,21 @@ class AppState(rx.State):
         self.auth_token = ""
         yield
 
-    @rx.var(cache=True)
+    @rx.var(cache=False)
     def user_mail(self) -> str:
         if not self.token_is_valid:
             return ""
 
         return self.decodeJWT["email"]
 
-    @rx.var(cache=True)
+    @rx.var(cache=False)
     def user_id(self) -> str:
         if not self.token_is_valid:
             return ""
 
         return self.decodeJWT["sub"]
 
-    @rx.var(cache=True)
+    @rx.var(cache=False)
     def decodeJWT(self) -> dict:
         """
         Decode the JWT token.
@@ -73,7 +73,7 @@ class AppState(rx.State):
         except Exception as e:
             return {}
 
-    @rx.var(cache=True)
+    @rx.var(cache=False)
     def token_is_valid(self) -> bool:
         """
         Check if the JWT token is valid.
