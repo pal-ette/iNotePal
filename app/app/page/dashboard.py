@@ -29,10 +29,17 @@ def build_past_card(chat: Tuple[int, Chat]):
         on_click=lambda: ChatState.select_past_card(chat[1]["id"]),
         bg=rx.cond(
             ChatState.current_chat["id"] == chat[1]["id"],
-            "#e5988e",
+            rx.color_mode_cond(
+                light="#ebb9b0",
+                dark="#af625c",
+            ),
             "#f2ebc8",
         ),
-        color="#49312d",
+        color=rx.cond(
+            ChatState.current_chat["id"] == chat[1]["id"],
+            "currentColor",
+            "#49312d",
+        ),
     )
 
 
