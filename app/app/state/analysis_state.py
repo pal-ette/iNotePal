@@ -225,9 +225,6 @@ class AnalysisState(ChatState):
                 morphs.append(w[0])
 
         words_count = Counter(morphs)
-        words = [
-            {"text": key, "value": value}
-            for i, (key, value) in enumerate(words_count.items())
-        ]
+        words = [{"text": key, "value": value} for key, value in words_count.items()]
 
         return words
