@@ -49,18 +49,18 @@ class Calendar(rx.ComponentState):
         )
 
     def next_month(self):
-        if self.month == 12:
-            if self.try_set_year(self.year + 1):
-                self.month = 1
-        else:
-            self.month += 1
+        new_month = self.month + 1
+        if new_month < 13:
+            self.month = new_month
+        elif self.try_set_year(self.year + 1):
+            self.month = 1
 
     def prev_month(self):
-        if self.month == 1:
-            if self.try_set_year(self.year - 1):
-                self.month = 12
-        else:
-            self.month -= 1
+        new_month = self.month - 1
+        if new_month > 0:
+            self.month = new_month
+        elif self.try_set_year(self.year - 1):
+            self.month = 12
 
     @rx.var(cache=True)
     def is_valid_next_month(self) -> bool:
@@ -157,7 +157,7 @@ class Calendar(rx.ComponentState):
                         rx.popover.trigger(
                             rx.button(
                                 rx.text(  # 현재 월과 연도를 표시하는 텍스트
-                                    f"{cls.month}월 {cls.year}",
+                                    f"{cls.year}년 {cls.month}월",
                                     width="150px",
                                     display="flex",
                                     justify_content="center",
