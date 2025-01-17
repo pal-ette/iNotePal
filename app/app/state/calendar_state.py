@@ -157,7 +157,7 @@ class Calendar(rx.ComponentState):
                         rx.popover.trigger(
                             rx.button(
                                 rx.text(  # 현재 월과 연도를 표시하는 텍스트
-                                    f"{cls.month}월 {cls.year}",
+                                    f"{cls.year}년 {cls.month}월",
                                     width="150px",
                                     display="flex",
                                     justify_content="center",
