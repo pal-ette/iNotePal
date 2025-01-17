@@ -49,18 +49,18 @@ class Calendar(rx.ComponentState):
         )
 
     def next_month(self):
-        if self.month == 12:
-            if self.try_set_year(self.year + 1):
-                self.month = 1
-        else:
-            self.month += 1
+        new_month = self.month + 1
+        if new_month < 13:
+            self.month = new_month
+        elif self.try_set_year(self.year + 1):
+            self.month = 1
 
     def prev_month(self):
-        if self.month == 1:
-            if self.try_set_year(self.year - 1):
-                self.month = 12
-        else:
-            self.month -= 1
+        new_month = self.month - 1
+        if new_month > 0:
+            self.month = new_month
+        elif self.try_set_year(self.year - 1):
+            self.month = 12
 
     @rx.var(cache=True)
     def is_valid_next_month(self) -> bool:
