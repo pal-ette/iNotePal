@@ -2,7 +2,7 @@
 
 asdf local python 3.10.12
 
-python -m venv .venv
+python3.10 -m venv .venv
 
 . $(pwd)/.venv/bin/activate
 
