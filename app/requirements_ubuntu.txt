@@ -19,6 +19,7 @@ dill==0.3.9
 distro==1.9.0
 docutils==0.21.2
 exceptiongroup==1.2.2
+faiss-cpu==1.9.0.post1
 fastapi==0.115.4
 filelock==3.16.1
 flatbuffers==24.3.25
@@ -82,6 +83,7 @@ oauthlib==3.2.2
 openai==1.20.0
 opt_einsum==3.4.0
 packaging==24.1
+pandas==2.2.3
 pillow==10.4.0
 pipdeptree==2.16.2
 pkginfo==1.10.0
@@ -103,6 +105,7 @@ python-dotenv==1.0.1
 python-engineio==4.9.1
 python-multipart==0.0.18
 python-socketio==5.11.4
+pytz==2024.2
 PyYAML==6.0.2
 readme_renderer==44.0
 realtime==1.0.6
@@ -144,18 +147,19 @@ tensorflow-estimator==2.15.0
 tensorflow-io-gcs-filesystem==0.37.1
 termcolor==2.4.0
 threadpoolctl==3.5.0
-tokenizers==0.19.1
+tokenizers==0.21.0
 tomli==2.0.2
 tomlkit==0.13.2
 torch==2.2.2
 torchaudio==2.2.2
 torchvision==0.17.2
 tqdm==4.66.5
-transformers==4.40.1
+transformers==4.48.0
 triton==2.2.0
 twine==5.1.1
 typer==0.15.1
 typing_extensions==4.12.2
+tzdata==2024.2
 urllib3==2.2.3
 uvicorn==0.31.0
 websockets==12.0
