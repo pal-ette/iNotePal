@@ -15,9 +15,9 @@ class EmbeddingModel(InferenceModel):
             "data": f"https://github.com/pal-ette/iNotePal/releases/download/{version}/embedding_data.csv",
         }
 
-        # self.index = faiss.read_index(self.download_file(self.paths["index"]))
+        self.index = faiss.read_index(self.download_file(self.paths["index"]))
 
-        # self.df = pd.read_csv(self.download_file(self.paths["data"]))
+        self.df = pd.read_csv(self.download_file(self.paths["data"]))
 
     def tokenize(self, string):
         return string
