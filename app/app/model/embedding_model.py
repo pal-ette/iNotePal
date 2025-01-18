@@ -6,6 +6,8 @@ import pandas as pd
 
 class EmbeddingModel(InferenceModel):
     def __init__(self, version) -> None:
+        super().__init__(version)
+
         self.model = SentenceTransformer("jhgan/ko-sroberta-multitask")
 
         self.paths = {
