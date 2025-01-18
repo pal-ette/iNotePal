@@ -1,40 +1,21 @@
 from sentence_transformers import SentenceTransformer
 from .inference_model import InferenceModel
-import torch
-import multiprocessing as mp
-
-
-def cuda_worker(input, output):
-    device = torch.device("cuda:0")
-
-    model = SentenceTransformer("jhgan/ko-sroberta-multitask")
-
-    for _func, sentence in iter(input.get, "STOP"):
-        output.put(model.encode(sentence))
+import faiss
+import pandas as pd
 
 
 class EmbeddingModel(InferenceModel):
-
     def __init__(self, version) -> None:
-        ctx = mp.get_context("spawn")
-        self.input_queue = ctx.Queue()
-        self.output_queue = ctx.Queue()
+        self.model = SentenceTransformer("jhgan/ko-sroberta-multitask")
 
-        self.cuda_process = ctx.Process(
-            target=cuda_worker,
-            args=(
-                self.input_queue,
-                self.output_queue,
-            ),
-            daemon=True,
-        )
-        self.cuda_process.start()
+        self.paths = {
+            "index": f"https://github.com/pal-ette/iNotePal/releases/download/{version}/embedding_index.index",
+            "data": f"https://github.com/pal-ette/iNotePal/releases/download/{version}/embedding_data.csv",
+        }
 
-    def __del__(self):
-        self.input_queue.put("STOP")
-        self.cuda_process.terminate()
-        self.input_queue.close()
-        self.output_queue.close()
+        self.index = faiss.read_index(self.download_file(self.paths["index"]))
+
+        self.df = pd.read_csv(self.download_file(self.paths["data"]))
 
     def tokenize(self, string):
         return string
@@ -43,5 +24,7 @@ class EmbeddingModel(InferenceModel):
         return string
 
     def predict(self, string):
-        self.input_queue.put((0, string))
-        return self.output_queue.get()
+        response = None
+        embedding = self.model.encode(string)
+        _distances, indices = self.index.search(embedding.reshape(1, -1), 5)
+        return self.df.iloc[indices[0][0]]["answer"]
