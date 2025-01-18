@@ -6,6 +6,8 @@ import pandas as pd
 
 class EmbeddingModel(InferenceModel):
     def __init__(self, version) -> None:
+        super().__init__(version)
+
         self.model = SentenceTransformer("jhgan/ko-sroberta-multitask")
 
         self.paths = {
@@ -13,9 +15,9 @@ class EmbeddingModel(InferenceModel):
             "data": f"https://github.com/pal-ette/iNotePal/releases/download/{version}/embedding_data.csv",
         }
 
-        self.index = faiss.read_index(self.download_file(self.paths["index"]))
+        # self.index = faiss.read_index(self.download_file(self.paths["index"]))
 
-        self.df = pd.read_csv(self.download_file(self.paths["data"]))
+        # self.df = pd.read_csv(self.download_file(self.paths["data"]))
 
     def tokenize(self, string):
         return string
