@@ -15,23 +15,19 @@ from app.schema.emotion import Emotion
 from app.util.emotion import (
     emotion_color_map_default as static_emotion_color_map_default,
 )
-from app.supabase_client import supabase_client
 from typing import List, Tuple, Dict
 from reflex import constants
-import random
 from collections import Counter
 import sqlalchemy
 from reflex.config import environment
 
 
-inference_model = InferenceModel("dummy-0.0.0")
-embedding_model = None
+model_version = "iNotePal-0.0.1"
+inference_model = InferenceModel(model_version)
+embedding_model = EmbeddingModel(model_version)
 env = environment.REFLEX_ENV_MODE.get()
 if env == constants.Env.PROD:
-    inference_model = Roberta("model-0.0.2")
-    embedding_model = EmbeddingModel("")
-# elif env == constants.Env.DEV:
-#     embedding_model = EmbeddingModel("")
+    inference_model = Roberta(model_version)
 
 
 class ChatState(AppState):
@@ -393,25 +389,10 @@ class ChatState(AppState):
         return response
 
     def _talk_to_embed_db(self, message):
+        response = None
         if embedding_model is None:
-            return None
-        embedding = embedding_model.predict(message)
-        response = random.sample(
-            supabase_client()
-            .rpc(
-                "match_sentences",
-                {
-                    "query_embedding": str(embedding.tolist()),
-                    "match_threshold": 0.0,
-                    "match_count": 3,
-                },
-            )
-            .execute()
-            .data,
-            1,
-        )[0]["content"]
-
-        return response
+            return response
+        return embedding_model.predict(message)
 
     def on_load_dashboard(self):
         if not self.is_hydrated:
