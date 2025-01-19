@@ -1,4 +1,5 @@
 import reflex as rx
+import asyncio
 from collections.abc import Generator
 
 from app.app_state import AppState
@@ -29,10 +30,11 @@ class LoginState(AppState):
             )
             self.auth_token = auth_response.session.access_token
             self.error_message = ""
+            self.redirect_to = DASHBOARD_ROUTE
         except Exception as e:
             print("oauth error:", str(e))
 
-        return rx.redirect(DASHBOARD_ROUTE)
+        return LoginState.redir()
 
     def login_with_github(self):
         self.is_loading = True
@@ -50,7 +52,7 @@ class LoginState(AppState):
         self.redirect_to = data.url
         return LoginState.redir()
 
-    def on_submit(self, form_data) -> Generator[rx.event.EventSpec]:
+    def on_submit(self, form_data):
         """Handle login form on_submit.
 
         Args:
@@ -82,13 +84,14 @@ class LoginState(AppState):
             # reset state variable again
             self.is_loading = False
 
-    def redir(self) -> Generator[rx.event.EventSpec]:
+    async def redir(self):
         """Redirect to the redirect_to route if logged in, or to the login page if not."""
         if not self.is_hydrated:
             # wait until after hydration
             return LoginState.redir()
         page = self.router.page.path
 
+        await asyncio.sleep(2)
         if not self.token_is_valid and page != LOGIN_ROUTE:
             self.redirect_to = page
 
@@ -96,8 +99,7 @@ class LoginState(AppState):
             self.is_loading = False
 
             return rx.redirect(LOGIN_ROUTE)
-        elif page == LOGIN_ROUTE:
-
+        else:
             # reset state variable again
             self.is_loading = False
 
