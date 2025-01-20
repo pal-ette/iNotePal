@@ -30,7 +30,7 @@ class LoginState(AppState):
             )
             self.auth_token = auth_response.session.access_token
             self.error_message = ""
-            self.redirect_to = DASHBOARD_ROUTE
+            self.redirect_to = ""
         except Exception as e:
             print("oauth error:", str(e))
 
@@ -48,7 +48,6 @@ class LoginState(AppState):
                 "options": {"redirect_to": redirect_to},
             }
         )
-        self.is_loading = False
         self.redirect_to = data.url
         return LoginState.redir()
 
