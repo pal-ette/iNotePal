@@ -9,7 +9,10 @@ from app.app_state import AppState
 from app.routes import REGISTER_ROUTE, LOGIN_ROUTE
 
 
-@rx.page(route=REGISTER_ROUTE)
+@rx.page(
+    route=REGISTER_ROUTE,
+    on_load=AppState.check_not_login,
+)
 def registration_page() -> rx.Component:
     """Render the registration page.
 

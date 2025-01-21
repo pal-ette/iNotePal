@@ -7,7 +7,10 @@ from app.state.reset_password_state import ResetPasswordState
 from app.routes import LOGIN_ROUTE, REGISTER_ROUTE
 
 
-@rx.page(route=LOGIN_ROUTE)
+@rx.page(
+    route=LOGIN_ROUTE,
+    on_load=LoginState.check_not_login,
+)
 def login_page() -> rx.Component:
     """Render the login page.
 
