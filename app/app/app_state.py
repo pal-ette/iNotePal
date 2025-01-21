@@ -11,7 +11,7 @@ import time
 import reflex as rx
 from app.supabase_client import supabase_client
 
-from app.routes import LOGIN_ROUTE
+from app.routes import LOGIN_ROUTE, DASHBOARD_ROUTE
 
 JWT_SECRET = os.getenv("JWT_SECRET")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
@@ -96,3 +96,7 @@ class AppState(rx.State):
         """
         if not self.token_is_valid:
             return rx.redirect(LOGIN_ROUTE, replace=True)
+
+    def check_not_login(self):
+        if self.token_is_valid:
+            return rx.redirect(DASHBOARD_ROUTE, replace=True)
