@@ -372,15 +372,22 @@ class ChatState(AppState):
         )
         self.is_creating = False
 
-    def _talk_to_open_ai(self, message):
+    def _talk_to_open_ai(self, history, message):
         client = OpenAI(
             api_key=os.getenv("OPENAI_API_KEY"),
             base_url=os.getenv("OPENAI_BASE_URL"),
         )
+        messages = [
+            {
+                "role": "user" if role == "human" else "assistant",
+                "content": [{"type": "text", "text": text}],
+            }
+            for role, text in history
+        ] + [{"role": "user", "content": message}]
         response = (
             client.chat.completions.create(
                 model="gpt-4o-mini",
-                messages=[{"role": "user", "content": message}],
+                messages=messages,
                 temperature=7e-1,
             )
             .choices[0]
@@ -388,11 +395,13 @@ class ChatState(AppState):
         )
         return response
 
-    def _talk_to_embed_db(self, message):
+    def _talk_to_embed_db(self, history, message):
         response = None
         if embedding_model is None:
             return response
-        return embedding_model.predict(message)
+        return embedding_model.predict(
+            " ".join([message[1] for message in history]) + f" {message}",
+        )
 
     def on_load_dashboard(self):
         if not self.is_hydrated:
@@ -409,13 +418,16 @@ class ChatState(AppState):
     def on_submit(self, form_data):
         self.is_waiting = True
         yield
+        history = [
+            ("human" if message.is_user else "ai", message.message)
+            for message in self.current_messages
+        ]
         question = form_data["message"]
 
         emotion = inference_model.predict(
             inference_model.padding(
                 inference_model.tokenize(
-                    " ".join([message.message for message in self.current_messages])
-                    + f" {question}",
+                    " ".join([message[1] for message in history]) + f" {question}",
                 ),
             ),
         )
@@ -428,9 +440,9 @@ class ChatState(AppState):
         )
         yield
 
-        response = self._talk_to_embed_db(question)
+        response = self._talk_to_embed_db(history, question)
         if response is None:
-            response = self._talk_to_open_ai(question)
+            response = self._talk_to_open_ai(history, question)
 
         self.insert_history(
             self.current_chat.id,
