@@ -8,7 +8,6 @@ from app.app_state import AppState
 from app.model.inference_model import InferenceModel
 from app.model.embedding_model import EmbeddingModel
 from app.model.roberta import Roberta
-from app.schema.greeting import Greeting
 from app.schema.chat import Chat, Message
 from app.schema.color import Color
 from app.schema.emotion import Emotion
@@ -297,15 +296,6 @@ class ChatState(AppState):
         self.show_result_modal = False
 
     def get_greeting(self):
-        greeting = None
-        with rx.session() as session:
-            greeting = session.exec(
-                Greeting.select().where(Greeting.date == self.db_select_date)
-            ).one_or_none()
-
-        if greeting is not None:
-            return greeting.message
-
         client = OpenAI(
             api_key=os.getenv("OPENAI_API_KEY"),
             base_url=os.getenv("OPENAI_BASE_URL"),
@@ -317,22 +307,13 @@ class ChatState(AppState):
             messages=[
                 {
                     "role": "system",
-                    "content": f"당신은 사람의 감정을 세심히 살필 수 있는 심리상담사입니다. 오늘은 {month}월 {day}일 입니다. 기분이라는 단어를 직접적으로 사용하지말고 오늘 날짜와 함께 기분이 드러날 수 있는 질문을 해주세요.",
+                    "content": f"당신은 사람의 감정을 세심히 살필 수 있는 심리상담사입니다. 오늘은 {month}월 {day}일 입니다. 기분이라는 단어를 직접적으로 사용하지말고 오늘 날짜와 함께 기분이 드러날 수 있는 질문을 해주세요.s",
                 }
             ],
             temperature=7e-1,
         )
-        out_greeting = response.choices[0].message.content
-        with rx.session() as session:
-            session.add(
-                Greeting(
-                    date=self.db_select_date,
-                    message=out_greeting,
-                ),
-            )
-            session.commit()
 
-        return out_greeting
+        return response.choices[0].message.content
 
     def start_new_chat(self):
         if not self.is_hydrated:
