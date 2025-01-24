@@ -54,25 +54,7 @@ class ChatState(AppState):
 
     @rx.var(cache=True)
     def chats(self) -> List[Chat]:
-        if self.db_select_date in self._db_chats:
-            return self._db_chats[self.db_select_date]
-
-        if not self.token_is_valid:
-            return []
-
-        chats: List[Chat] = []
-
-        with rx.session() as session:
-            chats = session.exec(
-                Chat.select()
-                .where(Chat.user_id == self.user_id)
-                .where(Chat.date == self.db_select_date)
-                .order_by(Chat.id)
-            ).all()
-
-        if len(chats) == 0:
-            return []
-        self._db_chats[self.db_select_date] = chats
+        self._db_chats[self.db_select_date] = self.load_chat(self.db_select_date)
         return self._db_chats[self.db_select_date]
 
     @rx.var(cache=True)
@@ -140,6 +122,28 @@ class ChatState(AppState):
     @rx.var(cache=True)
     def is_exist_chat(self) -> bool:
         return len(self.chats) > 0
+
+    def load_chat(self, load_date: date):
+        if not self.token_is_valid:
+            return []
+
+        if load_date in self._db_chats:
+            return self._db_chats[load_date]
+
+        chats: List[Chat] = []
+
+        with rx.session() as session:
+            chats = session.exec(
+                Chat.select()
+                .options(
+                    sqlalchemy.orm.selectinload(Chat.messages),
+                )
+                .where(Chat.user_id == self.user_id)
+                .where(Chat.date == load_date)
+                .order_by(Chat.id)
+            ).all()
+
+        return chats
 
     def on_change_date(self, year, month, day):
         self.select_date = date(year, month, day)
@@ -302,14 +306,37 @@ class ChatState(AppState):
         )
         month = self.select_date.month
         day = self.select_date.day
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
+        messages = [
+            {
+                "role": "system",
+                "content": f"당신은 사람의 감정을 세심히 살필 수 있는 심리상담사입니다. 오늘은 {month}월 {day}일 입니다. 기분이라는 단어를 직접적으로 사용하지말고 오늘 날짜와 함께 기분이 드러날 수 있는 질문을 해주세요.",
+            }
+        ]
+        old_dates = [
+            date for date in self.dates_has_closed_chat if date < self.select_date
+        ]
+        if old_dates:
+            latest_date = old_dates[-1]
+            loaded_chat = self.load_chat(latest_date)
+            log_messages = [
+                f"{'user' if message.is_user else 'ai'}: {message.message}"
+                for message in loaded_chat[0].messages
+            ]
+            log_messages = "\n".join(log_messages)
+            messages.append(
                 {
                     "role": "system",
-                    "content": f"당신은 사람의 감정을 세심히 살필 수 있는 심리상담사입니다. 오늘은 {month}월 {day}일 입니다. 기분이라는 단어를 직접적으로 사용하지말고 오늘 날짜와 함께 기분이 드러날 수 있는 질문을 해주세요.s",
+                    "content": f"""
+                    {latest_date.month}월 {latest_date.day}일에 아래와 같이 대화를 했습니다.
+                    해당 날짜와 내용을 되새기며 안부를 물으며 오늘의 대화를 시작해보세요.
+                    지난 대화:
+                    {log_messages}
+                    """,
                 }
-            ],
+            )
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=messages,
             temperature=7e-1,
         )
 
