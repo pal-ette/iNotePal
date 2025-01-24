@@ -52,10 +52,14 @@ class ChatState(AppState):
     def db_select_date(self) -> str:
         return str(self.select_date)
 
-    @rx.var(cache=True)
+    @rx.var(cache=False)
     def chats(self) -> List[Chat]:
-        self._db_chats[self.db_select_date] = self.load_chat(self.db_select_date)
-        return self._db_chats[self.db_select_date]
+        self.load_chat(self.db_select_date)
+        return (
+            self._db_chats[self.db_select_date]
+            if self.db_select_date in self._db_chats
+            else []
+        )
 
     @rx.var(cache=True)
     def dates_has_closed_chat(self) -> List[date]:
@@ -124,12 +128,11 @@ class ChatState(AppState):
         return len(self.chats) > 0
 
     def load_chat(self, load_date: date):
-        if not self.token_is_valid:
-            return []
-
         if load_date in self._db_chats:
-            return self._db_chats[load_date]
+            return
 
+        if not self.token_is_valid:
+            return
         chats: List[Chat] = []
 
         with rx.session() as session:
@@ -142,8 +145,7 @@ class ChatState(AppState):
                 .where(Chat.date == load_date)
                 .order_by(Chat.id)
             ).all()
-
-        return chats
+        self._db_chats[load_date] = chats
 
     def on_change_date(self, year, month, day):
         self.select_date = date(year, month, day)
@@ -205,7 +207,6 @@ class ChatState(AppState):
 
     def get_messages(self, chat_id):
         if chat_id in self._db_messages:
-            # print("get_messages", self._db_messages[chat_id])
             return self._db_messages[chat_id]
         messages: List[Message] = []
 
@@ -317,10 +318,10 @@ class ChatState(AppState):
         ]
         if old_dates:
             latest_date = old_dates[-1]
-            loaded_chat = self.load_chat(latest_date)
+            self.load_chat(latest_date)
             log_messages = [
                 f"{'user' if message.is_user else 'ai'}: {message.message}"
-                for message in loaded_chat[0].messages
+                for message in self._db_chats[latest_date][0].messages
             ]
             log_messages = "\n".join(log_messages)
             messages.append(
@@ -344,6 +345,9 @@ class ChatState(AppState):
 
     def start_new_chat(self):
         if not self.is_hydrated:
+            return ChatState.start_new_chat()
+
+        if not self.token_is_valid:
             return ChatState.start_new_chat()
 
         self.is_creating = True
@@ -416,9 +420,6 @@ class ChatState(AppState):
             return ChatState.on_load_dashboard()
 
         if self.is_exist_chat:
-            return
-
-        if len(self.chats) > 0:
             return
 
         return ChatState.start_new_chat()
