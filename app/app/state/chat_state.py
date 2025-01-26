@@ -1,6 +1,7 @@
 # state.py
 
 import os
+import random
 import reflex as rx
 from datetime import date
 from openai import OpenAI
@@ -321,7 +322,7 @@ class ChatState(AppState):
             self.load_chat(latest_date)
             log_messages = [
                 f"{'user' if message.is_user else 'ai'}: {message.message}"
-                for message in self._db_chats[latest_date][0].messages
+                for message in random.choice(self._db_chats[latest_date]).messages
             ]
             log_messages = "\n".join(log_messages)
             messages.append(
