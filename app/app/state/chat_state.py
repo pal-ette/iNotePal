@@ -322,7 +322,7 @@ class ChatState(AppState):
             self.load_chat(latest_date)
             log_messages = [
                 f"{'user' if message.is_user else 'ai'}: {message.message}"
-                for message in random.choice(self._db_chats[latest_date]).messages
+                for message in random.choice(self._db_chats[latest_date]).messages[1:]
             ]
             log_messages = "\n".join(log_messages)
             messages.append(
