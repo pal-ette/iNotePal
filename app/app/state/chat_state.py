@@ -47,7 +47,7 @@ class ChatState(AppState):
 
     _db_messages: Dict[int, List[Message]] = {}
 
-    _emotion_color_map: Dict[str, str] = {}
+    _user_setting: UserSetting | None = None
 
     @rx.var(cache=True)
     def db_select_date(self) -> str:
@@ -184,27 +184,58 @@ class ChatState(AppState):
         day = self.select_date.day
         return f"{year}년 {month}월 {day}일"
 
-    @rx.var(cache=True)
-    def emotion_color_map(self) -> Dict[str, str]:
+    @rx.var(cache=False)
+    def use_openai_chatting(self) -> bool:
+        out_use_openai_chatting = False
         if not self.user_id:
-            return self.emotion_color_map_default
+            return out_use_openai_chatting
 
-        if self._emotion_color_map:
-            return self._emotion_color_map
+        self.init_user_setting(False)
 
+        if self._user_setting:
+            out_use_openai_chatting = self._user_setting.use_openai_chatting
+
+        return out_use_openai_chatting
+
+    @rx.var(cache=False)
+    def emotion_color_map(self) -> Dict[str, str]:
         color_map = self.emotion_color_map_default.copy()
 
-        with rx.session() as session:
-            setting = session.exec(
-                UserSetting.select().where(UserSetting.user_id == self.user_id)
-            ).one_or_none()
-            if setting:
-                user_color_list = setting.emotion_colors.split(",")
-                for i, emotion in enumerate(color_map):
-                    color_map[emotion] = user_color_list[i]
+        if not self.user_id:
+            return color_map
 
-        self._emotion_color_map = color_map
-        return self._emotion_color_map
+        self.init_user_setting(False)
+
+        if self._user_setting:
+            user_color_list = self._user_setting.emotion_colors.split(",")
+            for i, emotion in enumerate(color_map):
+                color_map[emotion] = user_color_list[i]
+
+        return color_map
+
+    def init_user_setting(self, insert=True):
+        if not self._user_setting:
+            with rx.session() as session:
+                self._user_setting = session.exec(
+                    UserSetting.select().where(UserSetting.user_id == self.user_id)
+                ).one_or_none()
+
+        if insert and not self._user_setting:
+            self._user_setting = UserSetting(
+                user_id=self.user_id,
+                use_openai_chatting=False,
+                emotion_colors=",".join(
+                    [
+                        self.emotion_color_map_default[emotion]
+                        for emotion in self.emotion_color_map_default
+                    ]
+                ),
+            )
+
+            with rx.session() as session:
+                session.add(self._user_setting)
+                session.commit()
+                session.refresh(self._user_setting)
 
     def get_messages(self, chat_id):
         if chat_id in self._db_messages:
@@ -450,9 +481,10 @@ class ChatState(AppState):
         )
         yield
 
-        response = self._talk_to_embed_db(history, question)
-        if response is None:
+        if self.use_openai_chatting:
             response = self._talk_to_open_ai(history, question)
+        else:
+            response = self._talk_to_embed_db(history, question)
 
         self.insert_history(
             self.current_chat.id,
@@ -463,39 +495,25 @@ class ChatState(AppState):
         yield self.scroll_to_bottom()
 
     def on_change_color(self, emotion: str, color: str):
-        self.emotion_color_map[emotion] = color
+        self.init_user_setting()
+        color_map = self.emotion_color_map.copy()
+
+        color_map[emotion] = color
+
+        emotion_colors = ",".join([color_map[emotion] for emotion in color_map])
+        self._user_setting.emotion_colors = emotion_colors
+
+    def on_change_use_openai_chatting(self, value):
+        self.init_user_setting()
+
+        self._user_setting.use_openai_chatting = value
 
     def on_open_change_settings(self):
-        self.update_emotion_colors()
-
-    def update_emotion_colors(self):
-        if not self.emotion_color_map:
-            return
-
-        emotion_colors = ",".join(
-            [
-                self.emotion_color_map[emotion]
-                for emotion in self.emotion_color_map_default
-            ]
-        )
-
-        with rx.session() as session:
-            color = session.exec(
-                UserSetting.select().where((UserSetting.user_id == self.user_id))
-            ).one_or_none()
-
-            if color:
-                color.emotion_colors = emotion_colors
-                session.add(color)
-            else:
-                session.add(
-                    UserSetting(
-                        user_id=self.user_id,
-                        emotion_colors=emotion_colors,
-                    )
-                )
-
-            session.commit()
+        if self._user_setting:
+            with rx.session() as session:
+                session.add(self._user_setting)
+                session.commit()
+                session.refresh(self._user_setting)
 
     async def do_logout(self):
         self.reset()
