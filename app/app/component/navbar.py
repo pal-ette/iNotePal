@@ -104,96 +104,111 @@ def navbar() -> rx.Component:
                     rx.dialog.root(
                         rx.dialog.trigger(rx.button(rx.icon("settings"))),
                         rx.dialog.content(
-                            rx.dialog.title(
-                                rx.hstack(
-                                    rx.heading("설정"),
-                                    rx.dialog.close(
-                                        rx.button(
-                                            rx.icon("circle-x"),
-                                            variant="ghost",
+                            rx.vstack(
+                                rx.dialog.title(
+                                    rx.hstack(
+                                        rx.heading("설정"),
+                                        rx.dialog.close(
+                                            rx.button(
+                                                rx.icon("circle-x"),
+                                                variant="ghost",
+                                            ),
                                         ),
+                                        justify="between",
                                     ),
-                                    justify="between",
+                                    class_name="w-full",
                                 ),
-                            ),
-                            rx.heading(
-                                "색상 설정",
-                                size="3",
-                            ),
-                            rx.hstack(
-                                rx.foreach(
-                                    ChatState.emotion_color_map,
-                                    lambda emotion_color: rx.vstack(
-                                        rx.hstack(
-                                            rx.text(emotion_color[0]),
-                                            rx.cond(
-                                                emotion_color[1]
-                                                == ChatState.emotion_color_map_default[
-                                                    emotion_color[0]
-                                                ],
-                                                rx.fragment(),
-                                                rx.button(
-                                                    rx.icon(
-                                                        "undo-2",
-                                                        size=14,
-                                                    ),
-                                                    variant="ghost",
-                                                    size="1",
-                                                    on_click=ChatState.on_change_color(
-                                                        emotion_color[0],
-                                                        ChatState.emotion_color_map_default[
-                                                            emotion_color[0]
-                                                        ],
+                                rx.heading(
+                                    "색상 설정",
+                                    size="3",
+                                ),
+                                rx.hstack(
+                                    rx.foreach(
+                                        ChatState.emotion_color_map,
+                                        lambda emotion_color: rx.vstack(
+                                            rx.hstack(
+                                                rx.text(emotion_color[0]),
+                                                rx.cond(
+                                                    emotion_color[1]
+                                                    == ChatState.emotion_color_map_default[
+                                                        emotion_color[0]
+                                                    ],
+                                                    rx.fragment(),
+                                                    rx.button(
+                                                        rx.icon(
+                                                            "undo-2",
+                                                            size=14,
+                                                        ),
+                                                        variant="ghost",
+                                                        size="1",
+                                                        on_click=ChatState.on_change_color(
+                                                            emotion_color[0],
+                                                            ChatState.emotion_color_map_default[
+                                                                emotion_color[0]
+                                                            ],
+                                                        ),
                                                     ),
                                                 ),
+                                                align="center",
+                                            ),
+                                            rx.popover.root(
+                                                rx.popover.trigger(
+                                                    rx.box(
+                                                        bg=emotion_color[1],
+                                                        border_radius="10px",
+                                                        width="4em",
+                                                        height="4em",
+                                                    ),
+                                                ),
+                                                rx.popover.content(
+                                                    rx.vstack(
+                                                        rx.text_field(
+                                                            rx.text(
+                                                                "#",
+                                                                size="5",
+                                                                padding="0px 0px 0px 10px",
+                                                            ),
+                                                            value=emotion_color[1][1:],
+                                                            color_scheme=emotion_color[
+                                                                1
+                                                            ],
+                                                            on_change=lambda value: ChatState.on_change_color(
+                                                                emotion_color[0],
+                                                                f"#{value}",
+                                                            ).debounce(
+                                                                200
+                                                            ),
+                                                            style={
+                                                                "flex-direction": "row-reverse",
+                                                                "align-items": "center",
+                                                            },
+                                                        ),
+                                                        color_picker(
+                                                            color=emotion_color[1],
+                                                            on_change=lambda color: ChatState.on_change_color(
+                                                                emotion_color[0],
+                                                                color,
+                                                            ).debounce(
+                                                                200
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                                modal=True,
                                             ),
                                             align="center",
                                         ),
-                                        rx.popover.root(
-                                            rx.popover.trigger(
-                                                rx.box(
-                                                    bg=emotion_color[1],
-                                                    border_radius="10px",
-                                                    width="4em",
-                                                    height="4em",
-                                                ),
-                                            ),
-                                            rx.popover.content(
-                                                rx.vstack(
-                                                    rx.text_field(
-                                                        rx.text(
-                                                            "#",
-                                                            size="5",
-                                                            padding="0px 0px 0px 10px",
-                                                        ),
-                                                        value=emotion_color[1][1:],
-                                                        color_scheme=emotion_color[1],
-                                                        on_change=lambda value: ChatState.on_change_color(
-                                                            emotion_color[0],
-                                                            f"#{value}",
-                                                        ).debounce(
-                                                            200
-                                                        ),
-                                                        style={
-                                                            "flex-direction": "row-reverse",
-                                                            "align-items": "center",
-                                                        },
-                                                    ),
-                                                    color_picker(
-                                                        color=emotion_color[1],
-                                                        on_change=lambda color: ChatState.on_change_color(
-                                                            emotion_color[0],
-                                                            color,
-                                                        ).debounce(
-                                                            200
-                                                        ),
-                                                    ),
-                                                ),
-                                            ),
-                                            modal=True,
-                                        ),
-                                        align="center",
                                     ),
+                                ),
+                                rx.divider(),
+                                rx.heading(
+                                    "대화 설정",
+                                    size="3",
+                                ),
+                                rx.checkbox(
+                                    "대화에 OpenAI 를 사용",
+                                    checked=ChatState.use_openai_chatting,
+                                    on_change=ChatState.on_change_use_openai_chatting,
                                 ),
                             ),
                             on_pointer_down_outside=rx.prevent_default,
