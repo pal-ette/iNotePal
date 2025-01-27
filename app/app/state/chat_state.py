@@ -10,7 +10,7 @@ from app.model.inference_model import InferenceModel
 from app.model.embedding_model import EmbeddingModel
 from app.model.roberta import Roberta
 from app.schema.chat import Chat, Message
-from app.schema.color import Color
+from app.schema.user_setting import UserSetting
 from app.schema.emotion import Emotion
 from app.util.emotion import (
     emotion_color_map_default as static_emotion_color_map_default,
@@ -195,11 +195,11 @@ class ChatState(AppState):
         color_map = self.emotion_color_map_default.copy()
 
         with rx.session() as session:
-            color = session.exec(
-                Color.select().where(Color.user_id == self.user_id)
+            setting = session.exec(
+                UserSetting.select().where(UserSetting.user_id == self.user_id)
             ).one_or_none()
-            if color:
-                user_color_list = color.emotion_colors.split(",")
+            if setting:
+                user_color_list = setting.emotion_colors.split(",")
                 for i, emotion in enumerate(color_map):
                     color_map[emotion] = user_color_list[i]
 
@@ -481,7 +481,7 @@ class ChatState(AppState):
 
         with rx.session() as session:
             color = session.exec(
-                Color.select().where((Color.user_id == self.user_id))
+                UserSetting.select().where((UserSetting.user_id == self.user_id))
             ).one_or_none()
 
             if color:
@@ -489,7 +489,7 @@ class ChatState(AppState):
                 session.add(color)
             else:
                 session.add(
-                    Color(
+                    UserSetting(
                         user_id=self.user_id,
                         emotion_colors=emotion_colors,
                     )
