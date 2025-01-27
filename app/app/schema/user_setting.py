@@ -10,3 +10,5 @@ class UserSetting(rx.Model, table=True):
     )
 
     emotion_colors: str
+
+    use_openai_chatting: bool = False
