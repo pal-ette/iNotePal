@@ -1,6 +1,6 @@
 import reflex as rx
 import sqlmodel
-from .emotion import Emotion
+from typing import Dict, Any
 
 
 class UserSetting(rx.Model, table=True):
@@ -12,3 +12,8 @@ class UserSetting(rx.Model, table=True):
     emotion_colors: str
 
     use_openai_chatting: bool = False
+
+    setting: Dict[str, Any] = sqlmodel.Field(
+        default={},
+        sa_column=sqlmodel.Column(sqlmodel.JSON, nullable=False),
+    )
