@@ -223,6 +223,10 @@ class ChatState(AppState):
         if insert and not self._user_setting:
             self._user_setting = UserSetting(
                 user_id=self.user_id,
+                setting={
+                    "use_openai_chatting": False,
+                    "emotion_colors": self.emotion_color_map_default,
+                },
                 use_openai_chatting=False,
                 emotion_colors=",".join(
                     [
