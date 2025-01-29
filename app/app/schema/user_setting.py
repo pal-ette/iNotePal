@@ -9,10 +9,6 @@ class UserSetting(rx.Model, table=True):
         primary_key=True,
     )
 
-    emotion_colors: str
-
-    use_openai_chatting: bool = False
-
     setting: Dict[str, Any] = sqlmodel.Field(
         default={},
         sa_column=sqlmodel.Column(sqlmodel.JSON, nullable=False),
