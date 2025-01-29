@@ -193,7 +193,7 @@ class ChatState(AppState):
         self.init_user_setting(False)
 
         if self._user_setting:
-            out_use_openai_chatting = self._user_setting.use_openai_chatting
+            out_use_openai_chatting = self._user_setting.setting["use_openai_chatting"]
 
         return out_use_openai_chatting
 
@@ -207,9 +207,7 @@ class ChatState(AppState):
         self.init_user_setting(False)
 
         if self._user_setting:
-            user_color_list = self._user_setting.emotion_colors.split(",")
-            for i, emotion in enumerate(color_map):
-                color_map[emotion] = user_color_list[i]
+            color_map = self._user_setting.setting["emotion_colors"].copy()
 
         return color_map
 
@@ -500,21 +498,18 @@ class ChatState(AppState):
 
     def on_change_color(self, emotion: str, color: str):
         self.init_user_setting()
-        color_map = self.emotion_color_map.copy()
 
-        color_map[emotion] = color
-
-        emotion_colors = ",".join([color_map[emotion] for emotion in color_map])
-        self._user_setting.emotion_colors = emotion_colors
+        self._user_setting.setting["emotion_colors"][emotion] = color
 
     def on_change_use_openai_chatting(self, value):
         self.init_user_setting()
 
-        self._user_setting.use_openai_chatting = value
+        self._user_setting.setting["use_openai_chatting"] = value
 
     def on_open_change_settings(self):
         if self._user_setting:
             with rx.session() as session:
+                sqlalchemy.orm.attributes.flag_modified(self._user_setting, "setting")
                 session.add(self._user_setting)
                 session.commit()
                 session.refresh(self._user_setting)
