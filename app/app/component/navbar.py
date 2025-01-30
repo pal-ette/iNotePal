@@ -80,27 +80,6 @@ def navbar() -> rx.Component:
                         ),
                         on_click=toggle_color_mode,
                     ),
-                    rx.flex(
-                        rx.popover.root(
-                            rx.popover.trigger(rx.button(rx.icon("user"))),
-                            rx.popover.content(
-                                rx.text(AppState.user_mail),
-                                rx.button(
-                                    "Logout",
-                                    width="100%",
-                                    on_click=[
-                                        ChatState.do_logout,
-                                        AppState.check_login,
-                                    ],
-                                    variant="outline",
-                                ),
-                                rx.popover.close(
-                                    rx.button("Close"),
-                                    width="100%",
-                                ),
-                            ),
-                        ),
-                    ),
                     rx.dialog.root(
                         rx.dialog.trigger(rx.button(rx.icon("settings"))),
                         rx.dialog.content(
@@ -233,6 +212,22 @@ def navbar() -> rx.Component:
                                         color="transparent",
                                     ),
                                     rx.divider(border_color="black"),
+                                    rx.hstack(
+                                        rx.spacer(),
+                                        rx.text(
+                                            AppState.user_mail,
+                                        ),
+                                        rx.button(
+                                            "Logout",
+                                            on_click=[
+                                                ChatState.do_logout,
+                                                AppState.check_login,
+                                            ],
+                                            variant="outline",
+                                        ),
+                                        width="100%",
+                                        align_items="center",
+                                    ),
                                     rx.spacer(),
                                     rx.vstack(
                                         rx.hstack(
