@@ -1,0 +1,6 @@
+{
+  "tailwindCSS.classAttributes": ["class_name"],
+  "tailwindCSS.includeLanguages": {
+    "python": "html"
+  }
+}
