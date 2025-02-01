@@ -53,8 +53,13 @@ def navbar() -> rx.Component:
                 rx.hstack(
                     rx.link(
                         rx.text(
-                            "Analysis",
-                            color_scheme="gray",
+                            "통계",
+                            color_scheme=rx.cond(
+                                rx.State.router.page.path == ANALYSIS_ROUTE,
+                                "#de776c",
+                                "gray",
+                            ),
+                            class_name=f"hover:text-[#de776c] {rx.cond(rx.State.router.page.path == ANALYSIS_ROUTE, 'border-b-2 border-b-[#de776c]', '')}  py-3",
                         ),
                         href=ANALYSIS_ROUTE,
                     ),
@@ -287,7 +292,7 @@ def navbar() -> rx.Component:
                 width="100%",
                 align_items="center",
                 spacing="5",
-                padding="7px 20px 7px 20px;",
+                padding="0px 20px 0px 20px",
             ),
             width="100%",
             z_index="5",
