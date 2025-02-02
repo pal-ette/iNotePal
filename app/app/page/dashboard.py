@@ -159,15 +159,10 @@ def dashboard():
                     ),
                     align="center",
                     width="100%",
-                    style={
-                        "position": "absolute",
-                        "bottom": "30px",
-                    },
+                    class_name="absolute bottom-8",
                 ),
                 height="100vh",
-                style={
-                    "position": "relative",
-                },
+                class_name="relative",
             ),
             align_items="center",
         ),

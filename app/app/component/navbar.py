@@ -162,10 +162,7 @@ def navbar() -> rx.Component:
                                                             ).debounce(
                                                                 200
                                                             ),
-                                                            style={
-                                                                "flex-direction": "row-reverse",
-                                                                "align-items": "center",
-                                                            },
+                                                            class_name="flex-row-reverse items-center",
                                                         ),
                                                         color_picker(
                                                             color=emotion_color[1],

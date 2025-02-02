@@ -335,13 +335,7 @@ class Calendar(rx.ComponentState):
                                     ),
                                     rx.text(
                                         "•",
-                                        font_size="14px",
-                                        align="center",
-                                        style={
-                                            "position": "absolute",
-                                            "top": "29px",
-                                            "left": "23px",
-                                        },
+                                        class_name="text-sm absolute top-[85%] left-[50%] -translate-x-1/2 -translate-y-1/2",
                                     ),
                                 ),
                                 background_color=rx.cond(
