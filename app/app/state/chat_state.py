@@ -29,6 +29,11 @@ env = environment.REFLEX_ENV_MODE.get()
 if env == constants.Env.PROD:
     inference_model = Roberta(model_version)
 
+open_ai_client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url=os.getenv("OPENAI_BASE_URL"),
+)
+
 
 class ChatState(AppState):
     is_waiting: bool = False
@@ -335,10 +340,6 @@ class ChatState(AppState):
         self.show_result_modal = False
 
     def get_greeting(self):
-        client = OpenAI(
-            api_key=os.getenv("OPENAI_API_KEY"),
-            base_url=os.getenv("OPENAI_BASE_URL"),
-        )
         month = self.select_date.month
         day = self.select_date.day
         messages = [
@@ -369,7 +370,7 @@ class ChatState(AppState):
                     """,
                 }
             )
-        response = client.chat.completions.create(
+        response = open_ai_client.chat.completions.create(
             model="gpt-4o-mini",
             messages=messages,
             temperature=7e-1,
@@ -419,10 +420,6 @@ class ChatState(AppState):
         self.is_creating = False
 
     def _talk_to_open_ai(self, history, message):
-        client = OpenAI(
-            api_key=os.getenv("OPENAI_API_KEY"),
-            base_url=os.getenv("OPENAI_BASE_URL"),
-        )
         messages = [
             {
                 "role": "user" if role == "human" else "assistant",
@@ -431,7 +428,7 @@ class ChatState(AppState):
             for role, text in history
         ] + [{"role": "user", "content": message}]
         response = (
-            client.chat.completions.create(
+            open_ai_client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=messages,
                 temperature=7e-1,
