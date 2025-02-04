@@ -60,6 +60,14 @@ def dashboard():
                     height="50px",
                 ),
                 rx.hstack(
+                    rx.button(
+                        rx.icon(
+                            tag="chevron_left",
+                        ),
+                        variant="ghost",
+                        on_click=ChatState.select_prev_date,
+                        disabled=~ChatState.can_prev_date,
+                    ),
                     rx.popover.root(
                         rx.popover.trigger(
                             rx.button(
@@ -90,6 +98,14 @@ def dashboard():
                                 allow_future=False,
                             ),
                         ),
+                    ),
+                    rx.button(
+                        rx.icon(
+                            tag="chevron_right",
+                        ),
+                        variant="ghost",
+                        on_click=ChatState.select_next_date,
+                        disabled=~ChatState.can_next_date,
                     ),
                     rx.scroll_area(
                         rx.hstack(
@@ -162,7 +178,7 @@ def dashboard():
                     class_name="absolute bottom-8",
                 ),
                 height="100vh",
-                class_name="relative",
+                class_name="relative mx-10",
             ),
             align_items="center",
         ),
