@@ -3,7 +3,7 @@
 import os
 import random
 import reflex as rx
-from datetime import date
+from datetime import date, timedelta
 from openai import OpenAI
 from app.app_state import AppState
 from app.model.inference_model import InferenceModel
@@ -188,6 +188,24 @@ class ChatState(AppState):
         month = self.select_date.month
         day = self.select_date.day
         return f"{year}년 {month}월 {day}일"
+
+    def select_prev_date(self):
+        self.select_date -= timedelta(days=1)
+
+    @rx.var(cache=True)
+    def can_prev_date(self) -> bool:
+        try:
+            prev_date = self.select_date - timedelta(days=1)
+            return True
+        except OverflowError:
+            return False
+
+    def select_next_date(self):
+        self.select_date += timedelta(days=1)
+
+    @rx.var(cache=True)
+    def can_next_date(self) -> bool:
+        return self.select_date < date.today()
 
     @rx.var(cache=False)
     def use_openai_chatting(self) -> bool:
