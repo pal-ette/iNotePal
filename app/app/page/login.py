@@ -5,6 +5,7 @@ import reflex as rx
 from app.state.login_state import LoginState
 from app.state.reset_password_state import ResetPasswordState
 from app.routes import LOGIN_ROUTE, REGISTER_ROUTE
+from app.component.logo import logo
 
 
 @rx.page(
@@ -78,16 +79,7 @@ def login_page() -> rx.Component:
             LoginState.is_hydrated,
             rx.vstack(
                 rx.flex(
-                    rx.heading(
-                        "iNotePal",
-                        as_="h1",
-                        size="7",
-                        weight="bold",
-                        align="left",
-                        background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
-                        background_clip="text",
-                        color="transparent",
-                    ),
+                    logo(size="7"),
                     padding_bottom="10vh",
                 ),
                 rx.cond(  # conditionally show error messages
