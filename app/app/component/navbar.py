@@ -7,6 +7,7 @@ from app.component.emotion_card import emotion_card, show_emotion_colors
 from app.state.calendar_state import calendar_component
 from app.routes import DASHBOARD_ROUTE, ANALYSIS_ROUTE
 from app.component.color_picker import color_picker
+from app.component.logo import logo
 
 
 def navbar() -> rx.Component:
@@ -14,13 +15,8 @@ def navbar() -> rx.Component:
         rx.flex(
             rx.flex(
                 rx.link(
-                    rx.heading(
+                    logo(
                         "iNP",
-                        size="6",
-                        weight="bold",
-                        background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
-                        background_clip="text",
-                        color="transparent",
                         display=[
                             "flex",
                             "flex",
@@ -30,13 +26,7 @@ def navbar() -> rx.Component:
                             "none",
                         ],
                     ),
-                    rx.heading(
-                        "iNotePal",
-                        size="6",
-                        weight="bold",
-                        background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
-                        background_clip="text",
-                        color="transparent",
+                    logo(
                         display=[
                             "none",
                             "none",
@@ -204,15 +194,7 @@ def navbar() -> rx.Component:
                         rx.drawer.portal(
                             rx.drawer.content(
                                 rx.vstack(
-                                    rx.heading(
-                                        "iNotePal",
-                                        as_="h1",
-                                        size="6",
-                                        weight="bold",
-                                        background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
-                                        background_clip="text",
-                                        color="transparent",
-                                    ),
+                                    logo(),
                                     rx.divider(border_color="black"),
                                     rx.hstack(
                                         rx.spacer(),

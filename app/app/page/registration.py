@@ -7,6 +7,7 @@ import reflex as rx
 from app.state.registration_state import RegistrationState
 from app.app_state import AppState
 from app.routes import REGISTER_ROUTE, LOGIN_ROUTE
+from app.component.logo import logo
 
 
 @rx.page(
@@ -22,16 +23,7 @@ def registration_page() -> rx.Component:
     register_form = rx.form(
         rx.fragment(
             rx.flex(
-                rx.heading(
-                    "iNotePal",
-                    as_="h1",
-                    size="6",
-                    weight="bold",
-                    align="left",
-                    background="linear-gradient(to left, #f2ebc8, #de776c, #49312d)",
-                    background_clip="text",
-                    color="transparent",
-                ),
+                logo(),
                 padding_bottom="10vh",
             ),
             rx.flex(
