@@ -220,7 +220,7 @@ def navbar() -> rx.Component:
                                             AppState.user_mail,
                                         ),
                                         rx.button(
-                                            "Logout",
+                                            "로그아웃",
                                             on_click=[
                                                 ChatState.do_logout,
                                                 AppState.check_login,
@@ -235,7 +235,7 @@ def navbar() -> rx.Component:
                                         rx.hstack(
                                             rx.link(
                                                 rx.text(
-                                                    "Analysis",
+                                                    "통계",
                                                     color_scheme="gray",
                                                 ),
                                                 href=ANALYSIS_ROUTE,
