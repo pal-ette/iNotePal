@@ -23,7 +23,7 @@ def login_page() -> rx.Component:
         rx.fragment(
             rx.flex(
                 rx.heading(
-                    "Log In",
+                    "로그인",
                     as_="h1",
                     size="6",
                     align="left",
@@ -32,29 +32,33 @@ def login_page() -> rx.Component:
             ),
             rx.flex(
                 rx.text(
-                    "Email Address",
+                    "이메일",
                     size="3",
                     weight="medium",
                     align="left",
                 ),
                 rx.input(
-                    placeholder="email",
+                    placeholder="이메일",
                     id="login_email",
                     type_="email",
                 ),
                 rx.text(
-                    "Password",
+                    "비밀번호",
                     size="3",
                     weight="bold",
                     align="left",
                 ),
-                rx.input(placeholder="password", id="password", type="password"),
+                rx.input(
+                    placeholder="비밀번호",
+                    id="password",
+                    type="password",
+                ),
                 direction="column",
                 padding_bottom="2vh",
             ),
             rx.hstack(
                 rx.button(
-                    "Login",
+                    "로그인",
                     type_="submit",
                     loading=LoginState.is_loading,
                     variant="outline",
@@ -62,7 +66,8 @@ def login_page() -> rx.Component:
                 rx.button(
                     rx.hstack(
                         rx.icon("github"),
-                        rx.text("Login with Github"),
+                        rx.text("Github 계정으로 로그인"),
+                        class_name="items-center",
                     ),
                     type="button",
                     loading=LoginState.is_loading,
@@ -92,7 +97,7 @@ def login_page() -> rx.Component:
                     ),
                 ),
                 login_form,
-                rx.link("No account yet? Sign up.", href=REGISTER_ROUTE),
+                rx.link("아직 계정이 없으신가요? 가입하러 가기", href=REGISTER_ROUTE),
                 rx.dialog.root(
                     rx.dialog.content(
                         rx.heading("Password Reset"),

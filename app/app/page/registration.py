@@ -28,7 +28,7 @@ def registration_page() -> rx.Component:
             ),
             rx.flex(
                 rx.heading(
-                    "Sign up",
+                    "가입",
                     as_="h1",
                     size="6",
                     align="left",
@@ -37,27 +37,27 @@ def registration_page() -> rx.Component:
             ),
             rx.flex(
                 rx.text(
-                    "Email Address",
+                    "이메일",
                     size="3",
                     weight="medium",
                     align="left",
                 ),
-                rx.input(placeholder="email", id="email", type_="email"),
+                rx.input(placeholder="이메일", id="email", type_="email"),
                 rx.text(
-                    "Password",
+                    "비밀번호",
                     size="3",
                     weight="bold",
                     align="left",
                 ),
-                rx.input(placeholder="password", id="password", type="password"),
+                rx.input(placeholder="비밀번호", id="password", type="password"),
                 rx.text(
-                    "Confirm Password",
+                    "비밀번호 확인",
                     size="3",
                     weight="bold",
                     align="left",
                 ),
                 rx.input(
-                    placeholder="confirm password",
+                    placeholder="비밀번호 확인",
                     id="confirm_password",
                     type="password",
                 ),
@@ -66,7 +66,7 @@ def registration_page() -> rx.Component:
             ),
             rx.flex(
                 rx.button(
-                    "Register",
+                    "가입",
                     type_="submit",
                     loading=RegistrationState.is_loading,
                     variant="outline",
@@ -92,7 +92,7 @@ def registration_page() -> rx.Component:
                     rx.text(RegistrationState.error_message),
                 ),
                 register_form,
-                rx.link("Already have an account?", href=LOGIN_ROUTE),
+                rx.link("이미 계정이 있으신가요? 로그인하러 가기?", href=LOGIN_ROUTE),
                 padding_top="3vh",
                 margin="0px 10vw",
                 align="center",
