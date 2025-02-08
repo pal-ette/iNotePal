@@ -29,20 +29,18 @@ class AnalysisState(ChatState):
             self.set_end_date()
 
     def set_start_date(self):
-        if not self.is_valid_date_range(self.range_select_date, self.end_date):
+        if self.is_valid_date_range(self.range_select_date, self.end_date):
+            self.start_date = self.range_select_date
+        else:
             self.reset_calendar_date(self.start_date)
             self.date_valid_check = False
-            return
-
-        self.start_date = self.range_select_date
 
     def set_end_date(self):
-        if not self.is_valid_date_range(self.start_date, self.range_select_date):
+        if self.is_valid_date_range(self.start_date, self.range_select_date):
+            self.end_date = self.range_select_date
+        else:
             self.reset_calendar_date(self.end_date)
             self.date_valid_check = False
-            return
-
-        self.end_date = self.range_select_date
 
     def reset_calendar_date(self, new_date):
         self.range_select_date = new_date
