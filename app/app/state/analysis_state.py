@@ -93,8 +93,8 @@ class AnalysisState(ChatState):
 
     @rx.var(cache=True)
     def data_emotion_total(self) -> List[str]:
-        start_date = date(1970, 1, 1)
-        end_date = date(2999, 12, 31)
+        start_date = date.min
+        end_date = date.max
 
         total_data = self.get_chats_in_period(
             start_date,
