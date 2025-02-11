@@ -45,11 +45,9 @@ class EmotionState(ChatState):
             for (id, chats) in past_chats[::-1]
         ]
 
-        if len(emotions_of_the_day) > 0:
-            for _, emotions in emotions_of_the_day:
-                emotion_count = Counter(emotions)
-                bg_colors.append(self.get_bg_color(emotion_count))
-        return bg_colors
+        return [
+            self.get_bg_color(Counter(emotions)) for _, emotions in emotions_of_the_day
+        ]
 
 
 def create_box():

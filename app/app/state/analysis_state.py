@@ -162,9 +162,10 @@ class AnalysisState(ChatState):
                     if emotion:
                         emotions_by_date[entry.date][emotion] += 1
 
-        emotions_list = []
-        for date, emotions in emotions_by_date.items():
-            emotions_list.append({"date": date, "emotions": dict(emotions)})
+        emotions_list = [
+            {"date": date, "emotions": dict(emotions)}
+            for date, emotions in emotions_by_date.items()
+        ]
 
         return emotions_list
 
@@ -216,11 +217,8 @@ class AnalysisState(ChatState):
             return messages
 
         messages = " ".join(messages)
-        morphs = []
         pos = kkma.pos(messages)
-        for w in pos:
-            if w[1] in including:
-                morphs.append(w[0])
+        morphs = [w[0] for w in pos if w[1] in including]
 
         words_count = Counter(morphs)
         words = [{"text": key, "value": value} for key, value in words_count.items()]
