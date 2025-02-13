@@ -194,7 +194,16 @@ def navbar() -> rx.Component:
                         rx.drawer.portal(
                             rx.drawer.content(
                                 rx.vstack(
-                                    logo(),
+                                    rx.hstack(
+                                        logo(),
+                                        rx.drawer.close(
+                                            rx.button(
+                                                rx.icon("circle-x"),
+                                                variant="ghost",
+                                            ),
+                                        ),
+                                        class_name="justify-between items-center w-full",
+                                    ),
                                     rx.divider(border_color="black"),
                                     rx.hstack(
                                         rx.spacer(),
