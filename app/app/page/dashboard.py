@@ -116,6 +116,7 @@ def dashboard():
                         ),
                         width="300px",
                     ),
+                    class_name="items-center",
                 ),
                 rx.scroll_area(
                     rx.cond(
