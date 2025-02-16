@@ -1,7 +1,6 @@
 import reflex as rx
 import asyncio
 import re
-from collections.abc import AsyncGenerator
 from app.routes import LOGIN_ROUTE
 from app.supabase_client import supabase_client
 

@@ -3,7 +3,7 @@
 import os
 import random
 import reflex as rx
-from datetime import date, timedelta
+from datetime import date
 from openai import OpenAI
 from app.app_state import AppState
 from app.model.inference_model import InferenceModel
@@ -24,7 +24,7 @@ from reflex.config import environment
 
 model_version = "iNotePal-0.0.1"
 inference_model = InferenceModel(model_version)
-embedding_model = EmbeddingModel(model_version)
+embedding_model = None  # EmbeddingModel(model_version)
 env = environment.REFLEX_ENV_MODE.get()
 if env == constants.Env.PROD:
     inference_model = Roberta(model_version)

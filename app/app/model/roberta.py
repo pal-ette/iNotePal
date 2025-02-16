@@ -1,11 +1,9 @@
-import os, pickle, torch, re
+import torch, re
 from torch import nn
 from torch.autograd import Variable
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
-from collections import OrderedDict
 from .inference_model import InferenceModel
 import multiprocessing as mp
-import time
 
 
 class RobertaClassifier(nn.Module):

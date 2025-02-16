@@ -1,6 +1,5 @@
 import reflex as rx
 import asyncio
-from collections.abc import Generator
 
 from app.app_state import AppState
 from app.supabase_client import supabase_client
