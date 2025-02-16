@@ -9,7 +9,6 @@ import os
 import jwt
 import time
 import reflex as rx
-from app.supabase_client import supabase_client
 
 from app.routes import LOGIN_ROUTE, DASHBOARD_ROUTE
 
