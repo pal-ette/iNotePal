@@ -141,6 +141,10 @@ class Calendar(rx.ComponentState):
         if prop_allow_future is not None:
             cls.__fields__["allow_future"].default = prop_allow_future
 
+        prop_start_weekday = props.pop("start_weekday", None)
+        if prop_start_weekday is not None:
+            cls.__fields__["start_weekday"].default = prop_start_weekday
+
         return rx.vstack(
             rx.hstack(
                 rx.hstack(
