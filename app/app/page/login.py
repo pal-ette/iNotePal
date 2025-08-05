@@ -3,7 +3,6 @@
 import reflex as rx
 
 from app.state.login_state import LoginState
-from app.state.reset_password_state import ResetPasswordState
 from app.routes import LOGIN_ROUTE, REGISTER_ROUTE
 from app.component.logo import logo
 
@@ -63,16 +62,6 @@ def login_page() -> rx.Component:
                     loading=LoginState.is_loading,
                     variant="outline",
                 ),
-                rx.button(
-                    rx.hstack(
-                        rx.icon("github"),
-                        rx.text("Github 계정으로 로그인"),
-                        class_name="items-center",
-                    ),
-                    type="button",
-                    loading=LoginState.is_loading,
-                    on_click=LoginState.login_with_github,
-                ),
             ),
         ),
         width="100%",
@@ -98,59 +87,6 @@ def login_page() -> rx.Component:
                 ),
                 login_form,
                 rx.link("아직 계정이 없으신가요? 가입하러 가기", href=REGISTER_ROUTE),
-                rx.dialog.root(
-                    rx.dialog.content(
-                        rx.heading("Password Reset"),
-                        rx.form(
-                            rx.hstack(
-                                rx.input(
-                                    placeholder="email",
-                                    id="password_reset_email",
-                                    type_="email",
-                                    width="100%",
-                                ),
-                                rx.box(
-                                    width="15px",
-                                ),
-                                rx.button(
-                                    "Request",
-                                    type_="submit",
-                                    variant="outline",
-                                ),
-                                rx.button(
-                                    "Close",
-                                    type="button",
-                                    on_click=ResetPasswordState.hide_reset_password,
-                                ),
-                                margin="0px 20px",
-                                align="center",
-                            ),
-                            on_submit=ResetPasswordState.request_reset_password,
-                        ),
-                        rx.cond(
-                            ResetPasswordState.error_message != "",
-                            rx.callout(
-                                ResetPasswordState.error_message,
-                                icon="triangle_alert",
-                                color_scheme="red",
-                                role="alert",
-                            ),
-                        ),
-                        rx.cond(
-                            ResetPasswordState.is_requested,
-                            rx.callout(
-                                "Password reset mail requested.",
-                                icon="info",
-                                color_scheme="green",
-                            ),
-                        ),
-                    ),
-                    open=ResetPasswordState.is_show_reset_password,
-                ),
-                rx.link(
-                    "Forgot password?",
-                    on_click=ResetPasswordState.show_reset_password,
-                ),
                 padding_top="3vh",
                 margin="0px 10vw",
                 align="center",

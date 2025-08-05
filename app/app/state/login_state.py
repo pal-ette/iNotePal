@@ -2,7 +2,6 @@ import reflex as rx
 import asyncio
 
 from app.app_state import AppState
-from app.supabase_client import supabase_client
 from app.routes import LOGIN_ROUTE, OAUTH_ROUTE, DASHBOARD_ROUTE
 from reflex.config import get_config
 
@@ -14,41 +13,6 @@ class LoginState(AppState):
     redirect_to: str = ""
 
     is_loading: bool = False
-
-    def on_load_oauth(self):
-        sharp_param = f"{OAUTH_ROUTE}/#"
-        if self.router.page.raw_path.startswith(sharp_param):
-            return rx.redirect(
-                self.router.page.raw_path.replace(sharp_param, f"{OAUTH_ROUTE}/?")
-            )
-
-        try:
-            auth_response = supabase_client().auth.set_session(
-                access_token=self.router.page.params["access_token"],
-                refresh_token=self.router.page.params["refresh_token"],
-            )
-            self.auth_token = auth_response.session.access_token
-            self.error_message = ""
-            self.redirect_to = ""
-        except Exception as e:
-            print("oauth error:", str(e))
-
-        return LoginState.redir()
-
-    def login_with_github(self):
-        self.is_loading = True
-        yield
-        redirect_to = (
-            f"{self.router.page.host}{get_config().frontend_path}{OAUTH_ROUTE}"
-        )
-        data = supabase_client().auth.sign_in_with_oauth(
-            {
-                "provider": "github",
-                "options": {"redirect_to": redirect_to},
-            }
-        )
-        self.redirect_to = data.url
-        return LoginState.redir()
 
     def on_submit(self, form_data):
         """Handle login form on_submit.
@@ -66,13 +30,8 @@ class LoginState(AppState):
         password = form_data["password"]
 
         try:
-            auth_response = supabase_client().auth.sign_in_with_password(
-                {
-                    "email": email,
-                    "password": password,
-                },
-            )
-            self.auth_token = auth_response.session.access_token
+            # TODO: 로그인 처리
+            self.auth_token = ""
             self.error_message = ""
             self.redirect_to = ""
             return LoginState.redir()

@@ -2,7 +2,6 @@ import reflex as rx
 import asyncio
 import re
 from app.routes import LOGIN_ROUTE
-from app.supabase_client import supabase_client
 
 
 def is_valid_email(email):
@@ -64,13 +63,7 @@ class RegistrationState(rx.State):
             yield
             return
 
-        # sign up with supabase
-        supabase_client().auth.sign_up(
-            {
-                "email": email,
-                "password": password,
-            }
-        )
+        # TODO: 회원가입 처리
 
         # Set success and redirect to login page after a brief delay.
         self.error_message = ""
