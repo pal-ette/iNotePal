@@ -1,0 +1,17 @@
+[project]
+name = "i-note-pal"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11.9"
+dependencies = [
+    "streamlit>=1.37.0",
+    "streamlit-calendar>=1.2.0",
+    "openai>=1.27.0",
+    "requests>=2.32.0",
+    "supabase>=2.4.5",
+    "tensorflow>=2.16.1",
+    "streamlit-chat>=0.1.1",
+    "sentence-transformers>=2.7.0",
+    "tf-keras>=2.19.0",
+]
