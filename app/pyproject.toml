@@ -25,4 +25,5 @@ dependencies = [
     "faiss-cpu>=1.9.0.post1",
     "pandas>=2.2.3",
     "tf-keras>=2.16.0",
+    "reflex-local-auth>=0.3.0",
 ]
