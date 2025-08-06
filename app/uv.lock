@@ -78,6 +78,7 @@ dependencies = [
     { name = "pyjwt" },
     { name = "python-dotenv" },
     { name = "reflex" },
+    { name = "reflex-local-auth" },
     { name = "reflex-wordcloud" },
     { name = "scikit-learn" },
     { name = "sentence-transformers" },
@@ -103,6 +104,7 @@ requires-dist = [
     { name = "pyjwt", specifier = ">=2.8.0" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "reflex", specifier = ">=0.7.0" },
+    { name = "reflex-local-auth", specifier = ">=0.3.0" },
     { name = "reflex-wordcloud", specifier = ">=0.0.4" },
     { name = "scikit-learn", specifier = ">=1.5.0" },
     { name = "sentence-transformers", specifier = ">=2.7.0" },
@@ -2093,6 +2095,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/24/e5/239a487a18ba9fb135cce25228d3209260c0610a8f8280b763ff1eeaaf17/reflex_hosting_cli-0.1.53.tar.gz", hash = "sha256:a7152767302e79c8336c48be3cd5ceaf2f7246302c3e1ce86e3495efe3cf0ee9", size = 35181, upload-time = "2025-07-21T23:43:47.333Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/90/7d/6a31ef3c2dac3074babe1e94cfacc6028b6a70e7108916cc242128e1aa7d/reflex_hosting_cli-0.1.53-py3-none-any.whl", hash = "sha256:30675693373b264d70bde11a50435de74ee2d80a9951bb1d4ec8663e6e3b1af1", size = 44508, upload-time = "2025-07-21T23:43:45.973Z" },
+]
+
+[[package]]
+name = "reflex-local-auth"
+version = "0.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "bcrypt" },
+    { name = "reflex" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/7e/78/8ef7227a6d7df3e9b80ed1e84c8b682a2b5627575417e77ab939e220b8d7/reflex_local_auth-0.3.0.tar.gz", hash = "sha256:2e630d8f32c5b2c15ecbb8e3519cdde920d79c720dbe843110437b3a718f8ec0", size = 19739, upload-time = "2025-02-11T22:49:25.562Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d1/4a/77f50b8610059f31365d25a5f8d3fe7500ea1b35792d935fb01f8bfde585/reflex_local_auth-0.3.0-py3-none-any.whl", hash = "sha256:708083afde008d265677c601986f0301af91c399ff41d14a199e050cb3e5939d", size = 12054, upload-time = "2025-02-11T22:49:23.937Z" },
 ]
 
 [[package]]

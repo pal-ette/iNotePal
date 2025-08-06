@@ -208,13 +208,12 @@ def navbar() -> rx.Component:
                                     rx.hstack(
                                         rx.spacer(),
                                         rx.text(
-                                            AppState.user_mail,
+                                            AppState.authenticated_user.username,
                                         ),
                                         rx.button(
                                             "로그아웃",
                                             on_click=[
                                                 ChatState.do_logout,
-                                                AppState.check_login,
                                             ],
                                             variant="outline",
                                         ),

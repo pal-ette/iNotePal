@@ -14,6 +14,7 @@ custom_config = {
     "frontend_port": frontend_port,
     "api_url": f"http://localhost:{backend_port}",
     "env_file": ".env",
+    "disable_plugins": ["reflex.plugins.sitemap.SitemapPlugin"],
 }
 
 env = environment.REFLEX_ENV_MODE.get()

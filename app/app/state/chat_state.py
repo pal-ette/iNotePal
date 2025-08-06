@@ -75,7 +75,7 @@ class ChatState(AppState):
                 chat.date
                 for chat in session.exec(
                     Chat.select()
-                    .where(Chat.user_id == self.user_id)
+                    .where(Chat.user_id == self.authenticated_user.id)
                     .where(Chat.is_closed)
                 ).all()
             ]
@@ -137,7 +137,7 @@ class ChatState(AppState):
         if load_date in self._db_chats:
             return
 
-        if not self.token_is_valid:
+        if not self.is_authenticated:
             return
         chats: List[Chat] = []
 
@@ -147,7 +147,7 @@ class ChatState(AppState):
                 .options(
                     sqlalchemy.orm.selectinload(Chat.messages),
                 )
-                .where(Chat.user_id == self.user_id)
+                .where(Chat.user_id == self.authenticated_user.id)
                 .where(Chat.date == load_date)
                 .order_by(Chat.id)
             ).all()
@@ -165,7 +165,7 @@ class ChatState(AppState):
 
     def get_chats_in_period(self, start_date, end_date) -> List[Chat]:
         chats = []
-        if not self.token_is_valid:
+        if not self.is_authenticated:
             return chats
 
         with rx.session() as session:
@@ -174,7 +174,7 @@ class ChatState(AppState):
                 .options(
                     sqlalchemy.orm.selectinload(Chat.messages),
                 )
-                .where(Chat.user_id == self.user_id)
+                .where(Chat.user_id == self.authenticated_user.id)
                 .where(Chat.date >= start_date)
                 .where(Chat.date <= end_date)
                 .order_by(Chat.id)
@@ -229,7 +229,7 @@ class ChatState(AppState):
     @rx.var(cache=False)
     def use_openai_chatting(self) -> bool:
         out_use_openai_chatting = False
-        if not self.user_id:
+        if not self.authenticated_user.id:
             return out_use_openai_chatting
 
         self.init_user_setting(False)
@@ -243,7 +243,7 @@ class ChatState(AppState):
     def emotion_color_map(self) -> Dict[str, str]:
         color_map = self.emotion_color_map_default.copy()
 
-        if not self.user_id:
+        if not self.authenticated_user.id:
             return color_map
 
         self.init_user_setting(False)
@@ -257,12 +257,14 @@ class ChatState(AppState):
         if not self._user_setting:
             with rx.session() as session:
                 self._user_setting = session.exec(
-                    UserSetting.select().where(UserSetting.user_id == self.user_id)
+                    UserSetting.select().where(
+                        UserSetting.user_id == self.authenticated_user.id
+                    )
                 ).one_or_none()
 
         if insert and not self._user_setting:
             self._user_setting = UserSetting(
-                user_id=self.user_id,
+                user_id=self.authenticated_user.id,
                 setting={
                     "use_openai_chatting": False,
                     "emotion_colors": self.emotion_color_map_default,
@@ -419,14 +421,14 @@ class ChatState(AppState):
         if not self.is_hydrated:
             return ChatState.start_new_chat()
 
-        if not self.token_is_valid:
+        if not self.is_authenticated:
             return ChatState.start_new_chat()
 
         self.is_creating = True
         yield
 
         new_chat = Chat(
-            user_id=self.user_id,
+            user_id=self.authenticated_user.id,
             date=self.db_select_date,
         )
 

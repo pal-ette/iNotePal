@@ -4,6 +4,7 @@ import reflex as rx
 
 import os
 import jdk
+import reflex_local_auth
 
 jdk_dir = f"{os.getcwd()}/.cache/jdk"
 if os.path.isdir(jdk_dir):
@@ -21,4 +22,15 @@ app = rx.App(
         radius="large",
         accent_color="bronze",
     ),
+)
+
+app.add_page(
+    reflex_local_auth.pages.login_page,
+    route=reflex_local_auth.routes.LOGIN_ROUTE,
+    title="Login",
+)
+app.add_page(
+    reflex_local_auth.pages.register_page,
+    route=reflex_local_auth.routes.REGISTER_ROUTE,
+    title="Register",
 )

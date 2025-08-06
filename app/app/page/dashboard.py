@@ -1,11 +1,11 @@
 import reflex as rx
+import reflex_local_auth
 
 from app.component.chat_input import chat_input
 from app.component.chat_history import chat_history
 from app.component.navbar import navbar
 from app.state.chat_state import ChatState
 from app.component.emotion_card import create_box
-from app.page.login import require_login
 from app.state.calendar_state import calendar_component
 from app.routes import DASHBOARD_ROUTE
 from typing import Tuple
@@ -46,11 +46,11 @@ def build_past_card(chat: Tuple[int, Chat]):
 @rx.page(
     route=DASHBOARD_ROUTE,
     on_load=[
-        ChatState.check_login,
+        ChatState.on_load,
         ChatState.on_load_dashboard,
     ],
 )
-@require_login
+@reflex_local_auth.require_login
 def dashboard():
     return rx.flex(
         navbar(),
